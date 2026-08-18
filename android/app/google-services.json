@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "209800510781",
+    "project_id": "broker-agencies-flutter",
+    "storage_bucket": "broker-agencies-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209800510781:android:8e57728e5df746b94d1954",
+        "android_client_info": {
+          "package_name": "com.digi.tech.broker_agencies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxplSV83y_AWx5K2wa8LiB6j3zUA-g2MI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209800510781:android:ec47db589c29274c4d1954",
+        "android_client_info": {
+          "package_name": "com.digipie.admin.brokerflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxplSV83y_AWx5K2wa8LiB6j3zUA-g2MI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,330 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../../app/app_colors.dart';
+import '../../../app/app_text_styles.dart';
+import '../../../app/common_ext.dart';
+import '../../../models/models.dart';
+import '../../../providers/video_requests/video_requests_provider.dart';
+import '../../../widgets/dialogs/video_request_action_dialog.dart';
+import '../../../widgets/toast/app_toast.dart';
+
+class VideoRequestDetailScreen extends StatefulWidget {
+  final String requestId;
+  final VideoRequestModel? request;
+
+  const VideoRequestDetailScreen({super.key, required this.requestId, this.request});
+
+  @override
+  State<VideoRequestDetailScreen> createState() => _VideoRequestDetailScreenState();
+}
+
+class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
+  VideoRequestModel? _requestState;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _requestState = widget.request;
+    if (_requestState == null) {
+      _loadDetails();
+    }
+  }
+
+  Future<void> _loadDetails() async {
+    setState(() => _isLoading = true);
+    try {
+      final prov = context.read<VideoRequestsProvider>();
+      final request = prov.requests.firstWhere((r) => r.id == widget.requestId);
+      setState(() => _requestState = request);
+    } catch (e) {
+      debugPrint('Error loading request detail: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    final req = _requestState;
+    if (req == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Request Details')),
+        body: const Center(child: Text('Video request detail not found.')),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Video Request Detail'),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+      ),
+      backgroundColor: AppColors.background,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Status Section Card
+            _buildStatusHeader(req),
+            const SizedBox(height: 24),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main Info Cards
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      _buildInfoCard(
+                        title: 'Property Details',
+                        icon: Icons.apartment_rounded,
+                        children: [
+                          _buildDetailRow('Title', req.property?.propertyTitle ?? '-'),
+                          _buildDetailRow(
+                            'Listing Type',
+                            req.property?.listingType.name.toUpperCase() ?? '-',
+                          ),
+                          _buildDetailRow('Price', req.property?.price.formatCurrency ?? '-'),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInfoCard(
+                        title: 'Broker Details',
+                        icon: Icons.business_rounded,
+                        children: [
+                          _buildDetailRow('Business Name', req.broker?.businessName ?? '-'),
+                          _buildDetailRow('Plan Tier', req.broker?.plan ?? '-'),
+                          _buildDetailRow('Active', req.broker?.isActive == true ? 'YES' : 'NO'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+
+                // Notes / Admin Comments Side-Card
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      _buildInfoCard(
+                        title: 'Metadata & Notes',
+                        icon: Icons.notes_rounded,
+                        children: [
+                          _buildDetailRow(
+                            'Created At',
+                            req.createdAt != null
+                                ? DateFormat('dd MMM yyyy, hh:mm a').format(req.createdAt!)
+                                : '-',
+                          ),
+                          _buildDetailRow(
+                            'Completed At',
+                            req.completedAt != null
+                                ? DateFormat('dd MMM yyyy, hh:mm a').format(req.completedAt!)
+                                : '-',
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Broker Notes:',
+                            style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(req.notes ?? 'No notes provided.', style: AppTextStyles.body2),
+                        ],
+                      ),
+                      if (req.adminApprovalStatus == VideoRequestApprovalStatus.rejected) ...[
+                        const SizedBox(height: 20),
+                        _buildInfoCard(
+                          title: 'Rejection Details',
+                          icon: Icons.cancel_outlined,
+                          isDanger: true,
+                          children: [
+                            Text(
+                              req.adminCancelReason ?? 'No reason provided.',
+                              style: AppTextStyles.body2.copyWith(color: AppColors.error),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // Super Admin Action Bar
+            if (req.adminApprovalStatus == VideoRequestApprovalStatus.pending) ...[
+              const SizedBox(height: 32),
+              _buildApprovalActionBar(context, req),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusHeader(VideoRequestModel req) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.video_camera_back_rounded, size: 40, color: AppColors.primary),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Request ID: ${req.id}',
+                  style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Status: ${req.status.displayName} | Approval: ${req.adminApprovalStatus.displayName}',
+                  style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+    bool isDanger = false,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDanger ? AppColors.error.withOpacity(0.5) : AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: isDanger ? AppColors.error : AppColors.primary, size: 20),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: AppTextStyles.body1.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: isDanger ? AppColors.error : AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: AppColors.border),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary)),
+          Text(value, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApprovalActionBar(BuildContext context, VideoRequestModel req) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text('Action Needed: ', style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+          const Spacer(),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.cancel_outlined),
+            label: const Text('Reject Request'),
+            onPressed: () {
+              VideoRequestActionDialog.show(
+                context,
+                isApproval: false,
+                onSubmit: (reason) async {
+                  final prov = context.read<VideoRequestsProvider>();
+                  final success = await prov.rejectRequest(req.id!, reason: reason);
+                  if (success) {
+                    AppToast.showSuccess('Rejected', 'Video request rejected successfully.');
+                    setState(() {
+                      _requestState = prov.requests.firstWhere((r) => r.id == req.id);
+                    });
+                  }
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.check_circle_outline),
+            label: const Text('Approve Request'),
+            onPressed: () {
+              VideoRequestActionDialog.show(
+                context,
+                isApproval: true,
+                onSubmit: (notes) async {
+                  final prov = context.read<VideoRequestsProvider>();
+                  final success = await prov.approveRequest(req.id!, notes: notes);
+                  if (success) {
+                    AppToast.showSuccess('Approved', 'Video request approved successfully.');
+                    setState(() {
+                      _requestState = prov.requests.firstWhere((r) => r.id == req.id);
+                    });
+                  }
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

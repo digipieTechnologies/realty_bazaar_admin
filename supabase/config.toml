@@ -1,0 +1,15 @@
+# A string that uniquely identifies the project.
+project_id = "oibpptznppqlwvgytngj"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+
+[db]
+port = 54322
+
+[studio]
+enabled = true
+port = 54323
