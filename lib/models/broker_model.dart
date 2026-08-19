@@ -1,3 +1,4 @@
+import 'package:brokerflow_admin/widgets/brand/app_logo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -113,7 +114,12 @@ class BrokerModel extends Equatable {
     return CircleAvatar(
       radius: radius,
       backgroundColor: bg,
-      child: Icon(Icons.business_rounded, color: fg, size: iconSize),
+      child: CustomAppLogo(
+        width: radius * 2,
+        height: radius * 2,
+        logoColor: fg,
+        decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+      ),
     );
   }
 }

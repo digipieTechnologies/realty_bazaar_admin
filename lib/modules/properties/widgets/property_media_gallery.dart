@@ -156,7 +156,7 @@ class _MediaGridTileState extends State<_MediaGridTile> {
                   width: double.infinity,
                   height: double.infinity,
                   borderRadius: BorderRadius.circular(12),
-                  backgroundColor: colorScheme.surfaceContainerLow,
+                  backgroundColor: colorScheme.secondaryContainer,
                 ),
 
                 // Hover Dark Overlay

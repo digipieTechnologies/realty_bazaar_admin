@@ -52,7 +52,6 @@ class CachedImage extends StatelessWidget {
         color: backgroundColor ?? context.theme.colorScheme.surfaceContainerLow,
         borderRadius: borderRadius ?? BorderRadius.circular(5),
       ),
-      padding: EdgeInsets.all(height * 0.15),
       child: ColorFiltered(
         colorFilter: const ColorFilter.matrix(<double>[
           0.2126,

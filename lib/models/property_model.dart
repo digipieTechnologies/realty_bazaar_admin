@@ -1,3 +1,4 @@
+import 'package:brokerflow_admin/widgets/brand/app_logo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -283,6 +284,16 @@ class PropertyModel extends Equatable {
   }) {
     final colorScheme = Theme.of(context).colorScheme;
     final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(12);
+    final child = CustomAppLogo(
+      width: width,
+      height: height,
+      logoColor: context.infoColor.withOpacity(0.4),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: effectiveBorderRadius,
+        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+      ),
+    );
 
     return CachedImage(
       imageUrl: medias.firstOrNull?.url ?? '',
@@ -292,30 +303,8 @@ class PropertyModel extends Equatable {
       borderRadius: effectiveBorderRadius,
       backgroundColor: colorScheme.surface,
       borderColor: colorScheme.outlineVariant.withValues(alpha: 0.6),
-      errorWidget: (_) {
-        return Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer.withValues(alpha: 0.5),
-            borderRadius: effectiveBorderRadius,
-            border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
-          ),
-          child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
-        );
-      },
-      placeholderWidget: (_) {
-        return Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: colorScheme.primaryContainer.withValues(alpha: 0.5),
-            borderRadius: effectiveBorderRadius,
-            border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
-          ),
-          child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
-        );
-      },
+      errorWidget: (_) => child,
+      placeholderWidget: (_) => child,
     );
   }
 }

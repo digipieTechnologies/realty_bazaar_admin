@@ -15,19 +15,38 @@ class AppLogo extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(size * 0.25),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: size * 0.2,
-            offset: Offset(0, size * 0.1),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Icon(Icons.apartment_rounded, color: Colors.white, size: size * 0.55),
+      decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(size * 0.25)),
+      child: Image.asset('assets/logo/app_logo_transparent.png', fit: BoxFit.contain, color: Colors.white),
+    );
+  }
+}
+
+class CustomAppLogo extends StatelessWidget {
+  final double width;
+  final double height;
+  final BoxDecoration? decoration;
+  final Color? logoColor;
+
+  const CustomAppLogo({
+    super.key,
+    required this.width,
+    required this.height,
+    this.decoration,
+    this.logoColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration:
+          decoration ??
+          BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(width * 0.25)),
+      child: Image.asset(
+        'assets/logo/app_logo_transparent.png',
+        fit: BoxFit.contain,
+        color: logoColor ?? Colors.white,
       ),
     );
   }
