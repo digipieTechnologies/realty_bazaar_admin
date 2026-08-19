@@ -3,11 +3,11 @@
 
 import 'package:brokerflow_admin/app/app_routes.dart';
 import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
@@ -58,7 +58,7 @@ class UsersMobile extends StatelessWidget {
                 ? Center(child: Text('no_data'.tr(), style: AppTextStyles.body2))
                 : ListView.separated(
                     itemCount: usersList.length,
-                    padding: EdgeInsets.only(bottom: 32),
+                    padding: const EdgeInsets.only(bottom: 32),
                     separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final user = usersList[index];
@@ -82,9 +82,9 @@ class UsersMobile extends StatelessWidget {
   Widget _buildUserCard(BuildContext context, UserModel user, UsersProvider usersProv) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderColor),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12.0),
@@ -111,11 +111,11 @@ class UsersMobile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  _buildRoleBadge(user.role),
+                  _buildRoleBadge(context, user.role),
                 ],
               ),
               const SizedBox(height: 12),
-              const Divider(height: 1, color: AppColors.border),
+              Divider(height: 1, color: context.borderColor),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -132,7 +132,7 @@ class UsersMobile extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit_rounded, color: AppColors.primary, size: 20),
+                    icon: Icon(Icons.edit_rounded, color: context.primaryColor, size: 20),
                     onPressed: () {
                       UserEditDialog.show(
                         context,
@@ -145,7 +145,7 @@ class UsersMobile extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                    icon: Icon(Icons.delete_outline_rounded, color: context.errorColor, size: 20),
                     onPressed: () => state.confirmAndDeleteUser(user),
                   ),
                 ],
@@ -157,21 +157,21 @@ class UsersMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildRoleBadge(UserRole role) {
-    Color bg = AppColors.primaryLight;
-    Color fg = AppColors.primary;
+  Widget _buildRoleBadge(BuildContext context, UserRole role) {
+    Color bg = context.primaryContainerColor;
+    Color fg = context.primaryColor;
     if (role == UserRole.superAdmin) {
-      bg = AppColors.warningLight;
-      fg = AppColors.warning;
+      bg = context.warningContainerColor;
+      fg = context.warningColor;
     } else if (role == UserRole.marketing) {
-      bg = AppColors.secondaryLight;
-      fg = AppColors.secondary;
+      bg = context.secondaryContainerColor;
+      fg = context.secondaryColor;
     } else if (role == UserRole.broker) {
-      bg = AppColors.primaryLight;
-      fg = AppColors.primary;
+      bg = context.primaryContainerColor;
+      fg = context.primaryColor;
     } else if (role == UserRole.user) {
-      bg = AppColors.secondaryDark.withOpacity(0.05);
-      fg = AppColors.textSecondary;
+      bg = context.surfaceLightColor;
+      fg = context.textColorMuted;
     }
 
     return Container(

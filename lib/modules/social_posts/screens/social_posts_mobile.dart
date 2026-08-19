@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_routes.dart';
 import '../../../app/app_text_styles.dart';
+import '../../../app/context_ext.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
 import '../../../providers/social_posts/social_posts_provider.dart';
@@ -26,7 +26,7 @@ class SocialPostsMobile extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
+        backgroundColor: context.primaryColor,
         onPressed: () => state.createOrEditPost(),
         child: const Icon(Icons.add_rounded, color: Colors.white),
       ),
@@ -88,7 +88,7 @@ class SocialPostsMobile extends StatelessWidget {
 
   Widget _buildPostCard(BuildContext context, SocialPostModel post, SocialPostsProvider postsProv) {
     IconData platformIcon = Icons.article_rounded;
-    Color platformColor = AppColors.primary;
+    Color platformColor = context.primaryColor;
     if (post.platform?.toLowerCase() == 'instagram') {
       platformIcon = Icons.camera_alt_outlined;
       platformColor = Colors.pink;
@@ -102,9 +102,9 @@ class SocialPostsMobile extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderColor),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12.0),
@@ -128,7 +128,7 @@ class SocialPostsMobile extends StatelessWidget {
                       style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _buildStatusBadge(post.status),
+                  _buildStatusBadge(context, post.status),
                 ],
               ),
               const SizedBox(height: 12),
@@ -139,7 +139,7 @@ class SocialPostsMobile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 12),
-              Divider(height: 1, color: AppColors.border),
+              Divider(height: 1, color: context.borderColor),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -149,13 +149,13 @@ class SocialPostsMobile extends StatelessWidget {
                       children: [
                         Text(
                           'Broker: ${post.broker?.businessName ?? "-"}',
-                          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.caption.copyWith(color: context.textColorMuted),
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           'Property: ${post.property?.propertyTitle ?? "-"}',
-                          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.caption.copyWith(color: context.textColorMuted),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -165,12 +165,12 @@ class SocialPostsMobile extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit_outlined, size: 20),
-                        color: AppColors.primary,
+                        color: context.primaryColor,
                         onPressed: () => state.createOrEditPost(post: post),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete_outline, size: 20),
-                        color: AppColors.error,
+                        color: context.errorColor,
                         onPressed: () => state.confirmAndDeletePost(post),
                       ),
                     ],
@@ -184,17 +184,17 @@ class SocialPostsMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(String? status) {
-    Color bg = AppColors.successLight;
-    Color fg = AppColors.success;
+  Widget _buildStatusBadge(BuildContext context, String? status) {
+    Color bg = context.successContainerColor;
+    Color fg = context.successColor;
     String label = status ?? 'published';
 
     if (label == 'scheduled') {
-      bg = AppColors.warningLight;
-      fg = AppColors.warning;
+      bg = context.warningContainerColor;
+      fg = context.warningColor;
     } else if (label == 'failed') {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
+      bg = context.errorContainerColor;
+      fg = context.errorColor;
     }
 
     return Container(

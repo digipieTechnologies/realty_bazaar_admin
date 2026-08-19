@@ -1,11 +1,11 @@
 // File: lib/modules/dashboard/screens/admin_dashboard_screen.dart
 // Purpose: Super Admin overview metrics screen.
 
+import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_routes.dart';
@@ -99,7 +99,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Container(
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(color: AppColors.border, width: 1.0),
             ),
@@ -153,7 +153,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     String? route,
   }) {
     return Material(
-      color: AppColors.surface,
+      color: context.surfaceColor,
       borderRadius: BorderRadius.circular(12.0),
       child: InkWell(
         onTap: route != null ? () => context.go(route) : null,

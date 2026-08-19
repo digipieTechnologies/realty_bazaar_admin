@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../app/app_colors.dart';
+import '../app/context_ext.dart';
 import 'address_model.dart';
 
 class BrokerModel extends Equatable {
@@ -106,11 +107,13 @@ class BrokerModel extends Equatable {
     updatedAt,
   ];
 
-  Widget avatarImage({double radius = 16, double iconSize = 18}) {
+  Widget avatarImage({BuildContext? context, double radius = 16, double iconSize = 18}) {
+    final bg = context != null ? context.secondaryContainerColor : AppColors.secondary.withValues(alpha: 0.1);
+    final fg = context != null ? context.secondaryColor : AppColors.secondary;
     return CircleAvatar(
       radius: radius,
-      backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
-      child: Icon(Icons.business_rounded, color: AppColors.secondary, size: iconSize),
+      backgroundColor: bg,
+      child: Icon(Icons.business_rounded, color: fg, size: iconSize),
     );
   }
 }

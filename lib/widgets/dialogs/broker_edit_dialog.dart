@@ -4,8 +4,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../app/app_colors.dart';
 import '../../app/app_text_styles.dart';
+import '../../app/context_ext.dart';
 import '../../models/address_model.dart';
 import '../../models/broker_model.dart';
 import '../buttons/app_button.dart';
@@ -149,7 +149,7 @@ class _BrokerEditDialogState extends State<BrokerEditDialog> {
               ),
             ),
 
-            const Divider(color: AppColors.border),
+            Divider(color: context.borderColor),
             Text('address_details'.tr(), style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold)),
 
             AppTextField(label: 'full_address'.tr(), controller: _fullAddressController, maxLines: 2),

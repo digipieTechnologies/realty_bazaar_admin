@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../app/app_colors.dart';
+import '../app/context_ext.dart';
 import '../widgets/common/cached_image.dart';
 import 'address_model.dart';
 import 'broker_model.dart';
@@ -301,7 +301,7 @@ class PropertyModel extends Equatable {
             borderRadius: effectiveBorderRadius,
             border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
           ),
-          child: const Icon(Icons.apartment_rounded, color: AppColors.info, size: 18),
+          child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
         );
       },
       placeholderWidget: (_) {
@@ -313,7 +313,7 @@ class PropertyModel extends Equatable {
             borderRadius: effectiveBorderRadius,
             border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
           ),
-          child: const Icon(Icons.apartment_rounded, color: AppColors.info, size: 18),
+          child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
         );
       },
     );

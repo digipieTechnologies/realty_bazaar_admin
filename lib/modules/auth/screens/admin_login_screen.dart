@@ -58,7 +58,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     final authProvider = context.watch<AdminAuthProvider>();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -66,7 +66,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
             width: 440.0,
             padding: const EdgeInsets.all(32.0),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              
               borderRadius: BorderRadius.circular(20.0),
               border: Border.all(color: AppColors.border, width: 1.0),
               boxShadow: [

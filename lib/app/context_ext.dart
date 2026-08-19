@@ -1,4 +1,5 @@
-//path: lib/app/theme/context_ext.dart
+// File: lib/app/context_ext.dart
+// Purpose: BuildContext extensions for dynamic theme tokens, responsive breakpoints, and navigation.
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,66 +11,126 @@ extension AppContextExtensions on BuildContext {
 
   ColorScheme get colorScheme => theme.colorScheme;
 
-  bool get isLight => Theme.of(this).brightness == Brightness.light;
+  bool get isLight => theme.brightness == Brightness.light;
 
   bool get isDark => !isLight;
 
   TextTheme get textTheme => theme.textTheme;
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // THEME-AWARE COLORS
+  // THEME-AWARE DYNAMIC COLORS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Primary color from theme (--primary)
+  /// Primary brand color from theme
   Color get primaryColor => colorScheme.primary;
 
   /// On-primary color for text/icons on primary backgrounds
   Color get onPrimaryColor => colorScheme.onPrimary;
 
-  /// Primary container color (--primary-light)
+  /// Primary container color
   Color get primaryContainerColor => colorScheme.primaryContainer;
 
-  /// Secondary color (--secondary)
+  Color get secondaryContainerColor => colorScheme.secondaryContainer;
+
+  /// Secondary brand color
   Color get secondaryColor => colorScheme.secondary;
 
-  /// Background/scaffold color (--background)
-  Color get backgroundColor => colorScheme.surface;
+  /// Background / scaffold canvas color
+  Color get backgroundColor => theme.scaffoldBackgroundColor;
 
-  /// Surface/card color (--card)
+  /// Surface / card color
   Color get surfaceColor => colorScheme.surface;
 
-  /// On-surface color for text on surface (--foreground / --card-foreground)
+  /// Elevated surface color (dialogs, popovers, dropdowns)
+  Color get surfaceElevatedColor => isDark ? const Color(0xFF1C2A44) : Colors.white;
+
+  /// Muted / light surface color (input fill, metric chips, unselected states)
+  Color get surfaceLightColor => isDark ? const Color(0xFF1C2A44) : const Color(0xFFF1F5F9);
+
+  /// On-surface color for text on surface
   Color get onSurfaceColor => colorScheme.onSurface;
 
-  /// Muted foreground for secondary text (--muted-foreground)
-  Color get mutedForegroundColor => colorScheme.onSurfaceVariant;
-
-  /// Error/destructive color (--destructive)
-  Color get errorColor => colorScheme.error;
-
-  /// Border color (--border)
-  Color get borderColor => colorScheme.outlineVariant;
-
-  /// Shadow color
-  Color get shadowColor => colorScheme.shadow;
-
-  /// Card color
-  Color get cardColor => colorScheme.surface;
-
-  /// Text color - primary foreground
+  /// Primary text color
   Color get textColor => colorScheme.onSurface;
 
-  /// Text color - secondary/muted
+  /// Secondary text color
   Color get textColorMuted => colorScheme.onSurfaceVariant;
+
+  /// Text secondary color alias
+  Color get textSecondaryColor => colorScheme.onSurfaceVariant;
+
+  /// Muted foreground alias
+  Color get mutedForegroundColor => colorScheme.onSurfaceVariant;
 
   /// Inverse text color
   Color get inverseTextColor => colorScheme.inverseSurface;
 
-  /// Suffix icon color for inputs
+  /// Global border color
+  Color get borderColor => colorScheme.outlineVariant;
+
+  /// Divider color
+  Color get dividerColor => theme.dividerTheme.color ?? borderColor;
+
+  /// Shadow color
+  Color get shadowColor => colorScheme.shadow;
+
+  /// Card color alias
+  Color get cardColor => colorScheme.surface;
+
+  /// Default icon color
+  Color get iconColor => colorScheme.onSurfaceVariant;
+
+  /// Active icon color
+  Color get iconActiveColor => colorScheme.primary;
+
+  /// Suffix / prefix icon color for inputs
   Color get suffixIconColor => colorScheme.onSurfaceVariant;
 
   /// Hint text color
   Color get hintColor => colorScheme.onSurfaceVariant;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // STATUS & FEEDBACK DYNAMIC COLORS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Success color
+  Color get successColor => const Color(0xFF10B981);
+
+  /// Success container / light background
+  Color get successContainerColor => isDark ? const Color(0xFF064E3B) : const Color(0xFFECFDF5);
+
+  /// Success border
+  Color get successBorderColor => isDark ? const Color(0xFF065F46) : const Color(0xFFA7F3D0);
+
+  /// Warning color
+  Color get warningColor => const Color(0xFFF59E0B);
+
+  /// Warning container / light background
+  Color get warningContainerColor => isDark ? const Color(0xFF451A03) : const Color(0xFFFFFBEB);
+
+  /// Warning border
+  Color get warningBorderColor => isDark ? const Color(0xFF78350F) : const Color(0xFFFDE68A);
+
+  /// Error color
+  Color get errorColor => colorScheme.error;
+
+  /// Error container / light background
+  Color get errorContainerColor => colorScheme.errorContainer;
+
+  /// Error border
+  Color get errorBorderColor => isDark ? const Color(0xFF7F1D1D) : const Color(0xFFFECACA);
+
+  /// Info color
+  Color get infoColor => colorScheme.primary;
+
+  /// Info container / light background
+  Color get infoContainerColor => isDark ? const Color(0xFF0F325E) : const Color(0xFFEAF3FF);
+
+  /// Shimmer base color
+  Color get shimmerBaseColor => isDark ? const Color(0xFF1C2A44) : const Color(0xFFE2E8F0);
+
+  /// Shimmer highlight color
+  Color get shimmerHighlightColor => isDark ? const Color(0xFF233554) : const Color(0xFFF8FAFC);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // LEGACY COLOR ACCESSORS (for backward compatibility)
@@ -91,7 +152,7 @@ extension AppContextExtensions on BuildContext {
   Color? get lightLabelTextColor => colorScheme.onSurfaceVariant;
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // TEXT STYLES - All inherit colors from theme
+  // TEXT STYLES - Inheriting colors from theme
   // ═══════════════════════════════════════════════════════════════════════════
 
   TextStyle? get labelMedium => textTheme.labelMedium;
@@ -198,8 +259,7 @@ extension AppContextExtensions on BuildContext {
   TextStyle? get hintStyle2 => textTheme.bodySmall?.copyWith(color: textColorMuted);
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SEMANTIC TEXT STYLES — named by usage, not size
-  // Use these throughout the app for consistency.
+  // SEMANTIC TEXT STYLES — dynamically resolving colors from theme
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Page title — "Add New Lead", "Welcome back, John"
@@ -209,7 +269,7 @@ extension AppContextExtensions on BuildContext {
   TextStyle get pageTitleMobile =>
       TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: onSurfaceColor);
 
-  /// Page subtitle — "Create a new buyer requirement..."
+  /// Page subtitle
   TextStyle get pageSubtitle =>
       TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: mutedForegroundColor);
 
@@ -230,7 +290,7 @@ extension AppContextExtensions on BuildContext {
   TextStyle get navLabel => TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: onSurfaceColor);
 
   /// Button text — filled buttons, outlined buttons
-  TextStyle get buttonLabel => TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
+  TextStyle get buttonLabel => const TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
 
   /// Dialog title
   TextStyle get dialogTitle => TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: onSurfaceColor);
@@ -259,7 +319,7 @@ extension AppContextExtensions on BuildContext {
       TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: mutedForegroundColor);
 
   /// Tab toggle label
-  TextStyle get tabLabel => TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
+  TextStyle get tabLabel => const TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
 
   /// Stat card value (large number)
   TextStyle get statValue => TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: onSurfaceColor);
@@ -278,10 +338,8 @@ extension AppContextExtensions on BuildContext {
   // UTILITY METHODS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Returns same as MediaQuery.of(context)
   MediaQueryData get mq => MediaQuery.of(this);
 
-  /// Returns if Orientation is landscape
   bool get isLandscape => mq.orientation == Orientation.landscape;
 
   void hideKeyboard() {

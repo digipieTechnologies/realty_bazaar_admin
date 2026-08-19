@@ -3,11 +3,11 @@
 
 import 'package:brokerflow_admin/app/app_routes.dart';
 import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
@@ -57,7 +57,7 @@ class PropertiesMobile extends StatelessWidget {
                 ? Center(child: Text('no_data'.tr(), style: AppTextStyles.body2))
                 : ListView.separated(
                     itemCount: list.length,
-                    padding: EdgeInsets.only(bottom: 32),
+                    padding: const EdgeInsets.only(bottom: 32),
                     separatorBuilder: (context, index) => const SizedBox(height: 16),
                     itemBuilder: (context, index) {
                       final property = list[index];
@@ -89,9 +89,9 @@ class PropertiesMobile extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: AppColors.border, width: 1.0),
+        border: Border.all(color: context.borderColor, width: 1.0),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 3)),
         ],
@@ -114,7 +114,7 @@ class PropertiesMobile extends StatelessWidget {
                     height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     backgroundColor: colorScheme.surface,
                     errorWidget: (_) {
                       return Container(
@@ -124,7 +124,7 @@ class PropertiesMobile extends StatelessWidget {
                           color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.apartment_rounded, color: AppColors.info, size: 18),
+                        child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
                       );
                     },
                     placeholderWidget: (_) {
@@ -135,7 +135,7 @@ class PropertiesMobile extends StatelessWidget {
                           color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.apartment_rounded, color: AppColors.info, size: 18),
+                        child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
                       );
                     },
                   ),
@@ -188,7 +188,7 @@ class PropertiesMobile extends StatelessWidget {
                             style: AppTextStyles.heading3.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 16.0,
-                              color: AppColors.textPrimary,
+                              color: context.textColor,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -202,14 +202,14 @@ class PropertiesMobile extends StatelessWidget {
                               formattedPrice,
                               style: AppTextStyles.heading3.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
+                                color: context.primaryColor,
                                 fontSize: 17.0,
                               ),
                             ),
                             Text(
                               property.listingType.displayName,
                               style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textMuted,
+                                color: context.textColorMuted,
                                 fontSize: 10.0,
                               ),
                             ),
@@ -221,13 +221,13 @@ class PropertiesMobile extends StatelessWidget {
                     // Location Line
                     Row(
                       children: [
-                        const Icon(Icons.location_on_outlined, size: 14.0, color: AppColors.primary),
+                        Icon(Icons.location_on_outlined, size: 14.0, color: context.primaryColor),
                         const SizedBox(width: 4.0),
                         Expanded(
                           child: Text(
                             addressText,
                             style: AppTextStyles.body2.copyWith(
-                              color: AppColors.textSecondary,
+                              color: context.textColorMuted,
                               fontSize: 12.0,
                             ),
                             maxLines: 1,
@@ -245,30 +245,30 @@ class PropertiesMobile extends StatelessWidget {
                       children: [
                         _buildChip(
                           label: property.listingType.displayName.toUpperCase(),
-                          color: AppColors.primary,
+                          color: context.primaryColor,
                           isOutline: true,
                         ),
                         _buildChip(
                           label: property.propertyType.displayName,
-                          color: AppColors.textSecondary,
+                          color: context.textColorMuted,
                           isOutline: true,
                         ),
                         _buildChip(
                           label: property.constructionStatus.displayName,
-                          color: const Color(0xFF0F9D58),
+                          color: context.successColor,
                           isOutline: false,
                         ),
                         if (property.furnishingStatus != FurnishingStatus.unknown)
                           _buildChip(
                             label: property.furnishingStatus.displayName,
-                            color: AppColors.textSecondary,
+                            color: context.textColorMuted,
                             isOutline: true,
                           ),
                       ],
                     ),
                     const SizedBox(height: 12.0),
 
-                    const Divider(height: 1.0, color: AppColors.border),
+                    Divider(height: 1.0, color: context.borderColor),
                     const SizedBox(height: 10.0),
 
                     // Specs Wrap
@@ -279,9 +279,10 @@ class PropertiesMobile extends StatelessWidget {
                             spacing: 12.0,
                             runSpacing: 6.0,
                             children: [
-                              _buildSpecIconText(Icons.king_bed_outlined, '${property.bedrooms} Beds'),
-                              _buildSpecIconText(Icons.bathtub_outlined, '${property.bathrooms} Baths'),
+                              _buildSpecIconText(context, Icons.king_bed_outlined, '${property.bedrooms} Beds'),
+                              _buildSpecIconText(context, Icons.bathtub_outlined, '${property.bathrooms} Baths'),
                               _buildSpecIconText(
+                                context,
                                 Icons.square_foot_outlined,
                                 '${property.area} ${property.areaUnit.displayName}',
                               ),
@@ -289,7 +290,7 @@ class PropertiesMobile extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                          icon: Icon(Icons.delete_outline_rounded, color: context.errorColor, size: 20),
                           onPressed: () => state.confirmAndDeleteProperty(property),
                         ),
                       ],
@@ -319,16 +320,16 @@ class PropertiesMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecIconText(IconData icon, String text) {
+  Widget _buildSpecIconText(BuildContext context, IconData icon, String text) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14.0, color: AppColors.textSecondary),
+        Icon(icon, size: 14.0, color: context.textColorMuted),
         const SizedBox(width: 4.0),
         Text(
           text,
           style: AppTextStyles.caption.copyWith(
-            color: AppColors.textPrimary,
+            color: context.textColor,
             fontWeight: FontWeight.w500,
             fontSize: 11.0,
           ),
@@ -339,7 +340,7 @@ class PropertiesMobile extends StatelessWidget {
 
   Widget _buildStatusBadge(BuildContext context, PropertyStatus status) {
     final isAvailable = status == PropertyStatus.available;
-    final badgeColor = isAvailable ? const Color(0xFF0F9D58) : AppColors.warning;
+    final badgeColor = isAvailable ? context.successColor : context.warningColor;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),

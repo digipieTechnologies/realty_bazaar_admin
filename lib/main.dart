@@ -71,6 +71,8 @@ class SuperAdminApp extends StatelessWidget {
           return MaterialApp.router(
             title: AppStrings.appName,
             theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.light,
             routerConfig: AppRoutes.router,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: context.localizationDelegates,

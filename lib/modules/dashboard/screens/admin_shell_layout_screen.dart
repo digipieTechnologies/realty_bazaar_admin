@@ -99,7 +99,7 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
     if (isDesktop) {
       return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: AppColors.background,
+
         body: Row(
           children: [
             _buildSidebar(currentIndex, location.startsWith('/profile'), displayName, displayRole),
@@ -131,10 +131,8 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: AppColors.background,
       drawer: Drawer(
         width: 270.0,
-        backgroundColor: AppColors.surface,
         elevation: 0.0,
         child: _buildSidebar(currentIndex, location.startsWith(AppRoutes.profile), displayName, displayRole),
       ),
@@ -168,7 +166,6 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
   Widget _buildSidebar(int currentIndex, bool isProfileSelected, String name, String role) {
     return Container(
       width: 270.0,
-      color: AppColors.surface,
       padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
       child: SafeArea(
         child: Column(
@@ -391,7 +388,6 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       height: 70.0,
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       decoration: const BoxDecoration(
-        color: AppColors.surface,
         border: Border(bottom: BorderSide(color: AppColors.border, width: 1.0)),
       ),
       child: Row(

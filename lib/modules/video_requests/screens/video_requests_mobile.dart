@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
+import '../../../app/context_ext.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
 import '../../../providers/brokers/brokers_provider.dart';
@@ -116,9 +116,9 @@ class VideoRequestsMobile extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderColor),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12.0),
@@ -136,41 +136,44 @@ class VideoRequestsMobile extends StatelessWidget {
                       children: [
                         Text(
                           request.property?.propertyTitle ?? 'Property Title',
-                          style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+                          style: AppTextStyles.body1.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: context.textColor,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           'Broker: ${request.broker?.businessName ?? "-"}',
-                          style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
                         ),
                       ],
                     ),
                   ),
-                  _buildStatusBadge(request.status),
+                  _buildStatusBadge(context, request.status),
                 ],
               ),
               const SizedBox(height: 12),
               if (request.notes != null && request.notes!.isNotEmpty) ...[
                 Text(
                   request.notes!,
-                  style: AppTextStyles.body2,
+                  style: AppTextStyles.body2.copyWith(color: context.textColor),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 12),
               ],
-              const Divider(height: 1, color: AppColors.border),
+              Divider(height: 1, color: context.borderColor),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
                     request.createdAt != null ? DateFormat('dd MMM yyyy').format(request.createdAt!) : '-',
-                    style: AppTextStyles.caption,
+                    style: AppTextStyles.caption.copyWith(color: context.textColorMuted),
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.edit_rounded, color: AppColors.primary, size: 20),
+                    icon: Icon(Icons.edit_rounded, color: context.primaryColor, size: 20),
                     onPressed: () {
                       final brokersProv = context.read<BrokersProvider>();
                       final propertiesProv = context.read<AdminPropertyProvider>();
@@ -187,7 +190,7 @@ class VideoRequestsMobile extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                    icon: Icon(Icons.delete_outline_rounded, color: context.errorColor, size: 20),
                     onPressed: () => state.confirmAndDeleteRequest(request),
                   ),
                 ],
@@ -199,18 +202,18 @@ class VideoRequestsMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(VideoRequestStatus status) {
-    Color bg = AppColors.primaryLight;
-    Color fg = AppColors.primary;
+  Widget _buildStatusBadge(BuildContext context, VideoRequestStatus status) {
+    Color bg = context.primaryContainerColor;
+    Color fg = context.primaryColor;
     if (status == VideoRequestStatus.completed) {
-      bg = Colors.green.shade50;
-      fg = Colors.green.shade700;
+      bg = context.successContainerColor;
+      fg = context.successColor;
     } else if (status == VideoRequestStatus.cancelled) {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
+      bg = context.errorContainerColor;
+      fg = context.errorColor;
     } else if (status == VideoRequestStatus.inProgress) {
-      bg = Colors.blue.shade50;
-      fg = Colors.blue.shade700;
+      bg = context.infoContainerColor;
+      fg = context.infoColor;
     }
 
     return Container(

@@ -3,11 +3,11 @@
 
 import 'package:brokerflow_admin/app/app_routes.dart';
 import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
@@ -58,7 +58,7 @@ class BrokersMobile extends StatelessWidget {
                 ? Center(child: Text('no_data'.tr(), style: AppTextStyles.body2))
                 : ListView.separated(
                     itemCount: brokersList.length,
-                    padding: EdgeInsets.only(bottom: 32),
+                    padding: const EdgeInsets.only(bottom: 32),
                     separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final broker = brokersList[index];
@@ -86,16 +86,16 @@ class BrokersMobile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: context.surfaceColor,
           borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: context.borderColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                broker.avatarImage(radius: 18, iconSize: 20),
+                broker.avatarImage(context: context, radius: 18, iconSize: 20),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -114,11 +114,11 @@ class BrokersMobile extends StatelessWidget {
                     ],
                   ),
                 ),
-                _buildPlanBadge(broker.plan ?? 'Free'),
+                _buildPlanBadge(context, broker.plan ?? 'Free'),
               ],
             ),
             const SizedBox(height: 12),
-            const Divider(height: 1, color: AppColors.border),
+            Divider(height: 1, color: context.borderColor),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -132,7 +132,7 @@ class BrokersMobile extends StatelessWidget {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.edit_rounded, color: AppColors.primary, size: 20),
+                  icon: Icon(Icons.edit_rounded, color: context.primaryColor, size: 20),
                   onPressed: () {
                     BrokerEditDialog.show(
                       context,
@@ -145,7 +145,7 @@ class BrokersMobile extends StatelessWidget {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                  icon: Icon(Icons.delete_outline_rounded, color: context.errorColor, size: 20),
                   onPressed: () => state.confirmAndDeleteBroker(broker),
                 ),
               ],
@@ -156,15 +156,15 @@ class BrokersMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildPlanBadge(String plan) {
-    Color bg = AppColors.surfaceLight;
-    Color fg = AppColors.textSecondary;
+  Widget _buildPlanBadge(BuildContext context, String plan) {
+    Color bg = context.surfaceLightColor;
+    Color fg = context.textColorMuted;
     if (plan == 'Enterprise') {
-      bg = AppColors.primaryLight;
-      fg = AppColors.primary;
+      bg = context.primaryContainerColor;
+      fg = context.primaryColor;
     } else if (plan == 'Pro') {
-      bg = AppColors.secondaryLight;
-      fg = AppColors.secondary;
+      bg = context.secondaryContainerColor;
+      fg = context.secondaryColor;
     }
 
     return Container(

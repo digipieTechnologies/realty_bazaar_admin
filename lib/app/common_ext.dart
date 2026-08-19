@@ -1,4 +1,3 @@
-import 'package:brokerflow_admin/app/app_colors.dart';
 import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:brokerflow_admin/utils/formatters/currency_formatter.dart';
 import 'package:collection/collection.dart';
@@ -301,12 +300,12 @@ extension NumberExt on num? {
   Color differenceColor(BuildContext context) {
     final qty = this ?? 0;
     if (qty < 0) {
-      return AppColors.error;
+      return context.errorColor;
     }
     if (qty > 0) {
-      return AppColors.success;
+      return context.successColor;
     }
-    return context.theme.colorScheme.onSurface.withOpacity(0.6);
+    return context.colorScheme.onSurface.withValues(alpha: 0.6);
   }
 
   bool get isInteger => this != null && this is int || this == this!.roundToDouble();

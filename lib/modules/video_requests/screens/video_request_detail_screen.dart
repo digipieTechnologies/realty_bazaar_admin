@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../app/common_ext.dart';
+import '../../../app/context_ext.dart';
 import '../../../models/models.dart';
 import '../../../providers/video_requests/video_requests_provider.dart';
 import '../../../widgets/dialogs/video_request_action_dialog.dart';
@@ -66,14 +66,14 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
         title: const Text('Video Request Detail'),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
-      backgroundColor: AppColors.background,
+      backgroundColor: context.backgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Status Section Card
-            _buildStatusHeader(req),
+            _buildStatusHeader(context, req),
             const SizedBox(height: 24),
 
             Row(
@@ -85,25 +85,28 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                   child: Column(
                     children: [
                       _buildInfoCard(
+                        context,
                         title: 'Property Details',
                         icon: Icons.apartment_rounded,
                         children: [
-                          _buildDetailRow('Title', req.property?.propertyTitle ?? '-'),
+                          _buildDetailRow(context, 'Title', req.property?.propertyTitle ?? '-'),
                           _buildDetailRow(
+                            context,
                             'Listing Type',
                             req.property?.listingType.name.toUpperCase() ?? '-',
                           ),
-                          _buildDetailRow('Price', req.property?.price.formatCurrency ?? '-'),
+                          _buildDetailRow(context, 'Price', req.property?.price.formatCurrency ?? '-'),
                         ],
                       ),
                       const SizedBox(height: 20),
                       _buildInfoCard(
+                        context,
                         title: 'Broker Details',
                         icon: Icons.business_rounded,
                         children: [
-                          _buildDetailRow('Business Name', req.broker?.businessName ?? '-'),
-                          _buildDetailRow('Plan Tier', req.broker?.plan ?? '-'),
-                          _buildDetailRow('Active', req.broker?.isActive == true ? 'YES' : 'NO'),
+                          _buildDetailRow(context, 'Business Name', req.broker?.businessName ?? '-'),
+                          _buildDetailRow(context, 'Plan Tier', req.broker?.plan ?? '-'),
+                          _buildDetailRow(context, 'Active', req.broker?.isActive == true ? 'YES' : 'NO'),
                         ],
                       ),
                     ],
@@ -117,16 +120,19 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                   child: Column(
                     children: [
                       _buildInfoCard(
+                        context,
                         title: 'Metadata & Notes',
                         icon: Icons.notes_rounded,
                         children: [
                           _buildDetailRow(
+                            context,
                             'Created At',
                             req.createdAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(req.createdAt!)
                                 : '-',
                           ),
                           _buildDetailRow(
+                            context,
                             'Completed At',
                             req.completedAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(req.completedAt!)
@@ -135,22 +141,29 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                           const SizedBox(height: 12),
                           Text(
                             'Broker Notes:',
-                            style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
+                            style: AppTextStyles.body2.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.textColor,
+                            ),
                           ),
                           const SizedBox(height: 4),
-                          Text(req.notes ?? 'No notes provided.', style: AppTextStyles.body2),
+                          Text(
+                            req.notes ?? 'No notes provided.',
+                            style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
+                          ),
                         ],
                       ),
                       if (req.adminApprovalStatus == VideoRequestApprovalStatus.rejected) ...[
                         const SizedBox(height: 20),
                         _buildInfoCard(
+                          context,
                           title: 'Rejection Details',
                           icon: Icons.cancel_outlined,
                           isDanger: true,
                           children: [
                             Text(
                               req.adminCancelReason ?? 'No reason provided.',
-                              style: AppTextStyles.body2.copyWith(color: AppColors.error),
+                              style: AppTextStyles.body2.copyWith(color: context.errorColor),
                             ),
                           ],
                         ),
@@ -172,17 +185,17 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     );
   }
 
-  Widget _buildStatusHeader(VideoRequestModel req) {
+  Widget _buildStatusHeader(BuildContext context, VideoRequestModel req) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderColor),
       ),
       child: Row(
         children: [
-          Icon(Icons.video_camera_back_rounded, size: 40, color: AppColors.primary),
+          Icon(Icons.video_camera_back_rounded, size: 40, color: context.primaryColor),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -190,12 +203,15 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
               children: [
                 Text(
                   'Request ID: ${req.id}',
-                  style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+                  style: AppTextStyles.body1.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.textColor,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Status: ${req.status.displayName} | Approval: ${req.adminApprovalStatus.displayName}',
-                  style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
                 ),
               ],
             ),
@@ -205,7 +221,8 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     );
   }
 
-  Widget _buildInfoCard({
+  Widget _buildInfoCard(
+    BuildContext context, {
     required String title,
     required IconData icon,
     required List<Widget> children,
@@ -215,28 +232,30 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDanger ? AppColors.error.withOpacity(0.5) : AppColors.border),
+        border: Border.all(
+          color: isDanger ? context.errorColor.withOpacity(0.5) : context.borderColor,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: isDanger ? AppColors.error : AppColors.primary, size: 20),
+              Icon(icon, color: isDanger ? context.errorColor : context.primaryColor, size: 20),
               const SizedBox(width: 10),
               Text(
                 title,
                 style: AppTextStyles.body1.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: isDanger ? AppColors.error : AppColors.textPrimary,
+                  color: isDanger ? context.errorColor : context.textColor,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(height: 1, color: context.borderColor),
           const SizedBox(height: 16),
           ...children,
         ],
@@ -244,14 +263,20 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary)),
-          Text(value, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.w600)),
+          Text(label, style: AppTextStyles.body2.copyWith(color: context.textColorMuted)),
+          Text(
+            value,
+            style: AppTextStyles.body1.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.textColor,
+            ),
+          ),
         ],
       ),
     );
@@ -261,14 +286,20 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.surfaceColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text('Action Needed: ', style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            'Action Needed: ',
+            style: AppTextStyles.body1.copyWith(
+              fontWeight: FontWeight.bold,
+              color: context.textColor,
+            ),
+          ),
           const Spacer(),
           ElevatedButton.icon(
             icon: const Icon(Icons.cancel_outlined),
@@ -290,7 +321,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
+              backgroundColor: context.errorColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -317,7 +348,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: context.primaryColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

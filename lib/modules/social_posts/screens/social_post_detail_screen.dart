@@ -79,7 +79,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
         title: const Text('Social Post Detail'),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
-      backgroundColor: AppColors.background,
+      
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -90,7 +90,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
@@ -287,7 +287,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
       ),
