@@ -2,6 +2,7 @@
 // Purpose: Entrypoint for Super Admin Users screen. Owns state and delegates UI layout to UsersDesktop or UsersMobile.
 
 import 'package:brokerflow_admin/models/models.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -81,16 +82,15 @@ class UsersScreenState extends State<UsersScreen> {
   Future<void> confirmAndDeleteUser(UserModel user) async {
     final confirmed = await AppDialog.showConfirmation(
       context,
-      title: 'Delete User Account',
-      message:
-          'Are you sure you want to delete ${user.name ?? "this user"}? This will soft-delete their profile.',
-      confirmLabel: 'Delete User',
+      title: 'users_delete_account_title'.tr(),
+      message: 'users_delete_account_msg'.tr(args: [user.name ?? 'users_fallback_name'.tr()]),
+      confirmLabel: 'users_delete_confirm_btn'.tr(),
       isDanger: true,
     );
     if (confirmed == true && mounted) {
       final success = await context.read<UsersProvider>().deleteUser(user.id!);
       if (success && mounted) {
-        AppToast.showSuccess('User Removed', 'User has been soft-deleted.');
+        AppToast.showSuccess('users_toast_removed_title'.tr(), 'users_toast_removed_msg'.tr());
       }
     }
   }

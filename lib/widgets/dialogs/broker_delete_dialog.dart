@@ -29,24 +29,24 @@ class _BrokerDeleteDialogState extends State<BrokerDeleteDialog> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
-      title: Text('Delete or Deactivate Brokerage', style: context.dialogTitle),
+      title: Text('broker_delete_deactivate_title'.tr(), style: context.dialogTitle),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select the action you want to perform for ${widget.businessName}:',
+              'broker_delete_select_action'.tr(args: [widget.businessName]),
               style: context.dialogBody,
             ),
             const SizedBox(height: 16),
             RadioListTile<bool>(
-              title: const Text(
-                'Deactivate Account (Soft Delete)',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              title: Text(
+                'broker_delete_soft_title'.tr(),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
-              subtitle: const Text(
-                'Temporarily disable access to the brokerage. Data is preserved and can be reactivated later.',
+              subtitle: Text(
+                'broker_delete_soft_desc'.tr(),
               ),
               value: false,
               groupValue: _hardDelete,
@@ -58,12 +58,12 @@ class _BrokerDeleteDialogState extends State<BrokerDeleteDialog> {
               contentPadding: EdgeInsets.zero,
             ),
             RadioListTile<bool>(
-              title: const Text(
-                'Permanently Delete (Hard Delete)',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              title: Text(
+                'broker_delete_hard_title'.tr(),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               subtitle: Text(
-                'Permanently erase the brokerage profile, properties, leads, video requests, and chat messages. This action is irreversible.',
+                'broker_delete_hard_desc'.tr(),
                 style: TextStyle(color: _hardDelete ? colorScheme.error : null),
               ),
               value: true,
@@ -79,8 +79,8 @@ class _BrokerDeleteDialogState extends State<BrokerDeleteDialog> {
             if (_hardDelete) ...[
               const Divider(height: 32),
               CheckboxListTile(
-                title: const Text('Delete all associated user accounts?'),
-                subtitle: const Text('If unchecked, user accounts will be unlinked but preserved.'),
+                title: Text('broker_delete_users_prompt'.tr()),
+                subtitle: Text('broker_delete_users_subtext'.tr()),
                 value: _deleteUsers,
                 onChanged: (val) {
                   setState(() {
@@ -111,7 +111,7 @@ class _BrokerDeleteDialogState extends State<BrokerDeleteDialog> {
             backgroundColor: _hardDelete ? colorScheme.error : colorScheme.primary,
             foregroundColor: _hardDelete ? colorScheme.onError : colorScheme.onPrimary,
           ),
-          child: Text(_hardDelete ? 'Permanently Delete' : 'Deactivate'),
+          child: Text(_hardDelete ? 'broker_btn_permanently_delete'.tr() : 'broker_btn_deactivate'.tr()),
         ),
       ],
     );

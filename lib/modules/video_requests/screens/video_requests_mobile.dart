@@ -34,7 +34,7 @@ class VideoRequestsMobile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSearchBar(
-            hintText: 'Search video requests...',
+            hintText: 'video_requests_search_hint'.tr(),
             onSearch: (query) => state.filterProvider.updateSearch(query),
             isMobile: true,
             onFilter: state.showFilterBottomSheet,

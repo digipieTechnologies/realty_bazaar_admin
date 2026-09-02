@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class CachedImage extends StatelessWidget {
   final String? imageUrl;
+  final Uint8List? imageBytes;
   final String? fallbackUrl;
   final double height;
   final double width;
@@ -26,6 +27,7 @@ class CachedImage extends StatelessWidget {
   const CachedImage({
     super.key,
     this.imageUrl,
+    this.imageBytes,
     double? radius,
     this.isLocal = false,
     double? height,
@@ -38,8 +40,44 @@ class CachedImage extends StatelessWidget {
     this.placeholderWidget,
     this.errorWidget,
     this.backgroundColor,
-  }) : height = height ?? radius ?? 50.0,
-       width = width ?? radius ?? 50.0;
+  })  : height = height ?? radius ?? 50.0,
+        width = width ?? radius ?? 50.0;
+
+  factory CachedImage.fromUrl(
+    String? url, {
+    Key? key,
+    Uint8List? imageBytes,
+    double? radius,
+    bool isLocal = false,
+    double? height,
+    double? width,
+    BoxFit fit = BoxFit.cover,
+    BorderRadius? borderRadius,
+    String? fallbackUrl,
+    Color? borderColor,
+    bool ignoring = false,
+    WidgetBuilder? placeholderWidget,
+    WidgetBuilder? errorWidget,
+    Color? backgroundColor,
+  }) {
+    return CachedImage(
+      key: key,
+      imageUrl: url,
+      imageBytes: imageBytes,
+      radius: radius,
+      isLocal: isLocal,
+      height: height,
+      width: width,
+      fit: fit,
+      borderRadius: borderRadius,
+      fallbackUrl: fallbackUrl,
+      borderColor: borderColor,
+      ignoring: ignoring,
+      placeholderWidget: placeholderWidget,
+      errorWidget: errorWidget,
+      backgroundColor: backgroundColor,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +129,48 @@ class CachedImage extends StatelessWidget {
     }
 
     try {
+      if (imageBytes != null && imageBytes!.isNotEmpty) {
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            border: borderColor != null ? Border.all(color: borderColor!) : null,
+            borderRadius: borderRadius ?? BorderRadius.circular(5),
+          ),
+          child: ClipRRect(
+            borderRadius: borderRadius ?? BorderRadius.circular(5),
+            child: Image.memory(
+              imageBytes!,
+              width: width,
+              height: height,
+              fit: fit,
+              errorBuilder: (context, error, stackTrace) => placeHolderWidget,
+            ),
+          ),
+        );
+      }
+
+      if (imageUrl != null && imageUrl!.startsWith('assets/')) {
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            border: borderColor != null ? Border.all(color: borderColor!) : null,
+            borderRadius: borderRadius ?? BorderRadius.circular(5),
+          ),
+          child: ClipRRect(
+            borderRadius: borderRadius ?? BorderRadius.circular(5),
+            child: Image.asset(
+              imageUrl!,
+              width: width,
+              height: height,
+              fit: fit,
+              errorBuilder: (context, error, stackTrace) => placeHolderWidget,
+            ),
+          ),
+        );
+      }
+
       if (isLocal) {
         return Opacity(
           opacity: 0.5,

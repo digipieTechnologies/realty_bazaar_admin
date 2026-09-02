@@ -99,9 +99,9 @@ class _UserDetailMobileState extends State<UserDetailMobile> {
   Future<void> _onRemoveCover() async {
     final confirmed = await ConfirmDialog.showResponsive(
       context: context,
-      title: 'Delete Cover Image',
-      message: 'Are you sure you want to remove this cover image?',
-      confirmLabel: 'Delete',
+      title: 'users_delete_cover_image_title'.tr(),
+      message: 'users_delete_cover_image_msg'.tr(),
+      confirmLabel: 'delete'.tr(),
       isDestructive: true,
     );
     if (confirmed != true || widget.user.id == null) return;

@@ -4,6 +4,7 @@
 import 'package:brokerflow_admin/app/app_routes.dart';
 import 'package:brokerflow_admin/app/common_ext.dart';
 import 'package:brokerflow_admin/app/context_ext.dart';
+import 'package:brokerflow_admin/widgets/dialogs/property_edit_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +41,10 @@ class PropertiesMobile extends StatelessWidget {
             isMobile: true,
             onFilter: state.showFilterBottomSheet,
             activeFilterCount: state.filterProvider.activeFiltersCount,
+            addLabel: 'Add Property',
+            onAdd: () {
+              PropertyEditDialog.show(context);
+            },
           ),
           const SizedBox(height: 8),
           EnterpriseQuickFilters(

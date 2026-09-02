@@ -66,7 +66,7 @@ class _BrokerDetailDesktopState extends State<BrokerDetailDesktop> with SingleTi
               IconButton(
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => context.go('/brokers'),
-                tooltip: 'Back',
+                tooltip: 'common_back_tooltip'.tr(),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -153,7 +153,6 @@ class _BrokerDetailDesktopState extends State<BrokerDetailDesktop> with SingleTi
                 // Right Column - Tab Panes Content Area (Flexible)
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),

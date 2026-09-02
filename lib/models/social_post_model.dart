@@ -1,3 +1,4 @@
+import 'package:brokerflow_admin/models/media_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'broker_model.dart';
@@ -13,7 +14,7 @@ class SocialPostModel extends Equatable {
   final BrokerModel? broker;
   final String? platform;
   final String? caption;
-  final List<String>? mediaUrls;
+  final List<MediaModel>? medias;
   final String? status;
   final int? viewsCount;
   final int? commentCount;
@@ -31,7 +32,7 @@ class SocialPostModel extends Equatable {
     this.broker,
     this.platform,
     this.caption,
-    this.mediaUrls,
+    this.medias,
     this.status,
     this.viewsCount,
     this.commentCount,
@@ -46,6 +47,11 @@ class SocialPostModel extends Equatable {
     if (json is! Map<String, dynamic>) {
       return SocialPostModel(id: json?.toString());
     }
+
+    List<MediaModel> parsedMedias = [];
+    if (json['media_urls'] != null && json['media_urls'] is List) {
+      parsedMedias = (json['media_urls'] as List).map((e) => MediaModel.fromJson(e)).toList();
+    }
     return SocialPostModel(
       id: json['id']?.toString(),
       brokerId: json['broker_id']?.toString(),
@@ -58,9 +64,7 @@ class SocialPostModel extends Equatable {
           : null,
       platform: json['platform']?.toString() ?? 'Instagram',
       caption: json['caption']?.toString() ?? '',
-      mediaUrls: json['media_urls'] != null
-          ? List<String>.from(json['media_urls'].map((e) => e.toString()))
-          : [],
+      medias: parsedMedias,
       status: json['status']?.toString() ?? 'published',
       viewsCount: json['views_count'] != null ? int.tryParse(json['views_count'].toString()) : 0,
       commentCount: json['comment_count'] != null ? int.tryParse(json['comment_count'].toString()) : 0,
@@ -87,7 +91,7 @@ class SocialPostModel extends Equatable {
     data['property_id'] = propertyId ?? property?.id;
     data['platform'] = platform;
     data['caption'] = caption;
-    data['media_urls'] = mediaUrls;
+    data['media_urls'] = medias;
     data['status'] = status;
     if (scheduledAt != null) {
       data['scheduled_at'] = scheduledAt?.toUtc().toIso8601String();
@@ -112,7 +116,7 @@ class SocialPostModel extends Equatable {
     BrokerModel? broker,
     String? platform,
     String? caption,
-    List<String>? mediaUrls,
+    List<MediaModel>? mediaUrls,
     String? status,
     int? viewsCount,
     int? commentCount,
@@ -130,7 +134,7 @@ class SocialPostModel extends Equatable {
       broker: broker ?? this.broker,
       platform: platform ?? this.platform,
       caption: caption ?? this.caption,
-      mediaUrls: mediaUrls ?? this.mediaUrls,
+      medias: mediaUrls ?? this.medias,
       status: status ?? this.status,
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
@@ -151,7 +155,7 @@ class SocialPostModel extends Equatable {
     broker,
     platform,
     caption,
-    mediaUrls,
+    medias,
     status,
     viewsCount,
     commentCount,

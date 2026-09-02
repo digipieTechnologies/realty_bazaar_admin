@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app/app_colors.dart';
@@ -55,8 +55,8 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
     final post = _postState;
     if (post == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Post Details')),
-        body: const Center(child: Text('Social post detail not found.')),
+        appBar: AppBar(title: Text('social_posts_details_title'.tr())),
+        body: Center(child: Text('social_post_not_found'.tr())),
       );
     }
 
@@ -76,7 +76,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Social Post Detail'),
+        title: Text('social_post_detail_header'.tr()),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       
@@ -114,7 +114,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          post.caption ?? 'No Caption',
+                          post.caption ?? 'social_post_no_caption'.tr(),
                           style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -123,7 +123,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                         Row(
                           children: [
                             Text(
-                              post.platform ?? 'Platform',
+                              post.platform ?? 'platform'.tr(),
                               style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
                             ),
                             const SizedBox(width: 8),
@@ -157,27 +157,27 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                     children: [
                       // Media Carousel / List Card
                       _buildInfoCard(
-                        title: 'Media Previews',
+                        title: 'social_post_media_previews'.tr(),
                         icon: Icons.image_rounded,
                         children: [
-                          if (post.mediaUrls == null || post.mediaUrls!.isEmpty) ...[
+                          if (post.medias == null || post.medias!.isEmpty) ...[
                             Container(
                               height: 120,
                               decoration: BoxDecoration(
                                 color: AppColors.border.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.image_not_supported_outlined,
                                       color: AppColors.textSecondary,
                                       size: 32,
                                     ),
-                                    SizedBox(height: 8),
-                                    Text('No media attachments', style: AppTextStyles.body2),
+                                    const SizedBox(height: 8),
+                                    Text('social_post_no_media'.tr(), style: AppTextStyles.body2),
                                   ],
                                 ),
                               ),
@@ -187,14 +187,14 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                               height: 160,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: post.mediaUrls!.length,
+                                itemCount: post.medias!.length,
                                 separatorBuilder: (context, index) => const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
                                   return ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: SizedBox(
                                       width: 160,
-                                      child: CachedImage(imageUrl: post.mediaUrls![index], fit: BoxFit.cover),
+                                      child: CachedImage(imageUrl: post.medias![index].url, fit: BoxFit.cover),
                                     ),
                                   );
                                 },
@@ -207,15 +207,15 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
 
                       // Property Details Card
                       _buildInfoCard(
-                        title: 'Property details',
+                        title: 'social_post_property_details'.tr(),
                         icon: Icons.apartment_rounded,
                         children: [
-                          _buildDetailRow('Title', post.property?.propertyTitle ?? '-'),
+                          _buildDetailRow('properties_title'.tr(), post.property?.propertyTitle ?? '-'),
                           _buildDetailRow(
-                            'Listing Type',
+                            'properties_listing_type'.tr(),
                             post.property?.listingType.name.toUpperCase() ?? '-',
                           ),
-                          _buildDetailRow('Price', post.property?.price.formatCurrency ?? '-'),
+                          _buildDetailRow('price'.tr(), post.property?.price.formatCurrency ?? '-'),
                         ],
                       ),
                     ],
@@ -230,35 +230,35 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                     children: [
                       // Broker Details Card
                       _buildInfoCard(
-                        title: 'Broker Details',
+                        title: 'social_post_broker_details'.tr(),
                         icon: Icons.business_rounded,
                         children: [
-                          _buildDetailRow('Business Name', post.broker?.businessName ?? '-'),
-                          _buildDetailRow('Plan Tier', post.broker?.plan ?? '-'),
-                          _buildDetailRow('Status', post.broker?.onboardingStatus?.toUpperCase() ?? '-'),
+                          _buildDetailRow('business_name'.tr(), post.broker?.businessName ?? '-'),
+                          _buildDetailRow('plan'.tr(), post.broker?.plan ?? '-'),
+                          _buildDetailRow('status'.tr(), post.broker?.onboardingStatus?.toUpperCase() ?? '-'),
                         ],
                       ),
                       const SizedBox(height: 20),
 
                       // Metrics & Date Timelines
                       _buildInfoCard(
-                        title: 'Metadata & Performance',
+                        title: 'social_post_metadata_performance'.tr(),
                         icon: Icons.insights_rounded,
                         children: [
                           _buildDetailRow(
-                            'Published At',
+                            'published_at'.tr(),
                             post.publishedAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(post.publishedAt!)
                                 : '-',
                           ),
                           _buildDetailRow(
-                            'Scheduled At',
+                            'scheduled_at'.tr(),
                             post.scheduledAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(post.scheduledAt!)
                                 : '-',
                           ),
                           _buildDetailRow(
-                            'Created At',
+                            'created_at'.tr(),
                             post.createdAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(post.createdAt!)
                                 : '-',
@@ -266,9 +266,9 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                           const SizedBox(height: 12),
                           const Divider(),
                           const SizedBox(height: 12),
-                          _buildDetailRow('Views Count', '${post.viewsCount ?? 0}'),
-                          _buildDetailRow('Comments Count', '${post.commentCount ?? 0}'),
-                          _buildDetailRow('Likes Count', '${post.likesCount ?? 0}'),
+                          _buildDetailRow('social_post_views_count'.tr(), '${post.viewsCount ?? 0}'),
+                          _buildDetailRow('social_post_comments_count'.tr(), '${post.commentCount ?? 0}'),
+                          _buildDetailRow('social_post_likes_count'.tr(), '${post.likesCount ?? 0}'),
                         ],
                       ),
                     ],

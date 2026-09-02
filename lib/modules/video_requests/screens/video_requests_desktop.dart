@@ -35,7 +35,7 @@ class VideoRequestsDesktop extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSearchBar(
-            hintText: 'Search video requests by notes...',
+            hintText: 'video_requests_search_notes_desktop_hint'.tr(),
             onSearch: (query) => state.filterProvider.updateSearch(query),
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
@@ -60,12 +60,12 @@ class VideoRequestsDesktop extends StatelessWidget {
                         child: AppDataTable(
                           isLoading: videoRequestsProv.isLoading,
                           columns: [
-                            const AppDataColumn(label: 'Property', flex: 2),
-                            const AppDataColumn(label: 'Broker', flex: 2),
-                            const AppDataColumn(label: 'Workflow Status', flex: 1.5),
-                            const AppDataColumn(label: 'Approval Status', flex: 1.5),
-                            const AppDataColumn(label: 'Date Created', flex: 1.5),
-                            const AppDataColumn(label: 'Actions', flex: 1.5),
+                            AppDataColumn(label: 'video_request_col_property'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_col_broker'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_workflow_status_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_approval_status_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_date_created_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_col_actions'.tr(), flex: 1.5),
                           ],
                           rows: list
                               .map((request) => _buildRow(context, request, videoRequestsProv))

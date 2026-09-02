@@ -77,7 +77,6 @@ class AppDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.70,

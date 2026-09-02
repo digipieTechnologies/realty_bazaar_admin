@@ -100,9 +100,9 @@ class _UserDetailDesktopState extends State<UserDetailDesktop> {
   Future<void> _onRemoveCover() async {
     final confirmed = await ConfirmDialog.showResponsive(
       context: context,
-      title: 'Delete Cover Image',
-      message: 'Are you sure you want to remove this cover image?',
-      confirmLabel: 'Delete',
+      title: 'users_delete_cover_image_title'.tr(),
+      message: 'users_delete_cover_image_msg'.tr(),
+      confirmLabel: 'delete'.tr(),
       isDestructive: true,
     );
     if (confirmed != true || widget.user.id == null) return;
@@ -116,7 +116,7 @@ class _UserDetailDesktopState extends State<UserDetailDesktop> {
       if (!mounted) return;
       final updatedUser = widget.user.copyWith(coverImage: null);
       widget.usersProv.updateLocalUser(updatedUser);
-      AppToast.showSuccess('Cover Image Removed');
+      AppToast.showSuccess('users_toast_cover_removed'.tr());
     } on ApiException catch (e) {
       if (mounted) {
         setState(() => _coverImage = oldCover);
@@ -149,7 +149,7 @@ class _UserDetailDesktopState extends State<UserDetailDesktop> {
               IconButton(
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => context.pop(),
-                tooltip: 'Back',
+                tooltip: 'common_back_tooltip'.tr(),
               ),
               const SizedBox(width: 8),
               Expanded(

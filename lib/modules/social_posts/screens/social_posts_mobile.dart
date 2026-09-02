@@ -37,7 +37,7 @@ class SocialPostsMobile extends StatelessWidget {
           children: [
             // Search field
             AppSearchBar(
-              hintText: 'Search captions...',
+              hintText: 'social_posts_search_captions_hint'.tr(),
               onSearch: (query) => postsProv.setSearchQuery(query),
               isMobile: true,
               onFilter: state.showFilterBottomSheet,

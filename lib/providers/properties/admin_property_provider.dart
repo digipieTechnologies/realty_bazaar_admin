@@ -157,6 +157,34 @@ class AdminPropertyProvider extends ChangeNotifier {
     }
   }
 
+  Future<PropertyModel?> saveProperty(PropertyModel property, {bool isEdit = false}) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final saved = await _service.saveProperty(property, isEdit: isEdit);
+      if (saved != null) {
+        if (isEdit) {
+          updateLocalProperty(saved);
+        } else {
+          _properties.insert(0, saved);
+        }
+      }
+      await refresh();
+      return saved;
+    } on ApiException catch (e) {
+      _error = e.message;
+      return null;
+    } catch (e) {
+      _error = e.toString().replaceFirst('Exception: ', '');
+      return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<bool> updateProperty(PropertyModel updated) async {
     updateLocalProperty(updated);
     return true;

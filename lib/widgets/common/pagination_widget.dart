@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/network/pagination_model.dart';
@@ -49,7 +50,7 @@ class PaginationWidget extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.chevron_left_rounded),
               onPressed: (effPage > 1 && !isLoading) ? () => onPageChanged(effPage - 1) : null,
-              tooltip: 'Previous Page',
+              tooltip: 'common_previous_page'.tr(),
               visualDensity: VisualDensity.compact,
             ),
             const SizedBox(width: 4),
@@ -58,7 +59,7 @@ class PaginationWidget extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.chevron_right_rounded),
               onPressed: (effPage < effTotalPages && !isLoading) ? () => onPageChanged(effPage + 1) : null,
-              tooltip: 'Next Page',
+              tooltip: 'common_next_page'.tr(),
               visualDensity: VisualDensity.compact,
             ),
           ],

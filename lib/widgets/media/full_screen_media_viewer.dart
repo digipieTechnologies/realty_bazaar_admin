@@ -181,9 +181,11 @@ class _ImagePageItem extends StatelessWidget {
         maxScale: 4.0,
         child: CachedImage(
           imageUrl: media.url,
+          imageBytes: media.bytes,
           fit: BoxFit.contain,
           width: double.infinity,
           height: double.infinity,
+          ignoring: true,
           errorWidget: (context) => const _ErrorStateWidget(),
         ),
       ),

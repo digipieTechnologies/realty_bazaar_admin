@@ -1,6 +1,7 @@
 // File: lib/modules/brokers/screens/brokers_screen.dart
 // Purpose: Entrypoint for Super Admin Brokers screen. Owns state and delegates UI layout to BrokersDesktop or BrokersMobile.
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -83,7 +84,7 @@ class BrokersScreenState extends State<BrokersScreen> {
   Future<void> confirmAndDeleteBroker(BrokerModel broker) async {
     final result = await BrokerDeleteDialog.show(
       context: context,
-      businessName: broker.businessName ?? "this brokerage",
+      businessName: broker.businessName ?? 'broker_fallback_name'.tr(),
     );
 
     if (result != null && result['confirmed'] == true && mounted) {

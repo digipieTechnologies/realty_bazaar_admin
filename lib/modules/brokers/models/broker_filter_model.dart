@@ -32,8 +32,8 @@ class BrokerFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'search',
         type: FilterType.search,
-        labelKey: 'Search Brokerages',
-        hintText: 'Search by business name...',
+        labelKey: 'broker_search_label',
+        hintText: 'broker_search_hint',
       ),
       const FilterField(
         key: 'plan',
@@ -58,13 +58,13 @@ class BrokerFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'enterpriseOnly',
         type: FilterType.quickFilter,
-        labelKey: 'Enterprise Only',
+        labelKey: 'enterprise_only',
         isQuickFilter: true,
       ),
       const FilterField(
         key: 'proOnly',
         type: FilterType.quickFilter,
-        labelKey: 'Pro Only',
+        labelKey: 'pro_only',
         isQuickFilter: true,
       ),
     ],

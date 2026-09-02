@@ -33,7 +33,7 @@ class SocialPostsDesktop extends StatelessWidget {
         children: [
           // Filters and Search Bar
           AppSearchBar(
-            hintText: 'Search captions...',
+            hintText: 'social_posts_search_captions_hint'.tr(),
             onSearch: (query) => postsProv.setSearchQuery(query),
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
@@ -60,12 +60,12 @@ class SocialPostsDesktop extends StatelessWidget {
                         child: AppDataTable(
                           isLoading: postsProv.isLoading,
                           columns: [
-                            const AppDataColumn(label: 'Post Details', flex: 3),
-                            const AppDataColumn(label: 'Platform', flex: 1.2),
-                            const AppDataColumn(label: 'Broker', flex: 1.5),
-                            const AppDataColumn(label: 'Property', flex: 1.5),
-                            const AppDataColumn(label: 'Status', flex: 1.2),
-                            const AppDataColumn(label: 'Actions', flex: 1),
+                            AppDataColumn(label: 'social_posts_col_post_details'.tr(), flex: 3),
+                            AppDataColumn(label: 'social_posts_col_platform'.tr(), flex: 1.2),
+                            AppDataColumn(label: 'social_posts_col_broker'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'social_posts_col_property'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'social_posts_col_status'.tr(), flex: 1.2),
+                            AppDataColumn(label: 'social_posts_col_actions'.tr(), flex: 1),
                           ],
                           rows: postsList.map((post) => _buildRow(context, post, postsProv)).toList(),
                         ),

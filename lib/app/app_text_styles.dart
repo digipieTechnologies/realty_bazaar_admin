@@ -16,6 +16,7 @@ class AppTextStyles {
     letterSpacing: -0.5,
     height: 1.2,
   );
+  static const TextStyle h1 = heading1;
 
   static const TextStyle heading2 = TextStyle(
     fontSize: 22.0,
@@ -24,6 +25,7 @@ class AppTextStyles {
     letterSpacing: -0.3,
     height: 1.25,
   );
+  static const TextStyle h2 = heading2;
 
   static const TextStyle heading3 = TextStyle(
     fontSize: 18.0,
@@ -32,6 +34,16 @@ class AppTextStyles {
     letterSpacing: -0.2,
     height: 1.3,
   );
+  static const TextStyle h3 = heading3;
+
+  static const TextStyle heading4 = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.1,
+    height: 1.3,
+  );
+  static const TextStyle h4 = heading4;
 
   // Subtitle/Large Body Styles
   static const TextStyle subtitle = TextStyle(

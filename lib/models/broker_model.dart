@@ -22,7 +22,7 @@ class BrokerModel extends Equatable {
   const BrokerModel({
     this.id,
     this.businessName,
-    this.plan,
+    this.plan = "Free",
     this.onboardingStatus,
     this.isActive,
     this.autoApproveVideoRequests,
@@ -38,7 +38,6 @@ class BrokerModel extends Equatable {
     return BrokerModel(
       id: json['id']?.toString(),
       businessName: json['business_name']?.toString() ?? '',
-      plan: json['plan']?.toString() ?? 'Free',
       onboardingStatus: json['onboarding_status']?.toString() ?? 'pending',
       isActive: json['is_active'] as bool? ?? true,
       autoApproveVideoRequests:
@@ -57,7 +56,6 @@ class BrokerModel extends Equatable {
     final Map<String, dynamic> data = {};
     if (id != null) data['id'] = id;
     data['business_name'] = businessName;
-    data['plan'] = plan;
     data['onboarding_status'] = onboardingStatus;
     data['is_active'] = isActive;
     data['auto_approve_video_requests'] = autoApproveVideoRequests;
@@ -85,7 +83,6 @@ class BrokerModel extends Equatable {
     return BrokerModel(
       id: id ?? this.id,
       businessName: businessName ?? this.businessName,
-      plan: plan ?? this.plan,
       onboardingStatus: onboardingStatus ?? this.onboardingStatus,
       isActive: isActive ?? this.isActive,
       autoApproveVideoRequests: autoApproveVideoRequests ?? this.autoApproveVideoRequests,
@@ -99,7 +96,6 @@ class BrokerModel extends Equatable {
   List<Object?> get props => [
     id,
     businessName,
-    plan,
     onboardingStatus,
     isActive,
     autoApproveVideoRequests,

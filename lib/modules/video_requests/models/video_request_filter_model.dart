@@ -27,8 +27,8 @@ class VideoRequestFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'search',
         type: FilterType.search,
-        labelKey: 'Search Notes',
-        hintText: 'Search by notes...',
+        labelKey: 'notes',
+        hintText: 'video_requests_search_notes_hint',
       ),
       FilterField(
         key: 'status',

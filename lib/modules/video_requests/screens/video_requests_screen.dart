@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -69,15 +70,15 @@ class VideoRequestsScreenState extends State<VideoRequestsScreen> {
   Future<void> confirmAndDeleteRequest(VideoRequestModel request) async {
     final confirmed = await AppDialog.showConfirmation(
       context,
-      title: 'Delete Video Request',
-      message: 'Are you sure you want to delete this video request? This will permanently remove the record.',
-      confirmLabel: 'Delete Request',
+      title: 'video_request_delete_dialog_title'.tr(),
+      message: 'video_request_delete_dialog_msg'.tr(),
+      confirmLabel: 'video_request_delete_confirm_btn'.tr(),
       isDanger: true,
     );
     if (confirmed == true && mounted) {
       final success = await context.read<VideoRequestsProvider>().deleteVideoRequest(request.id!);
       if (success && mounted) {
-        AppToast.showSuccess('Request Removed', 'Video request has been deleted.');
+        AppToast.showSuccess('video_request_toast_removed_title'.tr(), 'video_request_toast_removed_msg'.tr());
       }
     }
   }

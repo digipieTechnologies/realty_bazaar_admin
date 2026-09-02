@@ -1,17 +1,20 @@
 // File: lib/modules/properties/widgets/property_detail_overview_tab.dart
-// Purpose: Mobile Overview Tab child widget for Property Details screen matching broker app layout with AutomaticKeepAliveClientMixin and TabHeader.
+// Purpose: Mobile Overview Tab child widget for Property Details screen matching broker app layout with quick feature counters, PropertyAmenitiesWrap, and PropertyLocationCard.
 
-import 'package:brokerflow_admin/app/app_colors.dart';
-import 'package:brokerflow_admin/app/common_ext.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/property_enums.dart';
-import 'package:brokerflow_admin/models/property_model.dart';
-import 'package:brokerflow_admin/providers/properties/admin_property_provider.dart';
-import 'package:brokerflow_admin/widgets/common/tab_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../../app/app_colors.dart';
+import '../../../app/common_ext.dart';
+import '../../../app/context_ext.dart';
+import '../../../models/property_enums.dart';
+import '../../../models/property_model.dart';
+import '../../../providers/properties/admin_property_provider.dart';
+import '../../../widgets/common/tab_header.dart';
+import 'property_amenities_wrap.dart';
+import 'property_location_card.dart';
 
 class PropertyDetailOverviewTab extends StatefulWidget {
   final PropertyModel property;
@@ -78,6 +81,10 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
           ),
           const SizedBox(height: 16),
 
+          // Quick Feature Grid
+          _buildQuickFeatureTiles(context, property),
+          const SizedBox(height: 16),
+
           // Description
           if (property.propertyDescription != null && property.propertyDescription!.isNotEmpty) ...[
             Card(
@@ -115,18 +122,7 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
             _buildSectionCard(
               context,
               title: 'facilities_amenities'.tr(),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: property.amenities
-                    .map(
-                      (a) => Chip(
-                        label: Text(a),
-                        backgroundColor: colorScheme.primaryContainer.withOpacity(0.4),
-                      ),
-                    )
-                    .toList(),
-              ),
+              child: PropertyAmenitiesWrap(amenities: property.amenities),
             ),
             const SizedBox(height: 16),
           ],
@@ -136,23 +132,7 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
             _buildSectionCard(
               context,
               title: 'location'.tr(),
-              child: Row(
-                children: [
-                  Icon(Icons.location_on_outlined, color: AppColors.primary, size: 20),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      [
-                        property.address?.fullAddress,
-                        property.address?.city,
-                        property.address?.state,
-                        property.address?.pincode,
-                      ].where((e) => e != null && e.isNotEmpty).join(', '),
-                      style: context.cardSubtitle.copyWith(fontSize: 14),
-                    ),
-                  ),
-                ],
-              ),
+              child: PropertyLocationCard(address: property.address),
             ),
             const SizedBox(height: 16),
           ],
@@ -164,6 +144,108 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
             child: _buildBrokerDetailCard(context),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQuickFeatureTiles(BuildContext context, PropertyModel property) {
+    final floorText = property.floorNumber != null
+        ? '${property.floorNumber}th of ${property.totalFloors ?? 1} Floors'
+        : (property.totalFloors != null ? '${property.totalFloors} Floors' : '1st Floor');
+
+    final facingText = property.facing != null
+        ? '${property.facing!.displayName} Facing'
+        : 'North East Facing';
+
+    final possessionText = property.constructionStatus == ConstructionStatus.readyToMove
+        ? 'Ready To Move'
+        : 'Under Construction';
+
+    final tiles = [
+      _MobileFeatureTileData(icon: Icons.bed_outlined, label: 'property_spec_bedrooms'.tr().toUpperCase(), value: '${property.bedrooms} BHK'),
+      _MobileFeatureTileData(icon: Icons.bathtub_outlined, label: 'property_spec_bathrooms'.tr().toUpperCase(), value: '${property.bathrooms} Baths'),
+      _MobileFeatureTileData(icon: Icons.balcony_outlined, label: 'property_spec_balconies'.tr().toUpperCase(), value: '${property.balconies} Balconies'),
+      _MobileFeatureTileData(icon: Icons.apartment_outlined, label: 'property_spec_floor'.tr().toUpperCase(), value: floorText),
+      _MobileFeatureTileData(icon: Icons.domain_outlined, label: 'property_spec_property_type'.tr().toUpperCase(), value: property.propertyType.displayName),
+      _MobileFeatureTileData(icon: Icons.key_outlined, label: 'property_spec_possession'.tr().toUpperCase(), value: possessionText),
+      _MobileFeatureTileData(icon: Icons.explore_outlined, label: 'property_spec_facing'.tr().toUpperCase(), value: facingText),
+      _MobileFeatureTileData(icon: Icons.directions_car_outlined, label: 'property_spec_parking'.tr().toUpperCase(), value: '${property.parking} Reserved'),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final columns = constraints.maxWidth >= 540.0 ? 4 : 2;
+          const spacing = 8.0;
+          final itemWidth = (constraints.maxWidth - (spacing * (columns - 1))) / columns;
+
+          return Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            children: tiles.map((tile) {
+              return SizedBox(
+                width: itemWidth,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        child: Icon(tile.icon, color: const Color(0xFF3B82F6), size: 14.0),
+                      ),
+                      const SizedBox(width: 6.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              tile.label,
+                              style: const TextStyle(
+                                fontSize: 8.5,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textSecondary,
+                                letterSpacing: 0.2,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 1.0),
+                            Text(
+                              tile.value,
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
@@ -300,8 +382,6 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
                           Text(
                             s.value,
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -335,32 +415,36 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
               : '${property.floorNumber}',
         ),
       _MobileDetailItem(Icons.category_outlined, 'type'.tr(), property.propertyType.displayName),
-      _MobileDetailItem(
-        Icons.sell_outlined,
-        'properties_listing_type'.tr(),
-        property.listingType.displayName,
-      ),
+      _MobileDetailItem(Icons.sell_outlined, 'properties_listing_type'.tr(), property.listingType.displayName),
       _MobileDetailItem(Icons.verified_outlined, 'status'.tr(), property.propertyStatus.displayName),
     ];
 
     return Column(
       children: details.map((d) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Row(
             children: [
-              Icon(d.icon, size: 18, color: AppColors.primary),
-              const SizedBox(width: 12),
+              Icon(d.icon, size: 16, color: AppColors.primary),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text(d.label, style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13)),
+                child: Text(d.label, style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12)),
               ),
-              Text(d.value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+              Text(d.value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
             ],
           ),
         );
       }).toList(),
     );
   }
+}
+
+class _MobileFeatureTileData {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  _MobileFeatureTileData({required this.icon, required this.label, required this.value});
 }
 
 class _MobileSpecItem {

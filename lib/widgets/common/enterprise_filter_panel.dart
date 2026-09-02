@@ -253,7 +253,7 @@ class _EnterpriseFilterPanelState extends State<EnterpriseFilterPanel> {
                                     decoration: InputDecoration(
                                       hintText: searchField.hintText != null
                                           ? searchField.hintText!.tr()
-                                          : 'Search...'.tr(),
+                                          : 'common.search'.tr(),
                                       prefixIcon: const Icon(Icons.search, size: 20),
                                       suffixIcon: provider.draftFilters.toJson()['search'] != null
                                           ? IconButton(

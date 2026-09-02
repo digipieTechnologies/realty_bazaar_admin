@@ -49,8 +49,8 @@ class PropertyFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'search',
         type: FilterType.search,
-        labelKey: 'Search Properties',
-        hintText: 'Search by title, type, location...',
+        labelKey: 'properties',
+        hintText: 'property_search_full_hint',
       ),
       FilterField(
         key: 'status',
@@ -134,7 +134,7 @@ class PropertyFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'activeOnly',
         type: FilterType.quickFilter,
-        labelKey: 'Active Only',
+        labelKey: 'active_only',
         isQuickFilter: true,
       ),
     ],

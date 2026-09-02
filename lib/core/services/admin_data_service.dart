@@ -90,7 +90,6 @@ class AdminDataService {
           .from('brokers')
           .update({
             'business_name': broker.businessName,
-            'plan': broker.plan,
             'onboarding_status': broker.onboardingStatus,
             'is_active': broker.isActive,
           })

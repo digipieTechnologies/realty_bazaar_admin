@@ -51,7 +51,7 @@ class BrokerDetailScreen extends StatelessWidget {
     Future<void> onDeleteBroker() async {
       final result = await BrokerDeleteDialog.show(
         context: context,
-        businessName: targetBroker.businessName ?? "this brokerage",
+        businessName: targetBroker.businessName ?? 'broker_fallback_name'.tr(),
       );
 
       if (result != null && result['confirmed'] == true && context.mounted) {

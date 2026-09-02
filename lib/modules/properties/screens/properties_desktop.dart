@@ -44,6 +44,10 @@ class PropertiesDesktop extends StatelessWidget {
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
             activeFilterCount: state.filterProvider.activeFiltersCount,
+            addLabel: 'Add Property',
+            onAdd: () {
+              PropertyEditDialog.show(context);
+            },
           ),
           const SizedBox(height: 8),
           EnterpriseQuickFilters(

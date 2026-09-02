@@ -31,8 +31,8 @@ class UserFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'search',
         type: FilterType.search,
-        labelKey: 'Search Users',
-        hintText: 'Search by name or email...',
+        labelKey: 'users',
+        hintText: 'users_search_name_email_hint',
       ),
       FilterField(
         key: 'role',

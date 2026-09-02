@@ -1,6 +1,7 @@
 // File: lib/modules/properties/screens/admin_properties_screen.dart
 // Purpose: Super Admin Properties catalog screen. Owns state and delegates UI layout to PropertiesDesktop or PropertiesMobile.
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -72,16 +73,15 @@ class AdminPropertiesScreenState extends State<AdminPropertiesScreen> {
   Future<void> confirmAndDeleteProperty(PropertyModel property) async {
     final confirmed = await AppDialog.showConfirmation(
       context,
-      title: 'Delete Property',
-      message:
-          'Are you sure you want to delete ${property.propertyTitle}? This will remove it from the active catalog.',
-      confirmLabel: 'Delete Property',
+      title: 'property_delete_dialog_title'.tr(),
+      message: 'property_delete_dialog_msg'.tr(args: [property.propertyTitle]),
+      confirmLabel: 'property_delete_confirm_btn'.tr(),
       isDanger: true,
     );
     if (confirmed == true && mounted) {
       final success = await context.read<AdminPropertyProvider>().deleteProperty(property.id!);
       if (success && mounted) {
-        AppToast.showSuccess('Property Deleted', 'Removed from active catalog.');
+        AppToast.showSuccess('property_toast_deleted_title'.tr(), 'property_toast_deleted_msg'.tr());
       }
     }
   }

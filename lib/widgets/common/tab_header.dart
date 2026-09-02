@@ -75,7 +75,6 @@ class TabHeader extends StatelessWidget {
               icon: const Icon(Icons.refresh, size: 18),
               tooltip: 'common.refresh'.tr(),
             ),
-            const SizedBox(width: 4),
           ],
           if (trailing != null) ...[
             trailing!,

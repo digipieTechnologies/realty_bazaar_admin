@@ -95,6 +95,47 @@ class PropertyService extends BaseSupabaseService {
     }
   }
 
+  /// Publish or update property via publish_property RPC.
+  Future<PropertyModel?> saveProperty(PropertyModel property, {bool isEdit = false}) async {
+    try {
+      final payload = property.toJson();
+      final response = await _client.rpc(
+        'publish_property',
+        params: {'p_property': payload, 'p_is_edit': isEdit},
+      );
+
+      if (response != null && response is Map<String, dynamic>) {
+        if (response['success'] == true) {
+          if (response['property'] != null) {
+            final returnedJson = response['property'] as Map<String, dynamic>;
+            AddressModel? parsedAddr;
+            String? addrId;
+            if (returnedJson['address_id'] != null) {
+              if (returnedJson['address_id'] is Map<String, dynamic>) {
+                parsedAddr = AddressModel.fromJson(returnedJson['address_id']);
+                addrId = parsedAddr.id;
+              } else {
+                addrId = returnedJson['address_id'].toString();
+              }
+            }
+            final merged = property.copyWith(
+              id: returnedJson['id']?.toString(),
+              addressId: addrId,
+              address: parsedAddr ?? property.address,
+            );
+            return merged;
+          }
+          return property;
+        }
+        final errorMsg = response['error']?.toString() ?? 'Server error';
+        throw Exception(errorMsg);
+      }
+      return property;
+    } catch (e) {
+      throw handleException(e, 'Failed to save property');
+    }
+  }
+
   /// Get property by ID.
   Future<PropertyModel> getPropertyById({required String id}) async {
     try {

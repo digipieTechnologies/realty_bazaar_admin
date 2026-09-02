@@ -28,7 +28,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   // Disable all easy_localization logs completely
-  EasyLocalization.logger.enableBuildModes = [];
+  // EasyLocalization.logger.enableBuildModes = [];
 
   try {
     await SupabaseConfig.initialize();

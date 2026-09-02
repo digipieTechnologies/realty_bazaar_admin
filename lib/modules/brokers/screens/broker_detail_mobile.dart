@@ -67,10 +67,7 @@ class BrokerDetailMobile extends StatelessWidget {
             BrokerDetailOverviewTab(broker: broker),
 
             // Properties Tab
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: BrokerPropertiesTab(brokerId: broker.id),
-            ),
+            BrokerPropertiesTab(brokerId: broker.id),
 
             // Posts Tab
             BrokerPostsTab(brokerId: broker.id),

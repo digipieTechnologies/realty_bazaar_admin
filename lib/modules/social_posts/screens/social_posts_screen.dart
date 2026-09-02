@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,15 +72,15 @@ class SocialPostsScreenState extends State<SocialPostsScreen> {
   Future<void> confirmAndDeletePost(SocialPostModel post) async {
     final confirmed = await AppDialog.showConfirmation(
       context,
-      title: 'Delete Social Post',
-      message: 'Are you sure you want to delete this social post?',
-      confirmLabel: 'Delete',
+      title: 'social_posts_delete_dialog_title'.tr(),
+      message: 'social_posts_delete_dialog_msg'.tr(),
+      confirmLabel: 'delete'.tr(),
       isDanger: true,
     );
     if (confirmed == true && mounted) {
       final success = await context.read<SocialPostsProvider>().deleteSocialPost(post.id!);
       if (success && mounted) {
-        AppToast.showSuccess('Post Deleted', 'Social post has been deleted successfully.');
+        AppToast.showSuccess('social_posts_toast_deleted_title'.tr(), 'social_posts_toast_deleted_msg'.tr());
       }
     }
   }

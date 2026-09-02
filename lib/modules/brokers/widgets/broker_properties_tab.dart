@@ -85,115 +85,118 @@ class _BrokerPropertiesTabState extends State<BrokerPropertiesTab> with Automati
             ? allProperties.sublist(startIndex, endIndex)
             : <PropertyModel>[];
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TabHeader(
-              title: 'tab_properties'.tr(),
-              count: snapshot.hasData ? totalCount : null,
-              padding: const EdgeInsets.only(bottom: 12),
-              onRefresh: _handleRefresh,
-            ),
-            Expanded(
-              child: Builder(
-                builder: (context) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        '${'common.error'.tr()}: ${snapshot.error}',
-                        style: TextStyle(color: colorScheme.error),
-                      ),
-                    );
-                  }
+        return Padding(
+          padding: const EdgeInsets.all(16).copyWith(top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TabHeader(
+                title: 'tab_properties'.tr(),
+                count: snapshot.hasData ? totalCount : null,
+                padding: const EdgeInsets.only(bottom: 12),
+                onRefresh: _handleRefresh,
+              ),
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          '${'common.error'.tr()}: ${snapshot.error}',
+                          style: TextStyle(color: colorScheme.error),
+                        ),
+                      );
+                    }
 
-                  if (allProperties.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.home_work_outlined,
-                            size: 48,
-                            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
-                          ),
-                          const SizedBox(height: 12),
-                          Text('no_properties_for_broker'.tr(), style: context.cardSubtitle),
-                        ],
-                      ),
-                    );
-                  }
+                    if (allProperties.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.home_work_outlined,
+                              size: 48,
+                              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 12),
+                            Text('no_properties_for_broker'.tr(), style: context.cardSubtitle),
+                          ],
+                        ),
+                      );
+                    }
 
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: paginatedProperties.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 12),
-                          itemBuilder: (context, index) {
-                            final property = paginatedProperties[index];
-                            return Card(
-                              clipBehavior: Clip.antiAlias,
-                              child: ListTile(
-                                onTap: () {
-                                  if (property.id != null) {
-                                    context.go('/properties/detail/${property.id}');
-                                  }
-                                },
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: CachedImage(
-                                    imageUrl: property.medias.firstOrNull?.url,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: paginatedProperties.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final property = paginatedProperties[index];
+                              return Card(
+                                clipBehavior: Clip.antiAlias,
+                                child: ListTile(
+                                  onTap: () {
+                                    if (property.id != null) {
+                                      context.go('/properties/detail/${property.id}');
+                                    }
+                                  },
+                                  leading: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: CachedImage(
+                                      imageUrl: property.medias.firstOrNull?.url,
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                title: Text(
-                                  property.propertyTitle,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  '${property.price.formatCurrency} • ${property.bedrooms} BHK • ${property.area} ${property.areaUnit.displayName}',
-                                ),
-                                trailing: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
+                                  title: Text(
+                                    property.propertyTitle,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  child: Text(
-                                    property.propertyStatus.displayName,
-                                    style: const TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11,
+                                  subtitle: Text(
+                                    '${property.price.formatCurrency} • ${property.bedrooms} BHK • ${property.area} ${property.areaUnit.displayName}',
+                                  ),
+                                  trailing: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      property.propertyStatus.displayName,
+                                      style: const TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            },
+                          ),
+                        ),
+                        PaginationWidget(
+                          currentPage: _currentPage,
+                          totalPages: totalPages,
+                          totalCount: totalCount,
+                          onPageChanged: (page) {
+                            setState(() {
+                              _currentPage = page;
+                            });
                           },
                         ),
-                      ),
-                      PaginationWidget(
-                        currentPage: _currentPage,
-                        totalPages: totalPages,
-                        totalCount: totalCount,
-                        onPageChanged: (page) {
-                          setState(() {
-                            _currentPage = page;
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -28,6 +28,7 @@ class _BrokerDetailDesktopOverviewTabState extends State<BrokerDetailDesktopOver
     final broker = widget.broker;
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(16).copyWith(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

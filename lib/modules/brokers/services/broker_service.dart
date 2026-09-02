@@ -114,7 +114,6 @@ class BrokerService extends BaseSupabaseService {
 
       final payload = <String, dynamic>{
         if (broker.businessName != null) 'business_name': broker.businessName!.trim(),
-        if (broker.plan != null) 'plan': broker.plan,
         if (broker.onboardingStatus != null) 'onboarding_status': broker.onboardingStatus,
         if (broker.isActive != null) 'is_active': broker.isActive,
         if (broker.autoApproveVideoRequests != null)

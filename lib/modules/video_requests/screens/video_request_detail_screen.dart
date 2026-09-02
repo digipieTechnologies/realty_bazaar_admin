@@ -56,14 +56,14 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     final req = _requestState;
     if (req == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Request Details')),
-        body: const Center(child: Text('Video request detail not found.')),
+        appBar: AppBar(title: Text('video_request_details_title'.tr())),
+        body: Center(child: Text('video_request_not_found'.tr())),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Video Request Detail'),
+        title: Text('video_request_detail_header'.tr()),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       backgroundColor: context.backgroundColor,
@@ -86,27 +86,27 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                     children: [
                       _buildInfoCard(
                         context,
-                        title: 'Property Details',
+                        title: 'video_request_property_details'.tr(),
                         icon: Icons.apartment_rounded,
                         children: [
-                          _buildDetailRow(context, 'Title', req.property?.propertyTitle ?? '-'),
+                          _buildDetailRow(context, 'properties_title'.tr(), req.property?.propertyTitle ?? '-'),
                           _buildDetailRow(
                             context,
-                            'Listing Type',
+                            'properties_listing_type'.tr(),
                             req.property?.listingType.name.toUpperCase() ?? '-',
                           ),
-                          _buildDetailRow(context, 'Price', req.property?.price.formatCurrency ?? '-'),
+                          _buildDetailRow(context, 'price'.tr(), req.property?.price.formatCurrency ?? '-'),
                         ],
                       ),
                       const SizedBox(height: 20),
                       _buildInfoCard(
                         context,
-                        title: 'Broker Details',
+                        title: 'video_request_broker_details'.tr(),
                         icon: Icons.business_rounded,
                         children: [
-                          _buildDetailRow(context, 'Business Name', req.broker?.businessName ?? '-'),
-                          _buildDetailRow(context, 'Plan Tier', req.broker?.plan ?? '-'),
-                          _buildDetailRow(context, 'Active', req.broker?.isActive == true ? 'YES' : 'NO'),
+                          _buildDetailRow(context, 'business_name'.tr(), req.broker?.businessName ?? '-'),
+                          _buildDetailRow(context, 'plan'.tr(), req.broker?.plan ?? '-'),
+                          _buildDetailRow(context, 'status_active'.tr(), req.broker?.isActive == true ? 'common.yes'.tr() : 'common.no'.tr()),
                         ],
                       ),
                     ],
@@ -121,26 +121,26 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                     children: [
                       _buildInfoCard(
                         context,
-                        title: 'Metadata & Notes',
+                        title: 'video_request_metadata_notes'.tr(),
                         icon: Icons.notes_rounded,
                         children: [
                           _buildDetailRow(
                             context,
-                            'Created At',
+                            'created_at'.tr(),
                             req.createdAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(req.createdAt!)
                                 : '-',
                           ),
                           _buildDetailRow(
                             context,
-                            'Completed At',
+                            'completed_at'.tr(),
                             req.completedAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(req.completedAt!)
                                 : '-',
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Broker Notes:',
+                            'video_request_broker_notes_label'.tr(),
                             style: AppTextStyles.body2.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.textColor,
@@ -148,7 +148,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            req.notes ?? 'No notes provided.',
+                            req.notes ?? 'video_request_no_notes'.tr(),
                             style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
                           ),
                         ],
@@ -157,12 +157,12 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                         const SizedBox(height: 20),
                         _buildInfoCard(
                           context,
-                          title: 'Rejection Details',
+                          title: 'video_request_rejection_details'.tr(),
                           icon: Icons.cancel_outlined,
                           isDanger: true,
                           children: [
                             Text(
-                              req.adminCancelReason ?? 'No reason provided.',
+                              req.adminCancelReason ?? 'video_request_no_rejection_reason'.tr(),
                               style: AppTextStyles.body2.copyWith(color: context.errorColor),
                             ),
                           ],
@@ -294,7 +294,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            'Action Needed: ',
+            'video_request_action_needed'.tr(),
             style: AppTextStyles.body1.copyWith(
               fontWeight: FontWeight.bold,
               color: context.textColor,
@@ -303,7 +303,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
           const Spacer(),
           ElevatedButton.icon(
             icon: const Icon(Icons.cancel_outlined),
-            label: const Text('Reject Request'),
+            label: Text('video_request_reject_btn'.tr()),
             onPressed: () {
               VideoRequestActionDialog.show(
                 context,
@@ -312,7 +312,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                   final prov = context.read<VideoRequestsProvider>();
                   final success = await prov.rejectRequest(req.id!, reason: reason);
                   if (success) {
-                    AppToast.showSuccess('Rejected', 'Video request rejected successfully.');
+                    AppToast.showSuccess('video_request_toast_rejected_title'.tr(), 'video_request_toast_rejected_msg'.tr());
                     setState(() {
                       _requestState = prov.requests.firstWhere((r) => r.id == req.id);
                     });
@@ -330,7 +330,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
           const SizedBox(width: 16),
           ElevatedButton.icon(
             icon: const Icon(Icons.check_circle_outline),
-            label: const Text('Approve Request'),
+            label: Text('video_request_approve_btn'.tr()),
             onPressed: () {
               VideoRequestActionDialog.show(
                 context,
@@ -339,7 +339,7 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                   final prov = context.read<VideoRequestsProvider>();
                   final success = await prov.approveRequest(req.id!, notes: notes);
                   if (success) {
-                    AppToast.showSuccess('Approved', 'Video request approved successfully.');
+                    AppToast.showSuccess('video_request_toast_approved_title'.tr(), 'video_request_toast_approved_msg'.tr());
                     setState(() {
                       _requestState = prov.requests.firstWhere((r) => r.id == req.id);
                     });

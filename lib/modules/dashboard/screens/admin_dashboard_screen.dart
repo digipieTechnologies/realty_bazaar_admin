@@ -46,7 +46,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Text('welcome_back'.tr(), style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4.0),
           Text(
-            'High-level summary of active users, brokerages, properties, and social engagement.',
+            'dashboard_subtitle'.tr(),
             style: AppTextStyles.body2,
           ),
           const SizedBox(height: 24.0),

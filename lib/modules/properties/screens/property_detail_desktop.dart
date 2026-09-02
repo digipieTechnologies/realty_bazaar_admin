@@ -66,7 +66,7 @@ class _PropertyDetailDesktopState extends State<PropertyDetailDesktop> with Sing
               IconButton(
                 icon: const Icon(Icons.arrow_back_rounded),
                 onPressed: () => context.go('/properties'),
-                tooltip: 'Back',
+                tooltip: 'common_back_tooltip'.tr(),
               ),
               const SizedBox(width: 8),
               Expanded(

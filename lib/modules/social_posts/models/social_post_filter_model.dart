@@ -26,8 +26,8 @@ class SocialPostFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'search',
         type: FilterType.search,
-        labelKey: 'Search Captions',
-        hintText: 'Search by caption...',
+        labelKey: 'caption',
+        hintText: 'social_posts_search_caption_hint',
       ),
       const FilterField(
         key: 'platform',
