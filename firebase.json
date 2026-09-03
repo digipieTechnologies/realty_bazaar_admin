@@ -1,1 +1,73 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"broker-agencies-flutter","appId":"1:209800510781:android:ec47db589c29274c4d1954","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"broker-agencies-flutter","appId":"1:209800510781:ios:dc8bdbbf88ed6b924d1954","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"broker-agencies-flutter","appId":"1:209800510781:ios:cc652997f2884f8f4d1954","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"broker-agencies-flutter","configurations":{"android":"1:209800510781:android:ec47db589c29274c4d1954","ios":"1:209800510781:ios:dc8bdbbf88ed6b924d1954","macos":"1:209800510781:ios:cc652997f2884f8f4d1954","web":"1:209800510781:web:d597da015be9ba994d1954","windows":"1:209800510781:web:85c0681dd7af1a934d1954"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "broker-agencies-flutter",
+          "appId": "1:209800510781:android:ec47db589c29274c4d1954",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "broker-agencies-flutter",
+          "appId": "1:209800510781:ios:dc8bdbbf88ed6b924d1954",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "broker-agencies-flutter",
+          "appId": "1:209800510781:ios:cc652997f2884f8f4d1954",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "broker-agencies-flutter",
+          "configurations": {
+            "android": "1:209800510781:android:ec47db589c29274c4d1954",
+            "ios": "1:209800510781:ios:dc8bdbbf88ed6b924d1954",
+            "macos": "1:209800510781:ios:cc652997f2884f8f4d1954",
+            "web": "1:209800510781:web:d597da015be9ba994d1954",
+            "windows": "1:209800510781:web:85c0681dd7af1a934d1954"
+          }
+        }
+      }
+    }
+  },
+  "hosting": [
+    {
+      "target": "dev",
+      "public": "build/web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "admin",
+      "public": "build/web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}

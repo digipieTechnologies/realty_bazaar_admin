@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "the-realty-bazaar"
+  },
+  "targets": {
+    "the-realty-bazaar": {
+      "hosting": {
+        "dev": [
+          "the-realty-bazaar-portal-dev"
+        ],
+        "admin": [
+          "the-realty-bazaar-portal"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
