@@ -22,6 +22,7 @@ import '../../../models/social_lead_model.dart';
 import '../../../providers/leads/admin_leads_provider.dart';
 import '../../../widgets/buttons/app_button.dart';
 import '../../../widgets/common/app_breadcrumbs.dart';
+import '../../../widgets/common/app_lead_status_badge.dart';
 import '../../../widgets/common/app_platform_badge.dart';
 import '../../../widgets/common/cached_image.dart';
 import '../../../widgets/dialogs/confirm_dialog.dart';
@@ -225,6 +226,21 @@ class LeadDetailDesktop extends StatelessWidget {
                             : (isInstagram ? Icons.camera_alt_rounded : Icons.public_rounded),
                         size: 90,
                         color: Colors.white.withValues(alpha: 0.15),
+                      ),
+                    ),
+                    Positioned(
+                      top: 14,
+                      left: 14,
+                      child: AppLeadStatusBadge(
+                        isSolid: true,
+                        status: lead.status,
+                        onStatusChanged: (newStatus) async {
+                          final success =
+                              await context.read<AdminLeadsProvider>().updateLeadStatus(lead.id!, newStatus);
+                          if (success && context.mounted) {
+                            AppToast.showSuccess('leads_toast_status_updated'.tr());
+                          }
+                        },
                       ),
                     ),
                     Positioned(

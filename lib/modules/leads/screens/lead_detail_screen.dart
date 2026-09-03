@@ -38,6 +38,14 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
     }
   }
 
+  @override
+  void didUpdateWidget(covariant LeadDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.lead != oldWidget.lead && widget.lead != null) {
+      _lead = widget.lead;
+    }
+  }
+
   Future<void> _loadLead() async {
     setState(() {
       _isLoading = true;
@@ -73,7 +81,24 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
       );
     }
 
-    if (_errorMessage != null || _lead == null) {
+    final provider = context.watch<AdminLeadsProvider>();
+    final targetId = _lead?.id ?? widget.leadId;
+    SocialLeadModel? liveLead;
+    if (targetId != null) {
+      if (provider.selectedLead?.id == targetId) {
+        liveLead = provider.selectedLead;
+      } else {
+        for (final l in provider.leads) {
+          if (l.id == targetId) {
+            liveLead = l;
+            break;
+          }
+        }
+      }
+    }
+    final lead = liveLead ?? _lead;
+
+    if (_errorMessage != null || lead == null) {
       return Scaffold(
         backgroundColor: context.backgroundColor,
         appBar: AppBar(title: Text('leads_detail_title'.tr())),
@@ -95,13 +120,15 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
       );
     }
 
+    final displayLead = lead;
+
     if (context.isDesktop) {
       return Scaffold(
         backgroundColor: context.backgroundColor,
-        body: LeadDetailDesktop(lead: _lead!),
+        body: LeadDetailDesktop(lead: displayLead),
       );
     }
 
-    return LeadDetailMobile(lead: _lead!);
+    return LeadDetailMobile(lead: displayLead);
   }
 }

@@ -16,6 +16,7 @@ import '../../../core/filters/filter_field.dart';
 import '../../../models/social_lead_model.dart';
 import '../../../providers/leads/admin_leads_provider.dart';
 import '../../../widgets/common/app_data_table.dart';
+import '../../../widgets/common/app_lead_status_badge.dart';
 import '../../../widgets/common/app_platform_badge.dart';
 import '../../../widgets/common/app_search_field.dart';
 import '../../../widgets/common/enterprise_filter_panel.dart';
@@ -101,14 +102,15 @@ class LeadsDesktop extends StatelessWidget {
                           isLoading: provider.isLoading,
                           emptyMessage: 'leads_empty_title'.tr(),
                           columns: [
-                            AppDataColumn(label: 'leads_col_client'.tr(), flex: 2),
-                            AppDataColumn(label: 'leads_col_broker'.tr(), flex: 4),
-                            AppDataColumn(label: 'leads_col_platform'.tr(), flex: 1),
+                            AppDataColumn(label: 'leads_col_client'.tr(), flex: 3),
+                            AppDataColumn(label: 'leads_col_broker'.tr(), flex: 3),
+                            AppDataColumn(label: 'leads_status'.tr(), flex: 2),
+                            AppDataColumn(label: 'leads_col_platform'.tr(), flex: 2),
                             AppDataColumn(label: 'leads_col_property'.tr(), flex: 3),
-                            AppDataColumn(label: 'leads_col_date'.tr(), flex: 1),
-                            AppDataColumn(label: 'leads_col_actions'.tr(), flex: 1),
+                            AppDataColumn(label: 'leads_col_date'.tr(), flex: 2),
+                            AppDataColumn(label: 'leads_col_actions'.tr(), flex: 2),
                           ],
-                          rows: leads.map((lead) => _buildRow(context, lead)).toList(),
+                          rows: leads.map((lead) => _buildRow(context, lead, provider)).toList(),
                         ),
                       ),
                       PaginationWidget(
@@ -138,7 +140,7 @@ class LeadsDesktop extends StatelessWidget {
     );
   }
 
-  DataRowItem _buildRow(BuildContext context, SocialLeadModel lead) {
+  DataRowItem _buildRow(BuildContext context, SocialLeadModel lead, AdminLeadsProvider provider) {
     final brokerName = lead.broker?.businessName ?? 'leads_unassigned'.tr();
     final hasBroker = lead.broker != null;
 
@@ -221,16 +223,30 @@ class LeadsDesktop extends StatelessWidget {
           ),
         ),
 
-        // 3. Platform Source Badge
+        // 3. Status Badge (Interactive)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: AppLeadStatusBadge(
+            status: lead.status,
+            onStatusChanged: (newStatus) async {
+              final success = await provider.updateLeadStatus(lead.id!, newStatus);
+              if (success && context.mounted) {
+                AppToast.showSuccess('leads_toast_status_updated'.tr());
+              }
+            },
+          ),
+        ),
+
+        // 4. Platform Source Badge
         Align(
           alignment: Alignment.centerLeft,
           child: AppPlatformBadge(platform: lead.socialPost?.platform),
         ),
 
-        // 4. Inquired Property Title
+        // 5. Inquired Property Title
         DataCellText(text: propertyDisplay),
 
-        // 5. Received Date
+        // 6. Received Date
         DataCellText(text: _formatDate(lead.createdAt)),
 
         // 6. Actions Row

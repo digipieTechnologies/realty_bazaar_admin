@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import '../../core/network/api_exception.dart';
 import '../../core/network/pagination_model.dart';
 import '../../models/broker_model.dart';
+import '../../models/lead_status_enum.dart';
 import '../../models/social_lead_model.dart';
 import '../../modules/leads/models/lead_filter_model.dart';
 import '../../modules/leads/services/lead_service.dart';
@@ -23,6 +24,7 @@ class AdminLeadsProvider extends ChangeNotifier {
   String _searchQuery = '';
   List<String> _platformsFilter = [];
   String? _selectedBrokerId;
+  LeadStatus? _statusFilter;
   LeadFilterModel _filter = const LeadFilterModel();
 
   List<BrokerModel> _brokers = [];
@@ -74,6 +76,7 @@ class AdminLeadsProvider extends ChangeNotifier {
         searchQuery: _searchQuery,
         platforms: _platformsFilter,
         brokerId: _selectedBrokerId,
+        status: _statusFilter,
       );
 
       _leads = response.items;
@@ -109,6 +112,17 @@ class AdminLeadsProvider extends ChangeNotifier {
       _platformsFilter = [newFilter.platform!];
     } else {
       _platformsFilter = [];
+    }
+
+    // Resolve status from quick filters or dropdown
+    if (newFilter.activeOnly == true) {
+      _statusFilter = LeadStatus.active;
+    } else if (newFilter.inactiveOnly == true) {
+      _statusFilter = LeadStatus.inactive;
+    } else if (newFilter.junkOnly == true) {
+      _statusFilter = LeadStatus.junk;
+    } else {
+      _statusFilter = newFilter.status;
     }
 
     _selectedBrokerId = (newFilter.brokerId == 'all' || newFilter.brokerId == '') ? null : newFilter.brokerId;
@@ -193,6 +207,7 @@ class AdminLeadsProvider extends ChangeNotifier {
     required String propertyDetails,
     String? notes,
     String? brokerId,
+    LeadStatus status = LeadStatus.pending,
   }) async {
     try {
       final newLead = await _service.createLead(
@@ -201,6 +216,7 @@ class AdminLeadsProvider extends ChangeNotifier {
         propertyDetails: propertyDetails,
         notes: notes,
         brokerId: brokerId,
+        status: status,
       );
 
       // Refresh list to show newly added lead
@@ -228,6 +244,35 @@ class AdminLeadsProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       debugPrint('[AdminLeadsProvider] Error updating lead: $e');
+      return false;
+    }
+  }
+
+  /// Updates lead status with optimistic local update and DB persistence.
+  Future<bool> updateLeadStatus(String leadId, LeadStatus newStatus) async {
+    final oldIndex = _leads.indexWhere((l) => l.id == leadId);
+    final oldLead = oldIndex != -1 ? _leads[oldIndex] : null;
+
+    if (oldLead != null) {
+      _leads[oldIndex] = oldLead.copyWith(status: newStatus);
+    }
+    if (_selectedLead?.id == leadId && _selectedLead != null) {
+      _selectedLead = _selectedLead!.copyWith(status: newStatus);
+    }
+    notifyListeners();
+
+    try {
+      await _service.updateLeadStatus(leadId, newStatus);
+      return true;
+    } catch (e) {
+      debugPrint('[AdminLeadsProvider] Error updating lead status: $e');
+      if (oldLead != null && oldIndex != -1) {
+        _leads[oldIndex] = oldLead;
+      }
+      if (_selectedLead?.id == leadId && oldLead != null) {
+        _selectedLead = oldLead;
+      }
+      notifyListeners();
       return false;
     }
   }

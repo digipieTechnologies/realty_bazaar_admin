@@ -41,15 +41,8 @@ class AppPlatformBadge extends StatelessWidget {
       return Container(
         padding: effectivePadding,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.92),
+          color: Colors.white.withValues(),
           borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -83,11 +76,7 @@ class AppPlatformBadge extends StatelessWidget {
           const SizedBox(width: 6.0),
           Text(
             labelText,
-            style: TextStyle(
-              fontSize: 11.5,
-              fontWeight: FontWeight.bold,
-              color: brandColor,
-            ),
+            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: brandColor),
           ),
         ],
       ),

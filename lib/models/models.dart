@@ -3,6 +3,7 @@ export 'address_model.dart';
 export 'broker_model.dart';
 export 'dashboard_summary_model.dart';
 export 'language_model.dart';
+export 'lead_status_enum.dart';
 export 'media_model.dart';
 export 'property_enums.dart';
 export 'property_model.dart';

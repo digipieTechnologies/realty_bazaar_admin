@@ -4,6 +4,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'broker_model.dart';
+import 'lead_status_enum.dart';
 import 'social_post_model.dart';
 
 class SocialLeadModel extends Equatable {
@@ -20,6 +21,7 @@ class SocialLeadModel extends Equatable {
   final BrokerModel? brokerId;
   final String? rawBrokerId;
   final String? rawSocialPostId;
+  final LeadStatus status;
   final bool isDeleted;
   final DateTime? deletedAt;
   final DateTime? createdAt;
@@ -47,7 +49,6 @@ class SocialLeadModel extends Equatable {
   String get leadPhone => phone;
   String? get leadEmail => null;
   String? get platform => socialPost?.platform;
-  String get status => isDeleted ? 'deleted' : 'active';
 
   /// Generates a pre-filled WhatsApp click-to-chat URL with inquiry context.
   String buildWhatsappUrl() {
@@ -92,6 +93,7 @@ class SocialLeadModel extends Equatable {
     this.brokerId,
     this.rawBrokerId,
     this.rawSocialPostId,
+    this.status = LeadStatus.pending,
     this.isDeleted = false,
     this.deletedAt,
     this.createdAt,
@@ -160,6 +162,7 @@ class SocialLeadModel extends Equatable {
       brokerId: parsedBroker,
       rawBrokerId: rawBId,
       rawSocialPostId: rawPId,
+      status: LeadStatus.fromString(json['status']?.toString()),
       isDeleted: json['is_deleted'] as bool? ?? false,
       deletedAt: json['deleted_at'] != null
           ? DateTime.tryParse(json['deleted_at'].toString())?.toLocal()
@@ -184,6 +187,7 @@ class SocialLeadModel extends Equatable {
     data['phone_country_iso'] = phoneCountryIso ?? 'IN';
     data['social_post_id'] = socialPostId?.id ?? rawSocialPostId;
     data['broker_id'] = brokerId?.id ?? rawBrokerId;
+    data['status'] = status.apiValue;
     data['is_deleted'] = isDeleted;
     if (deletedAt != null) {
       data['deleted_at'] = deletedAt?.toUtc().toIso8601String();
@@ -209,6 +213,7 @@ class SocialLeadModel extends Equatable {
     BrokerModel? brokerId,
     String? rawBrokerId,
     String? rawSocialPostId,
+    LeadStatus? status,
     bool? isDeleted,
     DateTime? deletedAt,
     DateTime? createdAt,
@@ -226,6 +231,7 @@ class SocialLeadModel extends Equatable {
       brokerId: brokerId ?? this.brokerId,
       rawBrokerId: rawBrokerId ?? this.rawBrokerId,
       rawSocialPostId: rawSocialPostId ?? this.rawSocialPostId,
+      status: status ?? this.status,
       isDeleted: isDeleted ?? this.isDeleted,
       deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
@@ -246,6 +252,7 @@ class SocialLeadModel extends Equatable {
     brokerId,
     rawBrokerId,
     rawSocialPostId,
+    status,
     isDeleted,
     deletedAt,
     createdAt,

@@ -1,6 +1,7 @@
 // File: lib/modules/leads/services/lead_service.dart
 // Purpose: Network service managing social leads fetching via get_social_leads RPC, single lead retrieval, creation, updating, reassignment, and soft deletion.
 
+import 'package:brokerflow_admin/models/lead_status_enum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,6 +31,7 @@ class LeadService {
     String? searchQuery,
     List<String>? platforms,
     String? brokerId,
+    LeadStatus? status,
   }) async {
     try {
       final sanitizedBrokerId = (brokerId != null && brokerId.isNotEmpty && brokerId != 'all') ? brokerId : null;
@@ -42,6 +44,7 @@ class LeadService {
           'p_limit': pageSize,
           'p_search_query': searchQuery ?? '',
           'p_platforms': (platforms != null && platforms.isNotEmpty) ? platforms : null,
+          'p_status': (status != null) ? status.apiValue : null,
         },
       );
 
@@ -106,6 +109,7 @@ class LeadService {
     required String propertyDetails,
     String? notes,
     String? brokerId,
+    LeadStatus status = LeadStatus.pending,
   }) async {
     try {
       final cleanPhone = phone.replaceAll(RegExp(r'\D'), '').trim();
@@ -121,6 +125,7 @@ class LeadService {
             'property_details': propertyDetails.trim(),
             'notes': (notes != null && notes.trim().isNotEmpty) ? notes.trim() : null,
             'broker_id': sanitizedBrokerId,
+            'status': status.apiValue,
             'is_deleted': false,
             'created_at': DateTime.now().toUtc().toIso8601String(),
           })
@@ -150,6 +155,7 @@ class LeadService {
         'property_details': lead.propertyDetails?.trim(),
         'notes': lead.notes?.trim(),
         'broker_id': lead.resolvedBrokerId,
+        'status': lead.status.apiValue,
       };
 
       await _client.from('social_leads').update(payload).eq('id', lead.id!);
@@ -158,6 +164,22 @@ class LeadService {
       throw ApiException(e.message, code: 500);
     } catch (e) {
       debugPrint('[LeadService] Error updating lead: $e');
+      throw ApiException(e.toString(), code: 500);
+    }
+  }
+
+  /// Updates just the status of an existing lead.
+  Future<void> updateLeadStatus(String leadId, LeadStatus status) async {
+    try {
+      await _client
+          .from('social_leads')
+          .update({'status': status.apiValue})
+          .eq('id', leadId);
+    } on PostgrestException catch (e) {
+      debugPrint('[LeadService] PostgrestException updating lead status: ${e.message}');
+      throw ApiException(e.message, code: 500);
+    } catch (e) {
+      debugPrint('[LeadService] Error updating lead status: $e');
       throw ApiException(e.toString(), code: 500);
     }
   }

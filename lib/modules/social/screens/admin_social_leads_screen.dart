@@ -93,7 +93,7 @@ class _AdminSocialLeadsScreenState extends State<AdminSocialLeadsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(color: AppColors.infoLight, borderRadius: BorderRadius.circular(12)),
             child: Text(
-              lead.status.toUpperCase(),
+              lead.status.label.toUpperCase(),
               style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.info),
             ),
           ),

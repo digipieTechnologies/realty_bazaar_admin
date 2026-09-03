@@ -18,6 +18,7 @@ import '../../../models/property_model.dart';
 import '../../../models/social_lead_model.dart';
 import '../../../providers/leads/admin_leads_provider.dart';
 import '../../../widgets/buttons/app_button.dart';
+import '../../../widgets/common/app_lead_status_badge.dart';
 import '../../../widgets/common/app_platform_badge.dart';
 import '../../../widgets/common/cached_image.dart';
 import '../../../widgets/dialogs/confirm_dialog.dart';
@@ -197,6 +198,21 @@ class LeadDetailMobile extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
+                    Positioned(
+                      top: 12,
+                      left: 12,
+                      child: AppLeadStatusBadge(
+                        isSolid: true,
+                        status: lead.status,
+                        onStatusChanged: (newStatus) async {
+                          final success =
+                              await context.read<AdminLeadsProvider>().updateLeadStatus(lead.id!, newStatus);
+                          if (success && context.mounted) {
+                            AppToast.showSuccess('leads_toast_status_updated'.tr());
+                          }
+                        },
+                      ),
+                    ),
                     Positioned(
                       top: 12,
                       right: 12,

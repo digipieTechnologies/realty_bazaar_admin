@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../app/app_text_styles.dart';
 import '../../../app/context_ext.dart';
+import '../../../models/lead_status_enum.dart';
 import '../../../models/property_model.dart';
 import '../../../models/social_lead_model.dart';
 import '../../../providers/leads/admin_leads_provider.dart';
@@ -46,6 +47,7 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
 
   String? _selectedBrokerId;
   PropertyModel? _selectedProperty;
+  LeadStatus _selectedStatus = LeadStatus.pending;
   bool _isSaving = false;
 
   bool get isEdit => widget.leadToEdit != null;
@@ -59,6 +61,7 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
     _propertyDetailsController = TextEditingController(text: lead?.propertyDetails ?? '');
     _notesController = TextEditingController(text: lead?.notes ?? '');
     _selectedBrokerId = lead?.resolvedBrokerId;
+    _selectedStatus = lead?.status ?? LeadStatus.pending;
   }
 
   @override
@@ -122,6 +125,7 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
           propertyDetails: propertyDetails,
           notes: notes.isNotEmpty ? notes : null,
           rawBrokerId: _selectedBrokerId,
+          status: _selectedStatus,
         );
         final success = await provider.updateLead(updatedLead);
         if (success && mounted) {
@@ -135,6 +139,7 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
           propertyDetails: propertyDetails,
           notes: notes.isNotEmpty ? notes : null,
           brokerId: _selectedBrokerId,
+          status: _selectedStatus,
         );
         if (mounted) {
           AppToast.showSuccess('leads_toast_created'.tr());
@@ -227,7 +232,60 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
             ),
             const SizedBox(height: 16),
 
-            // 5. Additional Inquiry Notes
+            // 5. Lead Status Selector
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'leads_status'.tr(),
+                  style: context.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: context.surfaceColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: context.borderColor),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<LeadStatus>(
+                      isExpanded: true,
+                      value: _selectedStatus,
+                      items: LeadStatus.values.map((status) {
+                        return DropdownMenuItem<LeadStatus>(
+                          value: status,
+                          child: Row(
+                            children: [
+                              Icon(status.icon, size: 16, color: status.color),
+                              const SizedBox(width: 10),
+                              Text(
+                                status.label,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: status.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newStatus) {
+                        if (newStatus != null) {
+                          setState(() => _selectedStatus = newStatus);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // 6. Additional Inquiry Notes
             AppTextField(
               controller: _notesController,
               label: 'leads_dialog_notes_label'.tr(),

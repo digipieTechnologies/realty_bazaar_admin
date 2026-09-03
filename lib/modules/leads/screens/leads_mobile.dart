@@ -11,10 +11,12 @@ import '../../../app/app_text_styles.dart';
 import '../../../app/context_ext.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/social_lead_model.dart';
+import '../../../widgets/common/app_lead_status_badge.dart';
 import '../../../widgets/common/app_platform_badge.dart';
 import '../../../widgets/common/app_search_field.dart';
 import '../../../widgets/common/enterprise_quick_filters.dart';
 import '../../../widgets/common/pagination_widget.dart';
+import '../../../widgets/toast/app_toast.dart';
 import '../models/lead_filter_model.dart';
 import '../widgets/add_lead_dialog.dart';
 import 'leads_screen.dart';
@@ -201,7 +203,22 @@ class LeadsMobile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    AppPlatformBadge(platform: lead.socialPost?.platform),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppLeadStatusBadge(
+                          status: lead.status,
+                          onStatusChanged: (newStatus) async {
+                            final success = await state.leadsProv.updateLeadStatus(lead.id!, newStatus);
+                            if (success && context.mounted) {
+                              AppToast.showSuccess('leads_toast_status_updated'.tr());
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                        AppPlatformBadge(platform: lead.socialPost?.platform),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
