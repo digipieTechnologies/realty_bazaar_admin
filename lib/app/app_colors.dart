@@ -101,4 +101,16 @@ class AppColors {
   static const List<Color> nexusGradient = [primary400, primary500, primary800];
   static const List<Color> secondaryGradient = [secondary, secondaryDark];
   static const List<Color> glassGradient = [Color(0x33FFFFFF), Color(0x0FFFFFFF)];
+
+  // ==========================================
+  // Social Platforms
+  // ==========================================
+  static const Color facebook = Color(0xFF1877F2);
+  static const Color facebookDark = Color(0xFF0C5AC8);
+  static const Color instagram = Color(0xFFE4405F);
+  static const Color instagramStart = Color(0xFF833AB4);
+  static const Color instagramMiddle = Color(0xFFFD1D1D);
+  static const Color instagramEnd = Color(0xFFFCB045);
+  static const Color whatsapp = Color(0xFF25D366);
+  static const Color whatsappDark = Color(0xFF128C7E);
 }

@@ -15,6 +15,7 @@ import 'providers/auth/admin_auth_provider.dart';
 import 'providers/brokers/brokers_provider.dart';
 import 'providers/dashboard/admin_dashboard_provider.dart';
 import 'providers/language/language_provider.dart';
+import 'providers/leads/admin_leads_provider.dart';
 import 'providers/properties/admin_property_provider.dart';
 import 'providers/reports/reports_provider.dart';
 import 'providers/social/admin_social_provider.dart';
@@ -65,6 +66,7 @@ class SuperAdminApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => VideoRequestsProvider()),
         ChangeNotifierProvider(create: (_) => SocialPostsProvider()),
+        ChangeNotifierProvider(create: (_) => AdminLeadsProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {

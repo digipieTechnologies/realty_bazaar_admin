@@ -162,14 +162,46 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
         : 'Under Construction';
 
     final tiles = [
-      _MobileFeatureTileData(icon: Icons.bed_outlined, label: 'property_spec_bedrooms'.tr().toUpperCase(), value: '${property.bedrooms} BHK'),
-      _MobileFeatureTileData(icon: Icons.bathtub_outlined, label: 'property_spec_bathrooms'.tr().toUpperCase(), value: '${property.bathrooms} Baths'),
-      _MobileFeatureTileData(icon: Icons.balcony_outlined, label: 'property_spec_balconies'.tr().toUpperCase(), value: '${property.balconies} Balconies'),
-      _MobileFeatureTileData(icon: Icons.apartment_outlined, label: 'property_spec_floor'.tr().toUpperCase(), value: floorText),
-      _MobileFeatureTileData(icon: Icons.domain_outlined, label: 'property_spec_property_type'.tr().toUpperCase(), value: property.propertyType.displayName),
-      _MobileFeatureTileData(icon: Icons.key_outlined, label: 'property_spec_possession'.tr().toUpperCase(), value: possessionText),
-      _MobileFeatureTileData(icon: Icons.explore_outlined, label: 'property_spec_facing'.tr().toUpperCase(), value: facingText),
-      _MobileFeatureTileData(icon: Icons.directions_car_outlined, label: 'property_spec_parking'.tr().toUpperCase(), value: '${property.parking} Reserved'),
+      _MobileFeatureTileData(
+        icon: Icons.bed_outlined,
+        label: 'property_spec_bedrooms'.tr().toUpperCase(),
+        value: '${property.bedrooms} BHK',
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.bathtub_outlined,
+        label: 'property_spec_bathrooms'.tr().toUpperCase(),
+        value: '${property.bathrooms} Baths',
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.balcony_outlined,
+        label: 'property_spec_balconies'.tr().toUpperCase(),
+        value: '${property.balconies} Balconies',
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.apartment_outlined,
+        label: 'property_spec_floor'.tr().toUpperCase(),
+        value: floorText,
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.domain_outlined,
+        label: 'property_spec_property_type'.tr().toUpperCase(),
+        value: property.propertyType.displayName,
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.key_outlined,
+        label: 'property_spec_possession'.tr().toUpperCase(),
+        value: possessionText,
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.explore_outlined,
+        label: 'property_spec_facing'.tr().toUpperCase(),
+        value: facingText,
+      ),
+      _MobileFeatureTileData(
+        icon: Icons.directions_car_outlined,
+        label: 'property_spec_parking'.tr().toUpperCase(),
+        value: '${property.parking} Reserved',
+      ),
     ];
 
     return Container(
@@ -258,7 +290,7 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
     return Row(
       children: [
         if (broker != null)
-          broker.avatarImage(radius: 24, iconSize: 24)
+          broker.avatarImage(context: context, width: 40, height: 40)
         else
           CircleAvatar(
             radius: 24,
@@ -379,10 +411,7 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
                         children: [
                           Text(s.label, style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 10)),
                           const SizedBox(height: 2),
-                          Text(
-                            s.value,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                          ),
+                          Text(s.value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                         ],
                       ),
                     ),
@@ -415,7 +444,11 @@ class _PropertyDetailOverviewTabState extends State<PropertyDetailOverviewTab>
               : '${property.floorNumber}',
         ),
       _MobileDetailItem(Icons.category_outlined, 'type'.tr(), property.propertyType.displayName),
-      _MobileDetailItem(Icons.sell_outlined, 'properties_listing_type'.tr(), property.listingType.displayName),
+      _MobileDetailItem(
+        Icons.sell_outlined,
+        'properties_listing_type'.tr(),
+        property.listingType.displayName,
+      ),
       _MobileDetailItem(Icons.verified_outlined, 'status'.tr(), property.propertyStatus.displayName),
     ];
 

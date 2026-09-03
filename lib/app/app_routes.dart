@@ -12,6 +12,8 @@ import '../modules/brokers/screens/broker_detail_screen.dart';
 import '../modules/brokers/screens/brokers_screen.dart';
 import '../modules/dashboard/screens/admin_dashboard_screen.dart';
 import '../modules/dashboard/screens/admin_shell_layout_screen.dart';
+import '../modules/leads/screens/lead_detail_screen.dart';
+import '../modules/leads/screens/leads_screen.dart';
 import '../modules/profile/screens/admin_profile_screen.dart';
 import '../modules/properties/screens/admin_properties_screen.dart';
 import '../modules/properties/screens/property_detail_screen.dart';
@@ -34,6 +36,7 @@ const String propertiesPath = 'properties';
 const String propertyDetailPath = 'property_detail';
 const String socialAccountsPath = 'social_accounts';
 const String socialLeadsPath = 'social_leads';
+const String socialLeadsDetailPath = 'social_leads_detail';
 const String socialPostsPath = 'social_posts';
 const String socialPostsDetailPath = 'social_posts_detail';
 const String reportsPath = 'reports';
@@ -61,6 +64,7 @@ class AppRoutes {
   static const String propertyDetail = '/properties/detail/:id';
   static const String socialAccounts = '/social-accounts';
   static const String socialLeads = '/social-leads';
+  static const String socialLeadsDetail = '/social-leads/detail/:id';
   static const String socialPosts = '/social-posts';
   static const String socialPostsDetail = '/social-posts/detail/:id';
   static const String reports = '/reports';
@@ -219,6 +223,31 @@ class AppRoutes {
             ],
           ),
           GoRoute(
+            name: socialLeadsPath,
+            path: socialLeads,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const LeadsScreen()),
+            routes: [
+              GoRoute(
+                name: socialLeadsDetailPath,
+                path: 'detail/:id',
+                pageBuilder: (context, state) {
+                  final id = state.pathParameters['id'];
+                  final extra = state.extra;
+                  final lead = extra is SocialLeadModel
+                      ? extra
+                      : extra is Map<String, dynamic>
+                      ? SocialLeadModel.fromJson(extra)
+                      : null;
+                  return NoTransitionPage(
+                    key: state.pageKey,
+                    child: LeadDetailScreen(leadId: id, lead: lead),
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
             name: settingsPath,
             path: settings,
             pageBuilder: (context, state) =>
@@ -311,6 +340,9 @@ class _ExtraEncoder extends Converter<Object?, Object?> {
     if (input is SocialPostModel) {
       return {'__type__': 'SocialPostModel', 'data': input.toJson()};
     }
+    if (input is SocialLeadModel) {
+      return {'__type__': 'SocialLeadModel', 'data': input.toJson()};
+    }
     return input;
   }
 }
@@ -337,6 +369,8 @@ class _ExtraDecoder extends Converter<Object?, Object?> {
             return VideoRequestModel.fromJson(data);
           case 'SocialPostModel':
             return SocialPostModel.fromJson(data);
+          case 'SocialLeadModel':
+            return SocialLeadModel.fromJson(data);
         }
       }
     }

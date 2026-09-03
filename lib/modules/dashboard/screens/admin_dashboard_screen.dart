@@ -88,7 +88,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     icon: Icons.contact_phone_rounded,
                     color: AppColors.warning,
                     width: isWide ? (constraints.maxWidth - 48) / 4 : (constraints.maxWidth - 16) / 2,
-                    route: AppRoutes.videoRequests,
+                    route: AppRoutes.socialLeads,
                   ),
                 ],
               );

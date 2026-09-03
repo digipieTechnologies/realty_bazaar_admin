@@ -14,6 +14,7 @@ class SocialPostModel extends Equatable {
   final BrokerModel? broker;
   final String? platform;
   final String? caption;
+  final String? permalink;
   final List<MediaModel>? medias;
   final String? status;
   final int? viewsCount;
@@ -32,6 +33,7 @@ class SocialPostModel extends Equatable {
     this.broker,
     this.platform,
     this.caption,
+    this.permalink,
     this.medias,
     this.status,
     this.viewsCount,
@@ -64,6 +66,7 @@ class SocialPostModel extends Equatable {
           : null,
       platform: json['platform']?.toString() ?? 'Instagram',
       caption: json['caption']?.toString() ?? '',
+      permalink: json['permalink']?.toString(),
       medias: parsedMedias,
       status: json['status']?.toString() ?? 'published',
       viewsCount: json['views_count'] != null ? int.tryParse(json['views_count'].toString()) : 0,
@@ -91,6 +94,7 @@ class SocialPostModel extends Equatable {
     data['property_id'] = propertyId ?? property?.id;
     data['platform'] = platform;
     data['caption'] = caption;
+    if (permalink != null) data['permalink'] = permalink;
     data['media_urls'] = medias;
     data['status'] = status;
     if (scheduledAt != null) {
@@ -116,6 +120,7 @@ class SocialPostModel extends Equatable {
     BrokerModel? broker,
     String? platform,
     String? caption,
+    String? permalink,
     List<MediaModel>? mediaUrls,
     String? status,
     int? viewsCount,
@@ -134,6 +139,7 @@ class SocialPostModel extends Equatable {
       broker: broker ?? this.broker,
       platform: platform ?? this.platform,
       caption: caption ?? this.caption,
+      permalink: permalink ?? this.permalink,
       medias: mediaUrls ?? this.medias,
       status: status ?? this.status,
       viewsCount: viewsCount ?? this.viewsCount,
@@ -155,6 +161,7 @@ class SocialPostModel extends Equatable {
     broker,
     platform,
     caption,
+    permalink,
     medias,
     status,
     viewsCount,

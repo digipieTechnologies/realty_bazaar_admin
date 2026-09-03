@@ -105,7 +105,7 @@ class BrokersDesktop extends StatelessWidget {
       cells: [
         Row(
           children: [
-            broker.avatarImage(),
+            broker.avatarImage(context: context, width: 40, height: 40),
             const SizedBox(width: 10),
             Expanded(
               child: Text(

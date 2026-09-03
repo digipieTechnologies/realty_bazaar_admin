@@ -63,6 +63,12 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       icon: Icons.article_rounded,
     ),
     _NavigationItem(
+      title: 'Leads',
+      titleKey: 'tab_leads',
+      path: AppRoutes.socialLeads,
+      icon: Icons.contact_phone_rounded,
+    ),
+    _NavigationItem(
       title: 'Settings',
       titleKey: 'settings',
       path: AppRoutes.settings,

@@ -86,7 +86,7 @@ extension StringsExtension on String {
     return match?.group(0);
   }
 
-  String forImage() {
+  String get forImage {
     if (isEmptyORNull) {
       return "";
     }

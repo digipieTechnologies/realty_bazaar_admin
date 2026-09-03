@@ -12,7 +12,7 @@ class SupabaseConfig {
       await Supabase.initialize(
         url: supabaseUrl,
         anonKey: supabaseAnonKey,
-        httpClient: SupabaseLoggerClient(),
+        // httpClient: SupabaseLoggerClient(),
       );
     }
   }

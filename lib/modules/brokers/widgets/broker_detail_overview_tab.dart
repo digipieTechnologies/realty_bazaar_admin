@@ -40,7 +40,7 @@ class _BrokerDetailOverviewTabState extends State<BrokerDetailOverviewTab>
               context.read<BrokersProvider>().refresh();
             },
           ),
-          Center(child: broker.avatarImage(radius: 40, iconSize: 40)),
+          Center(child: broker.avatarImage(context: context, width: 40, height: 40)),
           const SizedBox(height: 12),
           Center(child: Text(broker.businessName ?? '-', style: context.pageTitle)),
           const SizedBox(height: 4),

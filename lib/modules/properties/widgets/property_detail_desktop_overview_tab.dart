@@ -131,14 +131,46 @@ class _PropertyDetailDesktopOverviewTabState extends State<PropertyDetailDesktop
         : 'Under Construction';
 
     final tiles = [
-      _FeatureTileData(icon: Icons.bed_outlined, label: 'property_spec_bedrooms'.tr().toUpperCase(), value: '${property.bedrooms} BHK'),
-      _FeatureTileData(icon: Icons.bathtub_outlined, label: 'property_spec_bathrooms'.tr().toUpperCase(), value: '${property.bathrooms} Baths'),
-      _FeatureTileData(icon: Icons.balcony_outlined, label: 'property_spec_balconies'.tr().toUpperCase(), value: '${property.balconies} Balconies'),
-      _FeatureTileData(icon: Icons.apartment_outlined, label: 'property_spec_floor'.tr().toUpperCase(), value: floorText),
-      _FeatureTileData(icon: Icons.domain_outlined, label: 'property_spec_property_type'.tr().toUpperCase(), value: property.propertyType.displayName),
-      _FeatureTileData(icon: Icons.key_outlined, label: 'property_spec_possession'.tr().toUpperCase(), value: possessionText),
-      _FeatureTileData(icon: Icons.explore_outlined, label: 'property_spec_facing'.tr().toUpperCase(), value: facingText),
-      _FeatureTileData(icon: Icons.directions_car_outlined, label: 'property_spec_parking'.tr().toUpperCase(), value: '${property.parking} Reserved'),
+      _FeatureTileData(
+        icon: Icons.bed_outlined,
+        label: 'property_spec_bedrooms'.tr().toUpperCase(),
+        value: '${property.bedrooms} BHK',
+      ),
+      _FeatureTileData(
+        icon: Icons.bathtub_outlined,
+        label: 'property_spec_bathrooms'.tr().toUpperCase(),
+        value: '${property.bathrooms} Baths',
+      ),
+      _FeatureTileData(
+        icon: Icons.balcony_outlined,
+        label: 'property_spec_balconies'.tr().toUpperCase(),
+        value: '${property.balconies} Balconies',
+      ),
+      _FeatureTileData(
+        icon: Icons.apartment_outlined,
+        label: 'property_spec_floor'.tr().toUpperCase(),
+        value: floorText,
+      ),
+      _FeatureTileData(
+        icon: Icons.domain_outlined,
+        label: 'property_spec_property_type'.tr().toUpperCase(),
+        value: property.propertyType.displayName,
+      ),
+      _FeatureTileData(
+        icon: Icons.key_outlined,
+        label: 'property_spec_possession'.tr().toUpperCase(),
+        value: possessionText,
+      ),
+      _FeatureTileData(
+        icon: Icons.explore_outlined,
+        label: 'property_spec_facing'.tr().toUpperCase(),
+        value: facingText,
+      ),
+      _FeatureTileData(
+        icon: Icons.directions_car_outlined,
+        label: 'property_spec_parking'.tr().toUpperCase(),
+        value: '${property.parking} Reserved',
+      ),
     ];
 
     return Container(
@@ -160,11 +192,7 @@ class _PropertyDetailDesktopOverviewTabState extends State<PropertyDetailDesktop
             children: tiles.map((tile) {
               return SizedBox(
                 width: itemWidth,
-                child: _buildFeatureTileItem(
-                  icon: tile.icon,
-                  label: tile.label,
-                  value: tile.value,
-                ),
+                child: _buildFeatureTileItem(icon: tile.icon, label: tile.label, value: tile.value),
               );
             }).toList(),
           );
@@ -173,11 +201,7 @@ class _PropertyDetailDesktopOverviewTabState extends State<PropertyDetailDesktop
     );
   }
 
-  Widget _buildFeatureTileItem({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  Widget _buildFeatureTileItem({required IconData icon, required String label, required String value}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       decoration: BoxDecoration(
@@ -238,7 +262,7 @@ class _PropertyDetailDesktopOverviewTabState extends State<PropertyDetailDesktop
     return Row(
       children: [
         if (broker != null)
-          broker.avatarImage(radius: 26, iconSize: 26)
+          broker!.avatarImage(context: context, width: 40, height: 40)
         else
           CircleAvatar(
             radius: 26,

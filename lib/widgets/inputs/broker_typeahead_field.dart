@@ -34,6 +34,8 @@ class BrokerTypeAheadField extends StatefulWidget {
 
 class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
   late final TextEditingController _controller;
+  String? _selectedBrokerDisplayText;
+  BrokerModel? _selectedBroker;
 
   @override
   void initState() {
@@ -61,10 +63,12 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
       final brokers = context.read<BrokersProvider>().brokers;
       try {
         final broker = brokers.firstWhere((b) => b.id == selectedId);
+        _selectedBroker = broker;
         final name = (broker.businessName != null && broker.businessName!.isNotEmpty)
             ? broker.businessName!
             : (broker.id ?? 'Broker');
         final text = '$name (${broker.plan ?? "Basic"})';
+        _selectedBrokerDisplayText = text;
         if (_controller.text != text && mounted) {
           _controller.text = text;
         }
@@ -74,15 +78,19 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
       // If not in cache, fetch directly from backend
       try {
         final broker = await BrokerService().getBrokerById(id: selectedId);
+        _selectedBroker = broker;
         final name = (broker.businessName != null && broker.businessName!.isNotEmpty)
             ? broker.businessName!
             : (broker.id ?? 'Broker');
         final text = '$name (${broker.plan ?? "Basic"})';
+        _selectedBrokerDisplayText = text;
         if (_controller.text != text && mounted) {
           _controller.text = text;
         }
       } catch (_) {}
     } else {
+      _selectedBroker = null;
+      _selectedBrokerDisplayText = null;
       if (_controller.text.isNotEmpty && mounted) {
         _controller.clear();
       }
@@ -124,6 +132,14 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             return TextField(
               controller: controller,
               focusNode: focusNode,
+              onTap: () {
+                if (controller.text.isNotEmpty) {
+                  controller.selection = TextSelection(
+                    baseOffset: 0,
+                    extentOffset: controller.text.length,
+                  );
+                }
+              },
               style: context.titleSmall?.copyWith(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: displayHint,
@@ -136,6 +152,8 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
                     ? IconButton(
                         icon: const Icon(Icons.clear, size: 18),
                         onPressed: () {
+                          _selectedBroker = null;
+                          _selectedBrokerDisplayText = null;
                           _controller.clear();
                           widget.onBrokerChanged(null);
                         },
@@ -161,19 +179,49 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
           },
           suggestionsCallback: (pattern) async {
             final trimmed = pattern.trim();
-            if (trimmed.isEmpty) {
-              if (brokers.isNotEmpty) return brokers;
-              try {
-                final response = await BrokerService().fetchBrokers(page: 1, pageSize: 20);
-                return response.items;
-              } catch (_) {
-                return brokers;
+            final cleanPattern = trimmed.replaceAll(RegExp(r'\s*\([^)]*\)$'), '').trim();
+
+            // Check if user just focused the field with an already selected broker
+            final isCurrentSelection = widget.selectedBrokerId != null &&
+                widget.selectedBrokerId!.isNotEmpty &&
+                (trimmed == _selectedBrokerDisplayText ||
+                    trimmed.isEmpty ||
+                    (cleanPattern.isNotEmpty &&
+                        _selectedBroker != null &&
+                        cleanPattern.toLowerCase() ==
+                            (_selectedBroker!.businessName ?? '').toLowerCase()));
+
+            if (trimmed.isEmpty || isCurrentSelection) {
+              List<BrokerModel> list = brokers;
+              if (list.isEmpty) {
+                try {
+                  final response = await BrokerService().fetchBrokers(page: 1, pageSize: 50);
+                  list = response.items;
+                } catch (_) {
+                  list = brokers;
+                }
               }
+
+              // Ensure the selected broker is at top of the options list
+              if (_selectedBroker != null) {
+                final listCopy = List<BrokerModel>.from(list);
+                final idx = listCopy.indexWhere((b) => b.id == _selectedBroker!.id);
+                if (idx > 0) {
+                  final item = listCopy.removeAt(idx);
+                  listCopy.insert(0, item);
+                } else if (idx == -1) {
+                  listCopy.insert(0, _selectedBroker!);
+                }
+                return listCopy;
+              }
+              return list;
             }
+
+            final searchTerm = cleanPattern.isNotEmpty ? cleanPattern : trimmed;
 
             try {
               final response = await BrokerService().fetchBrokers(
-                search: trimmed,
+                search: searchTerm,
                 page: 1,
                 pageSize: 20,
               );
@@ -184,11 +232,18 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
 
             // Client-side fallback filter over existing cached brokers
             final query = trimmed.toLowerCase();
+            final cleanQuery = searchTerm.toLowerCase();
+
             return brokers.where((b) {
               final name = (b.businessName ?? '').toLowerCase();
               final id = (b.id ?? '').toLowerCase();
               final plan = (b.plan ?? '').toLowerCase();
-              return name.contains(query) || id.contains(query) || plan.contains(query);
+              final fullDisplay = '$name ($plan)'.toLowerCase();
+              return name.contains(cleanQuery) ||
+                  fullDisplay.contains(query) ||
+                  query.contains(name) ||
+                  id.contains(cleanQuery) ||
+                  plan.contains(cleanQuery);
             }).toList();
           },
           itemBuilder: (context, broker) {
@@ -199,19 +254,31 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
 
             return ListTile(
               dense: true,
-              tileColor: isSelected ? colorScheme.primary.withOpacity(0.08) : null,
-              leading: CircleAvatar(
-                radius: 16,
-                backgroundColor: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
-                child: Text(
-                  name.isNotEmpty ? name[0].toUpperCase() : 'B',
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+              tileColor: isSelected ? colorScheme.primary.withValues(alpha: 0.08) : null,
+              leading: () {
+                final placeholder = CircleAvatar(
+                  radius: 16,
+                  backgroundColor: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
+                  child: Text(
+                    name.isNotEmpty ? name[0].toUpperCase() : 'B',
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ),
+                );
+
+                try {
+                  final dynamic avatar = broker.avatarImage(context: context, width: 40, height: 40);
+                  if (avatar == null || (avatar is SizedBox && (avatar.width == 0 || avatar.height == 0))) {
+                    return placeholder;
+                  }
+                  return avatar as Widget;
+                } catch (_) {
+                  return placeholder;
+                }
+              }(),
               title: Text(
                 name,
                 style: TextStyle(
@@ -227,10 +294,13 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             );
           },
           onSelected: (broker) {
+            _selectedBroker = broker;
             final name = (broker.businessName != null && broker.businessName!.isNotEmpty)
                 ? broker.businessName!
                 : (broker.id ?? 'Broker');
-            _controller.text = '$name (${broker.plan ?? "Basic"})';
+            final text = '$name (${broker.plan ?? "Basic"})';
+            _selectedBrokerDisplayText = text;
+            _controller.text = text;
             widget.onBrokerChanged(broker.id);
           },
           loadingBuilder: (context) => const Padding(

@@ -1,8 +1,8 @@
-import 'package:brokerflow_admin/widgets/brand/app_logo.dart';
+import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:brokerflow_admin/widgets/common/cached_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../app/app_colors.dart';
 import '../app/context_ext.dart';
 import 'address_model.dart';
 
@@ -104,17 +104,36 @@ class BrokerModel extends Equatable {
     updatedAt,
   ];
 
-  Widget avatarImage({BuildContext? context, double radius = 16, double iconSize = 18}) {
-    final bg = context != null ? context.secondaryContainerColor : AppColors.secondary.withValues(alpha: 0.1);
-    final fg = context != null ? context.secondaryColor : AppColors.secondary;
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: bg,
-      child: CustomAppLogo(
-        width: radius * 2,
-        height: radius * 2,
-        logoColor: fg,
-        decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+  Widget avatarImage({
+    required BuildContext context,
+    double width = 48,
+    double height = 48,
+    String? imageUrl,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return CachedImage(
+      width: width,
+      height: height,
+      imageUrl: imageUrl,
+      borderRadius: BorderRadius.circular(12),
+      backgroundColor: colorScheme.surface,
+      borderColor: colorScheme.outlineVariant.withValues(alpha: 0.6),
+      errorWidget: (ctx) => Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            businessName?.forImage ?? '',
+            style: context.labelSmallBold?.copyWith(
+              fontSize: (width + height) * 0.18,
+              color: colorScheme.primary,
+            ),
+          ),
+        ),
       ),
     );
   }

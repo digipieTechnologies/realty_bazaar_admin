@@ -106,7 +106,7 @@ class PropertyDetailSidebarCard extends StatelessWidget {
           Row(
             children: [
               if (broker != null)
-                broker.avatarImage(radius: 20, iconSize: 20)
+                broker.avatarImage(context: context, width: 40, height: 40)
               else
                 CircleAvatar(
                   radius: 20,

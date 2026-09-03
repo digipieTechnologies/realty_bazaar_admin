@@ -27,7 +27,7 @@ class BrokerDetailSidebarCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          broker.avatarImage(radius: 36, iconSize: 36),
+          broker.avatarImage(context: context, width: 40, height: 40),
           const SizedBox(height: 16),
           Text(
             broker.businessName ?? '-',

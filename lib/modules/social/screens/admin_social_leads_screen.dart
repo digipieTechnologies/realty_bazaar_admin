@@ -77,7 +77,7 @@ class _AdminSocialLeadsScreenState extends State<AdminSocialLeadsScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                lead.leadName ?? '-',
+                lead.leadName.isNotEmpty ? lead.leadName : '-',
                 style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -85,7 +85,7 @@ class _AdminSocialLeadsScreenState extends State<AdminSocialLeadsScreen> {
           ],
         ),
         DataCellText(text: lead.leadEmail ?? '-'),
-        DataCellText(text: lead.leadPhone ?? '-'),
+        DataCellText(text: lead.leadPhone.isNotEmpty ? lead.leadPhone : '-'),
         DataCellText(text: lead.platform ?? '-'),
         Align(
           alignment: Alignment.centerLeft,
@@ -93,7 +93,7 @@ class _AdminSocialLeadsScreenState extends State<AdminSocialLeadsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(color: AppColors.infoLight, borderRadius: BorderRadius.circular(12)),
             child: Text(
-              (lead.status ?? 'new').toUpperCase(),
+              lead.status.toUpperCase(),
               style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.info),
             ),
           ),

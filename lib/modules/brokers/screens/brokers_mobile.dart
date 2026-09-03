@@ -95,7 +95,7 @@ class BrokersMobile extends StatelessWidget {
           children: [
             Row(
               children: [
-                broker.avatarImage(context: context, radius: 18, iconSize: 20),
+                broker.avatarImage(context: context, width: 40, height: 40),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

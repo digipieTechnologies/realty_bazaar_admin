@@ -1,8 +1,6 @@
 // File: lib/modules/brokers/widgets/broker_posts_tab.dart
 // Purpose: Tab child widget displaying social posts created by the selected broker using BrokerService.
 
-import 'dart:convert';
-
 import 'package:brokerflow_admin/app/app_colors.dart';
 import 'package:brokerflow_admin/app/context_ext.dart';
 import 'package:brokerflow_admin/models/media_model.dart';
@@ -203,7 +201,6 @@ class _BrokerPostsTabState extends State<BrokerPostsTab> with AutomaticKeepAlive
                                         if (post.medias != null && post.medias!.isNotEmpty)
                                           InkWell(
                                             onTap: () {
-
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                   builder: (context) => FullScreenMediaViewer(

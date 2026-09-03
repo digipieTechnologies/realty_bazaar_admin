@@ -343,7 +343,7 @@ class CachedImageInitials extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            initials?.forImage() ?? "-",
+            initials?.forImage ?? "-",
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w700,
               color: cs.primary,
@@ -361,7 +361,7 @@ class CachedImageInitials extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            initials?.forImage() ?? "-",
+            initials?.forImage ?? "-",
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w700,
               color: cs.primary,

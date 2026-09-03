@@ -66,6 +66,30 @@ class PropertyService extends BaseSupabaseService {
     );
   }
 
+  /// Fetch properties belonging to a specific broker with optional search query.
+  Future<List<PropertyModel>> fetchPropertiesByBroker({
+    required String brokerId,
+    String? search,
+    int limit = 30,
+  }) async {
+    try {
+      var query = _client
+          .from('properties')
+          .select('*, address_id(*), broker_id(*, address_id(*))')
+          .eq('is_deleted', false)
+          .eq('broker_id', brokerId);
+
+      if (search != null && search.trim().isNotEmpty) {
+        query = query.ilike('property_title', '%${search.trim()}%');
+      }
+
+      final response = await query.order('created_at', ascending: false).limit(limit);
+      return (response as List).map((e) => PropertyModel.fromJson(e)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   /// Update property status.
   Future<void> updatePropertyStatus(String id, PropertyStatus status) async {
     try {
