@@ -20,6 +20,7 @@ import '../modules/properties/screens/property_detail_screen.dart';
 import '../modules/settings/screens/admin_settings_screen.dart';
 import '../modules/social_posts/screens/social_post_detail_screen.dart';
 import '../modules/social_posts/screens/social_posts_screen.dart';
+import '../modules/support/screens/admin_support_screen.dart';
 import '../modules/users/screens/user_detail_screen.dart';
 import '../modules/users/screens/users_screen.dart';
 import '../modules/video_requests/screens/video_request_detail_screen.dart';
@@ -45,6 +46,7 @@ const String settingsPath = 'settings';
 const String profilePath = 'profile';
 const String videoRequestsPath = 'video_requests';
 const String videoRequestDetailPath = 'video_request_detail';
+const String supportPath = 'support';
 
 class AppRoutes {
   AppRoutes._();
@@ -56,6 +58,7 @@ class AppRoutes {
 
   static const String login = '/login';
   static const String dashboard = '/dashboard';
+  static const String support = '/support';
   static const String users = '/users';
   static const String userDetail = '/users/detail/:id';
   static const String brokers = '/brokers';
@@ -283,6 +286,12 @@ class AppRoutes {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            name: supportPath,
+            path: support,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
           ),
         ],
       ),

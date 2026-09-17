@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../providers/auth/admin_auth_provider.dart';
+import '../../../providers/support/admin_support_provider.dart';
 import '../../../widgets/brand/app_logo.dart';
 import '../../../widgets/common/common_app_bar.dart';
 import '../../../widgets/dialogs/language_dialog.dart';
@@ -29,6 +30,16 @@ class AdminShellLayoutScreen extends StatefulWidget {
 
 class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AdminSupportProvider>().fetchTickets(showLoading: false);
+      }
+    });
+  }
 
   static const List<_NavigationItem> _navItems = [
     _NavigationItem(
@@ -67,6 +78,12 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       titleKey: 'tab_leads',
       path: AppRoutes.socialLeads,
       icon: Icons.contact_phone_rounded,
+    ),
+    _NavigationItem(
+      title: 'Support',
+      titleKey: 'support_title',
+      path: AppRoutes.support,
+      icon: Icons.support_agent_rounded,
     ),
     _NavigationItem(
       title: 'Settings',
@@ -211,18 +228,23 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
             ),
             const SizedBox(height: 28.0),
             Expanded(
-              child: ListView.separated(
-                itemCount: _navItems.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 4.0),
-                itemBuilder: (context, index) {
-                  final item = _navItems[index];
-                  final isSelected = index == currentIndex;
-                  return _buildSidebarItem(item, isSelected, index);
+              child: Builder(
+                builder: (context) {
+                  final unreadSupportCount = context.watch<AdminSupportProvider>().totalUnreadCount;
+                  return ListView.separated(
+                    itemCount: _navItems.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 4.0),
+                    itemBuilder: (context, index) {
+                      final item = _navItems[index];
+                      final isSelected = index == currentIndex;
+                      return _buildSidebarItem(item, isSelected, index, unreadSupportCount);
+                    },
+                  );
                 },
               ),
             ),
-            // _buildLanguageSelectorButton(),
-            // const SizedBox(height: 12.0),
+            _buildLanguageSelectorButton(),
+            const SizedBox(height: 12.0),
             _buildUserCard(name, role, isProfileSelected),
           ],
         ),
@@ -230,14 +252,14 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
     );
   }
 
-  Widget _buildSidebarItem(_NavigationItem item, bool isSelected, int index) {
+  Widget _buildSidebarItem(_NavigationItem item, bool isSelected, int index, int unreadSupportCount) {
     return InkWell(
       onTap: () => _onTabSelected(index),
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
         height: 44.0,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.06) : Colors.transparent,
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.06) : Colors.transparent,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Stack(
@@ -248,14 +270,35 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
                 const SizedBox(width: 12.0),
                 Icon(item.icon, size: 20.0, color: isSelected ? AppColors.primary : AppColors.textSecondary),
                 const SizedBox(width: 14.0),
-                Text(
-                  item.titleKey.tr(),
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                Expanded(
+                  child: Text(
+                    item.titleKey.tr(),
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                if (item.path == AppRoutes.support && unreadSupportCount > 0)
+                  Container(
+                    margin: const EdgeInsets.only(right: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 2.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade600,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(
+                      '$unreadSupportCount',
+                      style: const TextStyle(
+                        fontSize: 11.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
               ],
             ),
             if (isSelected)
@@ -330,7 +373,7 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.06) : AppColors.background,
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.06) : AppColors.background,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(color: isSelected ? AppColors.primary : AppColors.border, width: 1.0),
         ),
@@ -338,7 +381,7 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
           children: [
             CircleAvatar(
               radius: 18,
-              backgroundColor: AppColors.primary.withOpacity(0.1),
+              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
               child: Text(
                 avatarLetter,
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary),
