@@ -81,13 +81,7 @@ class MediaPickerHelper {
           bytes = file.bytes ?? await io.File(file.path!).readAsBytes();
         }
 
-        newMediaList.add(
-          MediaModel(
-            type: 'image',
-            url: pathOrName,
-            bytes: bytes,
-          ),
-        );
+        newMediaList.add(MediaModel(type: 'image', url: pathOrName, bytes: bytes));
       }
 
       if (duplicateFound) {
@@ -151,13 +145,7 @@ class MediaPickerHelper {
           bytes = file.bytes ?? await io.File(file.path!).readAsBytes();
         }
 
-        newMediaList.add(
-          MediaModel(
-            type: 'video',
-            url: pathOrName,
-            bytes: bytes,
-          ),
-        );
+        newMediaList.add(MediaModel(type: 'video', url: pathOrName, bytes: bytes));
       }
 
       if (duplicateFound) {

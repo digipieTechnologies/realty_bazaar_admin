@@ -145,10 +145,7 @@ class SocialLeadModel extends Equatable {
         json['whatsapp_number']?.toString() ??
         '';
 
-    final rawName =
-        json['user_name']?.toString() ??
-        json['lead_name']?.toString() ??
-        '';
+    final rawName = json['user_name']?.toString() ?? json['lead_name']?.toString() ?? '';
 
     return SocialLeadModel(
       id: json['id']?.toString(),

@@ -41,19 +41,17 @@ class FieldInfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppDialog(
       title: title,
-      actions: [
-        AppButton(
-          title: 'got_it'.tr(),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
+      actions: [AppButton(title: 'got_it'.tr(), onPressed: () => Navigator.of(context).pop())],
       content: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(description, style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary, height: 1.5)),
+            Text(
+              description,
+              style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary, height: 1.5),
+            ),
             if (examples.isNotEmpty) ...[
               const SizedBox(height: 16.0),
               Text(

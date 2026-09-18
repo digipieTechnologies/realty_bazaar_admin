@@ -102,7 +102,11 @@ class AdminChatProvider extends ChangeNotifier {
           .range(0, _limit - 1);
 
       final listData = response as List;
-      final fetchedMessages = listData.map((json) => ChatMessageModel.fromJson(json)).toList().reversed.toList();
+      final fetchedMessages = listData
+          .map((json) => ChatMessageModel.fromJson(json))
+          .toList()
+          .reversed
+          .toList();
 
       _messages = fetchedMessages;
       _resolveReplyMessages(_messages);
@@ -133,7 +137,11 @@ class AdminChatProvider extends ChangeNotifier {
           .range(currentOffset, currentOffset + _limit - 1);
 
       final listData = response as List;
-      final olderMessages = listData.map((json) => ChatMessageModel.fromJson(json)).toList().reversed.toList();
+      final olderMessages = listData
+          .map((json) => ChatMessageModel.fromJson(json))
+          .toList()
+          .reversed
+          .toList();
 
       if (olderMessages.isNotEmpty) {
         _messages.insertAll(0, olderMessages);
@@ -240,10 +248,9 @@ class AdminChatProvider extends ChangeNotifier {
             uploadedThumb = await _uploadChatMedia(thumbName, fileBytes: item.thumbnailBytes);
           }
 
-          uploadedMedias.add(item.copyWith(
-            url: uploadedUrl ?? item.url,
-            thumbnail: uploadedThumb ?? item.thumbnail,
-          ));
+          uploadedMedias.add(
+            item.copyWith(url: uploadedUrl ?? item.url, thumbnail: uploadedThumb ?? item.thumbnail),
+          );
         }
       }
 
@@ -264,11 +271,7 @@ class AdminChatProvider extends ChangeNotifier {
         'is_deleted': false,
       };
 
-      final response = await SupabaseConfig.client
-          .from('chat_messages')
-          .insert(payload)
-          .select('*')
-          .single();
+      final response = await SupabaseConfig.client.from('chat_messages').insert(payload).select('*').single();
 
       var newMessage = ChatMessageModel.fromJson(response);
       if (newMessage.replyMessageId != null && newMessage.replyMessage == null) {
@@ -350,10 +353,7 @@ class AdminChatProvider extends ChangeNotifier {
     final targetRoomId = roomId ?? _currentRoom?.id;
     if (targetRoomId == null || targetRoomId.isEmpty) return;
     try {
-      await SupabaseConfig.client.rpc(
-        'mark_chat_room_read',
-        params: {'p_room_id': targetRoomId},
-      );
+      await SupabaseConfig.client.rpc('mark_chat_room_read', params: {'p_room_id': targetRoomId});
     } catch (e) {
       debugPrint('[AdminChatProvider] Error marking room as read: $e');
     }

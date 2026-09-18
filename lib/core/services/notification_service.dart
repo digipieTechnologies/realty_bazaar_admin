@@ -140,7 +140,9 @@ class NotificationService {
         AppRoutes.router.push(targetPath);
       } else {
         // App is not open (cold launch): store pendingRedirectKey for AppBootstrap to consume
-        debugPrint('👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath');
+        debugPrint(
+          '👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath',
+        );
         _storePendingRedirect(targetPath);
       }
     } catch (e, stack) {

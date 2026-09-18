@@ -94,10 +94,7 @@ class _PropertyTypeAheadFieldState extends State<PropertyTypeAheadField> {
         if (displayLabel.isNotEmpty) ...[
           Text(
             widget.isRequired ? '$displayLabel *' : displayLabel,
-            style: context.titleSmall?.copyWith(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.titleSmall?.copyWith(color: colorScheme.onSurface, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 6.0),
         ],
@@ -111,10 +108,7 @@ class _PropertyTypeAheadFieldState extends State<PropertyTypeAheadField> {
               validator: widget.validator,
               onTap: () {
                 if (controller.text.isNotEmpty) {
-                  controller.selection = TextSelection(
-                    baseOffset: 0,
-                    extentOffset: controller.text.length,
-                  );
+                  controller.selection = TextSelection(baseOffset: 0, extentOffset: controller.text.length);
                 }
               },
               style: context.titleSmall?.copyWith(
@@ -164,8 +158,8 @@ class _PropertyTypeAheadFieldState extends State<PropertyTypeAheadField> {
             if (!hasBroker) return [];
 
             final trimmed = pattern.trim();
-            final isCurrentSelection = _selectedProperty != null &&
-                (trimmed == _selectedPropertyTitle || trimmed.isEmpty);
+            final isCurrentSelection =
+                _selectedProperty != null && (trimmed == _selectedPropertyTitle || trimmed.isEmpty);
 
             final searchTerm = isCurrentSelection ? null : (trimmed.isNotEmpty ? trimmed : null);
 
@@ -189,7 +183,8 @@ class _PropertyTypeAheadFieldState extends State<PropertyTypeAheadField> {
             return list;
           },
           itemBuilder: (context, property) {
-            final isSelected = property.id == _selectedProperty?.id ||
+            final isSelected =
+                property.id == _selectedProperty?.id ||
                 property.propertyTitle.toLowerCase() == _controller.text.trim().toLowerCase();
 
             return ListTile(
@@ -233,11 +228,7 @@ class _PropertyTypeAheadFieldState extends State<PropertyTypeAheadField> {
           loadingBuilder: (context) => const Padding(
             padding: EdgeInsets.all(16.0),
             child: Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
             ),
           ),
           emptyBuilder: (context) => Padding(

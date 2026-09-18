@@ -23,7 +23,6 @@ class LanguageDialog extends StatelessWidget {
     final currentCode = languageProvider.locale.languageCode;
 
     return Dialog(
-      
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
         width: 360.0,

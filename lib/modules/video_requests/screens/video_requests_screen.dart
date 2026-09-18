@@ -80,7 +80,10 @@ class VideoRequestsScreenState extends State<VideoRequestsScreen> {
     if (confirmed == true && mounted) {
       final success = await context.read<VideoRequestsProvider>().deleteVideoRequest(request.id!);
       if (success && mounted) {
-        AppToast.showSuccess('video_request_toast_removed_title'.tr(), 'video_request_toast_removed_msg'.tr());
+        AppToast.showSuccess(
+          'video_request_toast_removed_title'.tr(),
+          'video_request_toast_removed_msg'.tr(),
+        );
       }
     }
   }

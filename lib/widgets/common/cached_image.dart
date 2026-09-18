@@ -40,8 +40,8 @@ class CachedImage extends StatelessWidget {
     this.placeholderWidget,
     this.errorWidget,
     this.backgroundColor,
-  })  : height = height ?? radius ?? 50.0,
-        width = width ?? radius ?? 50.0;
+  }) : height = height ?? radius ?? 50.0,
+       width = width ?? radius ?? 50.0;
 
   factory CachedImage.fromUrl(
     String? url, {

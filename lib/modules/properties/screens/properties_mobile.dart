@@ -262,8 +262,16 @@ class PropertiesMobile extends StatelessWidget {
                             spacing: 12.0,
                             runSpacing: 6.0,
                             children: [
-                              _buildSpecIconText(context, Icons.king_bed_outlined, '${property.bedrooms} Beds'),
-                              _buildSpecIconText(context, Icons.bathtub_outlined, '${property.bathrooms} Baths'),
+                              _buildSpecIconText(
+                                context,
+                                Icons.king_bed_outlined,
+                                '${property.bedrooms} Beds',
+                              ),
+                              _buildSpecIconText(
+                                context,
+                                Icons.bathtub_outlined,
+                                '${property.bathrooms} Baths',
+                              ),
                               _buildSpecIconText(
                                 context,
                                 Icons.square_foot_outlined,

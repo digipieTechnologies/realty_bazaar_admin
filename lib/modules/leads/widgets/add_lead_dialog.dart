@@ -236,12 +236,7 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'leads_status'.tr(),
-                  style: context.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text('leads_status'.tr(), style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),

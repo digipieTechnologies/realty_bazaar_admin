@@ -77,10 +77,7 @@ class AppDateField extends StatelessWidget {
 
     if (pickTime) {
       final initialTime = TimeOfDay.fromDateTime(value ?? initialDate ?? now);
-      final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: initialTime,
-      );
+      final pickedTime = await showTimePicker(context: context, initialTime: initialTime);
 
       if (pickedTime != null) {
         finalDateTime = DateTime(
@@ -131,7 +128,8 @@ class AppDateField extends StatelessWidget {
             fontSize: 14,
           ),
           prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon ??
+          suffixIcon:
+              suffixIcon ??
               (showClearButton && currentValue != null && enabled
                   ? IconButton(
                       icon: const Icon(Icons.clear_rounded, size: 18),
@@ -186,7 +184,9 @@ class AppDateField extends StatelessWidget {
               displayText,
               style: context.titleSmall?.copyWith(
                 color: enabled
-                    ? (currentValue != null ? colorScheme.onSurface : (isDark ? colorScheme.onSurfaceVariant : AppColors.slate400))
+                    ? (currentValue != null
+                          ? colorScheme.onSurface
+                          : (isDark ? colorScheme.onSurfaceVariant : AppColors.slate400))
                     : colorScheme.onSurface.withOpacity(0.38),
               ),
             ),

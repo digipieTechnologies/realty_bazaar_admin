@@ -90,10 +90,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
 
     // Priority
     if (_selectedPriority != widget.ticket.priorityEnum) {
-      final res = await provider.updateTicketPriority(
-        widget.ticket.id,
-        _selectedPriority.dbValue,
-      );
+      final res = await provider.updateTicketPriority(widget.ticket.id, _selectedPriority.dbValue);
       if (!res) success = false;
     }
 
@@ -132,9 +129,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
 
     if (mounted) {
       if (success) {
-        AppToast.showSuccess(
-          approve ? 'reopen_approved'.tr() : 'reopen_denied'.tr(),
-        );
+        AppToast.showSuccess(approve ? 'reopen_approved'.tr() : 'reopen_denied'.tr());
         Navigator.of(context).pop();
       } else {
         AppToast.showError('error_updating_ticket'.tr());
@@ -144,10 +139,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
 
   void _openChatDialog() {
     Navigator.of(context).pop();
-    AdminChatDialog.show(
-      context,
-      supportTicket: widget.ticket,
-    );
+    AdminChatDialog.show(context, supportTicket: widget.ticket);
   }
 
   @override
@@ -180,11 +172,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                       color: AppColors.primary100,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(
-                      Icons.support_agent_rounded,
-                      color: AppColors.primary,
-                      size: 24,
-                    ),
+                    child: const Icon(Icons.support_agent_rounded, color: AppColors.primary, size: 24),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -246,11 +234,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                           children: [
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.warning_amber_rounded,
-                                  color: AppColors.warning,
-                                  size: 22,
-                                ),
+                                const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 22),
                                 const SizedBox(width: 8),
                                 Text(
                                   'reopen_requested_title'.tr(),
@@ -309,7 +293,9 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                                 child: _buildInfoItem(
                                   label: 'broker'.tr(),
                                   value: widget.ticket.brokerBusinessName ?? 'N/A',
-                                  subtitle: widget.ticket.brokerCode != null ? 'Code: ${widget.ticket.brokerCode}' : null,
+                                  subtitle: widget.ticket.brokerCode != null
+                                      ? 'Code: ${widget.ticket.brokerCode}'
+                                      : null,
                                 ),
                               ),
                               Expanded(
@@ -324,10 +310,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildInfoItem(
-                                  label: 'email'.tr(),
-                                  value: widget.ticket.email,
-                                ),
+                                child: _buildInfoItem(label: 'email'.tr(), value: widget.ticket.email),
                               ),
                               Expanded(
                                 child: _buildInfoItem(
@@ -338,15 +321,9 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                             ],
                           ),
                           const Divider(height: 24, color: AppColors.border),
-                          _buildInfoItem(
-                            label: 'subject'.tr(),
-                            value: widget.ticket.subject,
-                          ),
+                          _buildInfoItem(label: 'subject'.tr(), value: widget.ticket.subject),
                           const SizedBox(height: 12),
-                          _buildInfoItem(
-                            label: 'description'.tr(),
-                            value: widget.ticket.description,
-                          ),
+                          _buildInfoItem(label: 'description'.tr(), value: widget.ticket.description),
                         ],
                       ),
                     ),
@@ -360,7 +337,8 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                         spacing: 12,
                         runSpacing: 12,
                         children: widget.ticket.attachments.map((att) {
-                          final isImage = att.type?.toLowerCase().contains('image') == true ||
+                          final isImage =
+                              att.type?.toLowerCase().contains('image') == true ||
                               (att.url?.toLowerCase().endsWith('.jpg') == true ||
                                   att.url?.toLowerCase().endsWith('.jpeg') == true ||
                                   att.url?.toLowerCase().endsWith('.png') == true);
@@ -433,10 +411,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                                     Container(
                                       width: 8,
                                       height: 8,
-                                      decoration: BoxDecoration(
-                                        color: s.color,
-                                        shape: BoxShape.circle,
-                                      ),
+                                      decoration: BoxDecoration(color: s.color, shape: BoxShape.circle),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(s.labelKey.tr()),
@@ -463,10 +438,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                                     Container(
                                       width: 8,
                                       height: 8,
-                                      decoration: BoxDecoration(
-                                        color: p.color,
-                                        shape: BoxShape.circle,
-                                      ),
+                                      decoration: BoxDecoration(color: p.color, shape: BoxShape.circle),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(p.labelKey.tr()),
@@ -489,14 +461,13 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                       value: _selectedAssignedTo,
                       hint: 'unassigned'.tr(),
                       items: [
-                        DropdownMenuItem<String?>(
-                          value: null,
-                          child: Text('unassigned'.tr()),
-                        ),
+                        DropdownMenuItem<String?>(value: null, child: Text('unassigned'.tr())),
                         ...users.map((u) {
                           return DropdownMenuItem<String?>(
                             value: u.id,
-                            child: Text('${u.name ?? u.email ?? 'Staff'} (${(u.role.displayName).toUpperCase()})'),
+                            child: Text(
+                              '${u.name ?? u.email ?? 'Staff'} (${(u.role.displayName).toUpperCase()})',
+                            ),
                           );
                         }),
                       ],
@@ -530,10 +501,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
                     onPressed: _openChatDialog,
                   ),
                   const Spacer(),
-                  AppButton.outline(
-                    text: 'cancel'.tr(),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                  AppButton.outline(text: 'cancel'.tr(), onPressed: () => Navigator.of(context).pop()),
                   const SizedBox(width: 12),
                   AppButton.solid(
                     text: 'save_changes'.tr(),
@@ -552,18 +520,11 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: AppTextStyles.body1.copyWith(
-        fontWeight: FontWeight.bold,
-        color: AppColors.textPrimary,
-      ),
+      style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
     );
   }
 
-  Widget _buildInfoItem({
-    required String label,
-    required String value,
-    String? subtitle,
-  }) {
+  Widget _buildInfoItem({required String label, required String value, String? subtitle}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -571,10 +532,7 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
         const SizedBox(height: 2),
         Text(
           value,
-          style: AppTextStyles.body2.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
+          style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         ),
         if (subtitle != null) ...[
           const SizedBox(height: 1),
@@ -584,23 +542,13 @@ class _AdminTicketDetailDialogState extends State<AdminTicketDetailDialog> {
     );
   }
 
-  Widget _buildBadge({
-    required String label,
-    required Color textColor,
-    required Color bgColor,
-  }) {
+  Widget _buildBadge({required String label, required Color textColor, required Color bgColor}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(6),
-      ),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(6)),
       child: Text(
         label,
-        style: AppTextStyles.caption.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppTextStyles.caption.copyWith(color: textColor, fontWeight: FontWeight.w600),
       ),
     );
   }

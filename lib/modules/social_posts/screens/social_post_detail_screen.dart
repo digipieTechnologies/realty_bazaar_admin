@@ -79,7 +79,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
         title: Text('social_post_detail_header'.tr()),
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
-      
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -90,7 +90,6 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
@@ -194,7 +193,10 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     child: SizedBox(
                                       width: 160,
-                                      child: CachedImage(imageUrl: post.medias![index].url, fit: BoxFit.cover),
+                                      child: CachedImage(
+                                        imageUrl: post.medias![index].url,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   );
                                 },
@@ -287,7 +289,6 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
       ),

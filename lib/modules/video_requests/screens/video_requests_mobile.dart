@@ -59,16 +59,16 @@ class VideoRequestsMobile extends StatelessWidget {
                 child: videoRequestsProv.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : list.isEmpty
-                        ? Center(child: Text('no_data'.tr(), style: AppTextStyles.body2))
-                        : ListView.separated(
-                            itemCount: list.length,
-                            padding: const EdgeInsets.only(bottom: 80),
-                            separatorBuilder: (context, index) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final request = list[index];
-                              return _buildCard(context, request, videoRequestsProv);
-                            },
-                          ),
+                    ? Center(child: Text('no_data'.tr(), style: AppTextStyles.body2))
+                    : ListView.separated(
+                        itemCount: list.length,
+                        padding: const EdgeInsets.only(bottom: 80),
+                        separatorBuilder: (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final request = list[index];
+                          return _buildCard(context, request, videoRequestsProv);
+                        },
+                      ),
               ),
             ),
             PaginationWidget(
@@ -130,11 +130,7 @@ class VideoRequestsMobile extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(color: context.borderColor),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Material(

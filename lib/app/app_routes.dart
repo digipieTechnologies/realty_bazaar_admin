@@ -119,7 +119,10 @@ class AppRoutes {
     },
     errorBuilder: (context, state) => Scaffold(
       body: Center(
-        child: Text('Route not found: ${state.uri.path}', style: const TextStyle(color: Colors.red, fontSize: 16)),
+        child: Text(
+          'Route not found: ${state.uri.path}',
+          style: const TextStyle(color: Colors.red, fontSize: 16),
+        ),
       ),
     ),
     routes: <RouteBase>[
@@ -141,7 +144,8 @@ class AppRoutes {
           GoRoute(
             name: dashboardPath,
             path: dashboard,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminDashboardScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminDashboardScreen()),
           ),
           GoRoute(
             name: usersPath,
@@ -170,7 +174,8 @@ class AppRoutes {
           GoRoute(
             name: brokersPath,
             path: brokers,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const BrokersScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const BrokersScreen()),
             routes: [
               GoRoute(
                 name: brokerDetailPath,
@@ -194,7 +199,8 @@ class AppRoutes {
           GoRoute(
             name: propertiesPath,
             path: properties,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminPropertiesScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminPropertiesScreen()),
             routes: [
               GoRoute(
                 name: propertyDetailPath,
@@ -218,7 +224,8 @@ class AppRoutes {
           GoRoute(
             name: socialPostsPath,
             path: socialPosts,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const SocialPostsScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const SocialPostsScreen()),
             routes: [
               GoRoute(
                 name: socialPostsDetailPath,
@@ -266,17 +273,20 @@ class AppRoutes {
           GoRoute(
             name: settingsPath,
             path: settings,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminSettingsScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminSettingsScreen()),
           ),
           GoRoute(
             name: profilePath,
             path: profile,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminProfileScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminProfileScreen()),
           ),
           GoRoute(
             name: videoRequestsPath,
             path: videoRequests,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const VideoRequestsScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const VideoRequestsScreen()),
             routes: [
               GoRoute(
                 name: videoRequestDetailPath,
@@ -300,7 +310,8 @@ class AppRoutes {
           GoRoute(
             name: supportPath,
             path: support,
-            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
           ),
         ],
       ),

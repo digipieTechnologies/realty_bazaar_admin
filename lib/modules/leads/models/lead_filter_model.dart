@@ -224,8 +224,8 @@ class LeadFilterModel extends BaseFilterModel {
       brokerId: map.containsKey('brokerId') ? map['brokerId'] as String? : brokerId,
       status: map.containsKey('status')
           ? (map['status'] is LeadStatus
-              ? map['status'] as LeadStatus?
-              : (map['status'] != null ? LeadStatus.fromString(map['status'].toString()) : null))
+                ? map['status'] as LeadStatus?
+                : (map['status'] != null ? LeadStatus.fromString(map['status'].toString()) : null))
           : status,
       instagramOnly: map.containsKey('instagramOnly') ? map['instagramOnly'] as bool? : instagramOnly,
       facebookOnly: map.containsKey('facebookOnly') ? map['facebookOnly'] as bool? : facebookOnly,
@@ -242,19 +242,19 @@ class LeadFilterModel extends BaseFilterModel {
 
   @override
   List<Object?> get props => [
-        search,
-        platform,
-        brokerId,
-        status,
-        instagramOnly,
-        facebookOnly,
-        directOnly,
-        activeOnly,
-        inactiveOnly,
-        junkOnly,
-        page,
-        pageSize,
-        sortBy,
-        sortOrder,
-      ];
+    search,
+    platform,
+    brokerId,
+    status,
+    instagramOnly,
+    facebookOnly,
+    directOnly,
+    activeOnly,
+    inactiveOnly,
+    junkOnly,
+    page,
+    pageSize,
+    sortBy,
+    sortOrder,
+  ];
 }

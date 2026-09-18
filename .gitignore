@@ -20,7 +20,8 @@ Thumbs.db
 *.iml
 *.ipr
 *.iws
-
+.gitattributes
+.firebase
 # Flutter / Dart Build Outputs
 .dart_tool/
 .flutter-plugins

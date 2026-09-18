@@ -171,7 +171,10 @@ class VideoRequestsDesktop extends StatelessWidget {
         DataCellText(text: request.property?.propertyTitle ?? '-'),
         DataCellText(text: request.broker?.businessName ?? '-'),
         Align(alignment: Alignment.centerLeft, child: _buildStatusBadge(context, request.status)),
-        Align(alignment: Alignment.centerLeft, child: _buildApprovalBadge(context, request.adminApprovalStatus)),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: _buildApprovalBadge(context, request.adminApprovalStatus),
+        ),
         DataCellText(
           text: request.createdAt != null
               ? DateFormat('dd MMM yyyy, hh:mm a').format(request.createdAt!)

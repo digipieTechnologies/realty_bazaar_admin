@@ -119,10 +119,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
         if (displayLabel.isNotEmpty) ...[
           Text(
             widget.isRequired ? '$displayLabel *' : displayLabel,
-            style: context.titleSmall?.copyWith(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+            style: context.titleSmall?.copyWith(color: colorScheme.onSurface, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 6.0),
         ],
@@ -134,10 +131,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
               focusNode: focusNode,
               onTap: () {
                 if (controller.text.isNotEmpty) {
-                  controller.selection = TextSelection(
-                    baseOffset: 0,
-                    extentOffset: controller.text.length,
-                  );
+                  controller.selection = TextSelection(baseOffset: 0, extentOffset: controller.text.length);
                 }
               },
               style: context.titleSmall?.copyWith(color: colorScheme.onSurface),
@@ -182,14 +176,14 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             final cleanPattern = trimmed.replaceAll(RegExp(r'\s*\([^)]*\)$'), '').trim();
 
             // Check if user just focused the field with an already selected broker
-            final isCurrentSelection = widget.selectedBrokerId != null &&
+            final isCurrentSelection =
+                widget.selectedBrokerId != null &&
                 widget.selectedBrokerId!.isNotEmpty &&
                 (trimmed == _selectedBrokerDisplayText ||
                     trimmed.isEmpty ||
                     (cleanPattern.isNotEmpty &&
                         _selectedBroker != null &&
-                        cleanPattern.toLowerCase() ==
-                            (_selectedBroker!.businessName ?? '').toLowerCase()));
+                        cleanPattern.toLowerCase() == (_selectedBroker!.businessName ?? '').toLowerCase()));
 
             if (trimmed.isEmpty || isCurrentSelection) {
               List<BrokerModel> list = brokers;
@@ -220,11 +214,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             final searchTerm = cleanPattern.isNotEmpty ? cleanPattern : trimmed;
 
             try {
-              final response = await BrokerService().fetchBrokers(
-                search: searchTerm,
-                page: 1,
-                pageSize: 20,
-              );
+              final response = await BrokerService().fetchBrokers(search: searchTerm, page: 1, pageSize: 20);
               if (response.items.isNotEmpty) {
                 return response.items;
               }
@@ -306,11 +296,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
           loadingBuilder: (context) => const Padding(
             padding: EdgeInsets.all(16.0),
             child: Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
             ),
           ),
           emptyBuilder: (context) => Padding(

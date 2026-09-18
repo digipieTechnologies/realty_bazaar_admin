@@ -115,7 +115,9 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
         _buildDetailRow(
           context,
           'completed_at'.tr(),
-          activeReq.completedAt != null ? DateFormat('dd MMM yyyy, hh:mm a').format(activeReq.completedAt!) : '-',
+          activeReq.completedAt != null
+              ? DateFormat('dd MMM yyyy, hh:mm a').format(activeReq.completedAt!)
+              : '-',
         ),
         const SizedBox(height: 12),
         Text(
@@ -166,7 +168,10 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(flex: 2, child: Column(children: [propertyCard, const SizedBox(height: 20), brokerCard])),
+                  Expanded(
+                    flex: 2,
+                    child: Column(children: [propertyCard, const SizedBox(height: 20), brokerCard]),
+                  ),
                   const SizedBox(width: 20),
                   Expanded(
                     flex: 1,
@@ -258,7 +263,11 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(color: context.primaryContainerColor, shape: BoxShape.circle),
-            child: Icon(Icons.video_camera_back_rounded, size: isDesktop ? 32 : 24, color: context.primaryColor),
+            child: Icon(
+              Icons.video_camera_back_rounded,
+              size: isDesktop ? 32 : 24,
+              color: context.primaryColor,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(child: content),
@@ -267,7 +276,12 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
     );
   }
 
-  Widget _buildBadgeChip(BuildContext context, {required String label, required Color color, required Color bgColor}) {
+  Widget _buildBadgeChip(
+    BuildContext context, {
+    required String label,
+    required Color color,
+    required Color bgColor,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12)),
@@ -352,7 +366,10 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
             final prov = context.read<VideoRequestsProvider>();
             final success = await prov.rejectRequest(req.id!, reason: reason);
             if (success) {
-              AppToast.showSuccess('video_request_toast_rejected_title'.tr(), 'video_request_toast_rejected_msg'.tr());
+              AppToast.showSuccess(
+                'video_request_toast_rejected_title'.tr(),
+                'video_request_toast_rejected_msg'.tr(),
+              );
               final updated = prov.requests.firstWhereOrNull((r) => r.id == req.id);
               if (updated != null) {
                 setStateIfMounted(() {
@@ -382,7 +399,10 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
             final prov = context.read<VideoRequestsProvider>();
             final success = await prov.approveRequest(req.id!, notes: notes);
             if (success) {
-              AppToast.showSuccess('video_request_toast_approved_title'.tr(), 'video_request_toast_approved_msg'.tr());
+              AppToast.showSuccess(
+                'video_request_toast_approved_title'.tr(),
+                'video_request_toast_approved_msg'.tr(),
+              );
               final updated = prov.requests.firstWhereOrNull((r) => r.id == req.id);
               if (updated != null) {
                 setStateIfMounted(() {

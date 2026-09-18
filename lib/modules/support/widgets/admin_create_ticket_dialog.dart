@@ -118,11 +118,7 @@ class _AdminCreateTicketDialogState extends State<AdminCreateTicketDialog> {
                       color: AppColors.primary100,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(
-                      Icons.add_comment_rounded,
-                      color: AppColors.primary,
-                      size: 24,
-                    ),
+                    child: const Icon(Icons.add_comment_rounded, color: AppColors.primary, size: 24),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -215,10 +211,7 @@ class _AdminCreateTicketDialogState extends State<AdminCreateTicketDialog> {
                               label: 'category'.tr(),
                               value: _selectedCategory,
                               items: SupportCategory.values.map((c) {
-                                return DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.labelKey.tr()),
-                                );
+                                return DropdownMenuItem(value: c, child: Text(c.labelKey.tr()));
                               }).toList(),
                               onChanged: (val) {
                                 if (val != null) setState(() => _selectedCategory = val);
@@ -285,10 +278,7 @@ class _AdminCreateTicketDialogState extends State<AdminCreateTicketDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  AppButton.outline(
-                    text: 'cancel'.tr(),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                  AppButton.outline(text: 'cancel'.tr(), onPressed: () => Navigator.of(context).pop()),
                   const SizedBox(width: 12),
                   AppButton.solid(
                     text: 'create_ticket'.tr(),

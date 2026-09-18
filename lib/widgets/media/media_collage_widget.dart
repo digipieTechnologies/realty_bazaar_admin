@@ -247,9 +247,7 @@ class MediaCollageWidget extends StatelessWidget {
         if (media.type == 'video')
           Container(
             color: Colors.black87,
-            child: const Center(
-              child: Icon(Icons.videocam_rounded, color: Colors.white, size: 36.0),
-            ),
+            child: const Center(child: Icon(Icons.videocam_rounded, color: Colors.white, size: 36.0)),
           )
         else
           CachedImage(imageUrl: media.url, imageBytes: media.bytes, fit: BoxFit.cover),

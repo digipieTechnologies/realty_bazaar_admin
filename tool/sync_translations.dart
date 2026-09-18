@@ -70,7 +70,8 @@ Future<String> translate(String text, String lang) async {
   // Google Translate might translate them or change their formatting.
   // We can pass them as is, but we should warn the user.
   final url = Uri.parse(
-      'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=$lang&dt=t&q=${Uri.encodeComponent(text)}');
+    'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=$lang&dt=t&q=${Uri.encodeComponent(text)}',
+  );
 
   final httpClient = HttpClient();
   try {

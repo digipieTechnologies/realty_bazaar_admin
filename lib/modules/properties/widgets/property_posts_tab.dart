@@ -199,7 +199,6 @@ class _PropertyPostsTabState extends State<PropertyPostsTab> with AutomaticKeepA
                                       if (post.medias != null && post.medias!.isNotEmpty)
                                         InkWell(
                                           onTap: () {
-
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => FullScreenMediaViewer(
@@ -215,7 +214,11 @@ class _PropertyPostsTabState extends State<PropertyPostsTab> with AutomaticKeepA
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Icon(Icons.photo_library_outlined, size: 14, color: AppColors.primary),
+                                                Icon(
+                                                  Icons.photo_library_outlined,
+                                                  size: 14,
+                                                  color: AppColors.primary,
+                                                ),
                                                 const SizedBox(width: 4),
                                                 Text(
                                                   '${post.medias!.length} Media',

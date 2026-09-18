@@ -81,7 +81,6 @@ class AppTheme {
 
       // Card Theme
       cardTheme: CardThemeData(
-        
         elevation: 0.5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -91,7 +90,6 @@ class AppTheme {
 
       // Dialog Theme
       dialogTheme: DialogThemeData(
-        
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       ),
@@ -101,7 +99,6 @@ class AppTheme {
 
       // AppBar Theme
       appBarTheme: const AppBarTheme(
-        
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: false,

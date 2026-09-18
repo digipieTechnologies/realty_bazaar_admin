@@ -543,7 +543,6 @@
   "create_ticket": "ટિકિટ બનાવો",
   "create_ticket_title": "સહાય ટિકિટ બનાવો",
   "create_ticket_subtitle": "બ્રોકર વતી નવી સહાય ટિકિટ ખોલો",
-  "select_broker": "બ્રોકર પસંદ કરો",
   "search_broker_hint": "બ્રોકર શોધો અને પસંદ કરો...",
   "please_select_broker": "કૃપા કરીને બ્રોકર પસંદ કરો",
   "requester_name": "વિનંતીકર્તાનું નામ",
@@ -597,6 +596,9 @@
   "priority_urgent": "અત્યંત તાત્કાલિક",
   "field_required": "આ ક્ષેત્ર જરૂરી છે",
   "invalid_email": "કૃપા કરીને માન્ય ઇમેઇલ દાખલ કરો",
+  "category": "શ્રેણી",
+  "filters": "ફિલ્ટર્સ",
+  "apply": "અરજી કરો",
   "common": {
     "collapse_sidebar": "સાઇડબારને સંકુચિત કરો",
     "expand_sidebar": "સાઇડબાર વિસ્તૃત કરો",

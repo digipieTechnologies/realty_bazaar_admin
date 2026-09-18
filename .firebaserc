@@ -6,10 +6,10 @@
     "the-realty-bazaar": {
       "hosting": {
         "dev": [
-          "the-realty-bazaar-portal-dev"
+          "the-realty-bazaar-admin-dev"
         ],
         "admin": [
-          "the-realty-bazaar-portal"
+          "the-realty-bazaar-admin"
         ]
       }
     }

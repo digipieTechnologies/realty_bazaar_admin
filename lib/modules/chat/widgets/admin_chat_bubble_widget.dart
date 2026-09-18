@@ -106,10 +106,7 @@ class AdminChatBubbleWidget extends StatelessWidget {
                                   : AppColors.border.withValues(alpha: 0.6),
                               borderRadius: BorderRadius.circular(6),
                               border: Border(
-                                left: BorderSide(
-                                  color: isMe ? Colors.white : AppColors.primary,
-                                  width: 3,
-                                ),
+                                left: BorderSide(color: isMe ? Colors.white : AppColors.primary, width: 3),
                               ),
                             ),
                             child: Text(
@@ -130,7 +127,8 @@ class AdminChatBubbleWidget extends StatelessWidget {
                             spacing: 8,
                             runSpacing: 8,
                             children: message.medias.map((m) {
-                              final isImg = m.url != null &&
+                              final isImg =
+                                  m.url != null &&
                                   (m.url!.toLowerCase().endsWith('.png') ||
                                       m.url!.toLowerCase().endsWith('.jpg') ||
                                       m.url!.toLowerCase().endsWith('.jpeg') ||
@@ -222,9 +220,7 @@ class AdminChatBubbleWidget extends StatelessWidget {
   void _showContextMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

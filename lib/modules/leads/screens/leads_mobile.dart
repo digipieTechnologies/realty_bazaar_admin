@@ -86,10 +86,7 @@ class LeadsMobile extends StatelessWidget {
             // Loading / Empty / Cards List
             if (provider.isLoading)
               const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(40.0),
-                  child: CircularProgressIndicator(),
-                ),
+                child: Padding(padding: EdgeInsets.all(40.0), child: CircularProgressIndicator()),
               )
             else if (leads.isEmpty)
               Center(
@@ -146,8 +143,8 @@ class LeadsMobile extends StatelessWidget {
     final propertyDisplay = (rawPropertyTitle != null && rawPropertyTitle.trim().isNotEmpty)
         ? rawPropertyTitle.trim()
         : (lead.propertyDetails?.trim().isNotEmpty == true
-            ? lead.propertyDetails!.trim()
-            : (lead.socialPost?.caption ?? 'leads_general_inquiry'.tr()));
+              ? lead.propertyDetails!.trim()
+              : (lead.socialPost?.caption ?? 'leads_general_inquiry'.tr()));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12.0),
@@ -156,11 +153,7 @@ class LeadsMobile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
         border: Border.all(color: context.borderColor),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 2)),
         ],
       ),
       child: Material(
@@ -182,7 +175,11 @@ class LeadsMobile extends StatelessWidget {
                       backgroundColor: context.primaryColor.withValues(alpha: 0.1),
                       child: Text(
                         lead.userName.isNotEmpty ? lead.userName[0].toUpperCase() : '?',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: context.primaryColor, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: context.primaryColor,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -261,9 +258,7 @@ class LeadsMobile extends StatelessWidget {
                         color: hasBroker ? AppColors.secondaryLight : context.backgroundColor,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: hasBroker
-                              ? AppColors.secondary.withValues(alpha: 0.2)
-                              : context.borderColor,
+                          color: hasBroker ? AppColors.secondary.withValues(alpha: 0.2) : context.borderColor,
                         ),
                       ),
                       child: Row(

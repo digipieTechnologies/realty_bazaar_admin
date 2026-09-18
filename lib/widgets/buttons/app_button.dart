@@ -56,8 +56,8 @@ class AppButton extends StatelessWidget {
     this.iconSpacing = 8.0,
     this.tooltip,
     this.elevation = 0.0,
-  })  : text = text ?? title,
-        variant = variant ?? (isBorderOnly ? AppButtonVariant.outline : AppButtonVariant.solid);
+  }) : text = text ?? title,
+       variant = variant ?? (isBorderOnly ? AppButtonVariant.outline : AppButtonVariant.solid);
 
   factory AppButton.solid({
     Key? key,

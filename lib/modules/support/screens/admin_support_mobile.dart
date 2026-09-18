@@ -157,8 +157,8 @@ class AdminSupportMobile extends StatelessWidget {
               onSearch: (q) => provider.setSearchQuery(q),
               isMobile: true,
               onFilter: () => _showFilterModal(context),
-              activeFilterCount: (provider.selectedCategory != null ? 1 : 0) +
-                  (provider.selectedPriority != null ? 1 : 0),
+              activeFilterCount:
+                  (provider.selectedCategory != null ? 1 : 0) + (provider.selectedPriority != null ? 1 : 0),
               onAdd: () => AdminCreateTicketDialog.show(context),
             ),
           ),
@@ -172,15 +172,23 @@ class AdminSupportMobile extends StatelessWidget {
               children: [
                 _buildFilterChip('common.all'.tr(), 'all', provider),
                 const SizedBox(width: 8),
-                _buildFilterChip('Unread', 'unread', provider,
-                    badge: provider.unreadTicketsCount > 0 ? provider.unreadTicketsCount : null),
+                _buildFilterChip(
+                  'Unread',
+                  'unread',
+                  provider,
+                  badge: provider.unreadTicketsCount > 0 ? provider.unreadTicketsCount : null,
+                ),
                 const SizedBox(width: 8),
                 _buildFilterChip('status_open'.tr(), 'open', provider),
                 const SizedBox(width: 8),
                 _buildFilterChip('status_in_progress'.tr(), 'in_progress', provider),
                 const SizedBox(width: 8),
-                _buildFilterChip('reopen_requested'.tr(), 'reopen_requested', provider,
-                    badge: provider.reopenRequestedCount > 0 ? provider.reopenRequestedCount : null),
+                _buildFilterChip(
+                  'reopen_requested'.tr(),
+                  'reopen_requested',
+                  provider,
+                  badge: provider.reopenRequestedCount > 0 ? provider.reopenRequestedCount : null,
+                ),
                 const SizedBox(width: 8),
                 _buildFilterChip('status_resolved'.tr(), 'resolved', provider),
                 const SizedBox(width: 8),
@@ -195,48 +203,55 @@ class AdminSupportMobile extends StatelessWidget {
             child: provider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : provider.errorMessage != null && tickets.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
-                              const SizedBox(height: 12),
-                              Text(
-                                provider.errorMessage!,
-                                textAlign: TextAlign.center,
-                                style: AppTextStyles.body2.copyWith(color: AppColors.error),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton.icon(
-                                onPressed: () => provider.fetchTickets(),
-                                icon: const Icon(Icons.refresh_rounded),
-                                label: Text('retry'.tr()),
-                              ),
-                            ],
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
+                          const SizedBox(height: 12),
+                          Text(
+                            provider.errorMessage!,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.body2.copyWith(color: AppColors.error),
                           ),
-                        ),
-                      )
-                    : tickets.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.support_agent_rounded, size: 54, color: AppColors.textMuted.withValues(alpha: 0.5)),
-                                const SizedBox(height: 12),
-                                Text('no_support_tickets_found'.tr(), style: AppTextStyles.body2.copyWith(color: AppColors.textMuted)),
-                              ],
-                            ),
-                          )
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        itemCount: tickets.length,
-                        itemBuilder: (context, index) {
-                          final ticket = tickets[index];
-                          return _buildTicketCard(context, ticket);
-                        },
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: () => provider.fetchTickets(),
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: Text('retry'.tr()),
+                          ),
+                        ],
                       ),
+                    ),
+                  )
+                : tickets.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.support_agent_rounded,
+                          size: 54,
+                          color: AppColors.textMuted.withValues(alpha: 0.5),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'no_support_tickets_found'.tr(),
+                          style: AppTextStyles.body2.copyWith(color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    itemCount: tickets.length,
+                    itemBuilder: (context, index) {
+                      final ticket = tickets[index];
+                      return _buildTicketCard(context, ticket);
+                    },
+                  ),
           ),
         ],
       ),
@@ -270,10 +285,7 @@ class AdminSupportMobile extends StatelessWidget {
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: AppColors.error,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: BoxDecoration(color: AppColors.error, borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   badge.toString(),
                   style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
@@ -307,10 +319,7 @@ class AdminSupportMobile extends StatelessWidget {
               children: [
                 Text(
                   ticket.ticketNumber,
-                  style: AppTextStyles.body1.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
+                  style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold, color: AppColors.primary),
                 ),
                 if (ticket.unreadCount > 0) ...[
                   const SizedBox(width: 6),
@@ -322,11 +331,7 @@ class AdminSupportMobile extends StatelessWidget {
                     ),
                     child: Text(
                       '${ticket.unreadCount} NEW',
-                      style: const TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ],
@@ -365,7 +370,11 @@ class AdminSupportMobile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'reopen_requested'.tr(),
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.error),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.error,
+                        ),
                       ),
                     ),
                   ],
@@ -407,10 +416,7 @@ class AdminSupportMobile extends StatelessWidget {
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: BoxDecoration(
-                    color: ticket.priorityEnum.color,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: ticket.priorityEnum.color, shape: BoxShape.circle),
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -443,10 +449,7 @@ class AdminSupportMobile extends StatelessWidget {
                         top: 4,
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade600,
-                            shape: BoxShape.circle,
-                          ),
+                          decoration: BoxDecoration(color: Colors.red.shade600, shape: BoxShape.circle),
                           constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                           child: Text(
                             '${ticket.unreadCount}',

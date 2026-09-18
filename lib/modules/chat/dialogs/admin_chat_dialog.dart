@@ -55,14 +55,16 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
       if (widget.supportTicket.chatRoomId != null) {
         context.read<AdminSupportProvider>().setActiveChatRoom(widget.supportTicket.chatRoomId);
       }
-      chatProvider.initSupportChatRoom(
-        supportTicketId: widget.supportTicket.id,
-        brokerId: widget.supportTicket.brokerId,
-      ).then((_) {
-        if (mounted && chatProvider.currentRoom != null) {
-          context.read<AdminSupportProvider>().setActiveChatRoom(chatProvider.currentRoom!.id);
-        }
-      });
+      chatProvider
+          .initSupportChatRoom(
+            supportTicketId: widget.supportTicket.id,
+            brokerId: widget.supportTicket.brokerId,
+          )
+          .then((_) {
+            if (mounted && chatProvider.currentRoom != null) {
+              context.read<AdminSupportProvider>().setActiveChatRoom(chatProvider.currentRoom!.id);
+            }
+          });
     });
   }
 
@@ -89,10 +91,7 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
     super.dispose();
   }
 
-  Future<void> _handleSendMessage({
-    required String text,
-    List<MediaModel> attachments = const [],
-  }) async {
+  Future<void> _handleSendMessage({required String text, List<MediaModel> attachments = const []}) async {
     final authProvider = context.read<AdminAuthProvider>();
     final adminUser = authProvider.adminUser;
     if (adminUser == null) {
@@ -111,11 +110,7 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
     if (success) {
       setState(() => _replyingToMessage = null);
       if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        _scrollController.animateTo(0.0, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
       }
     } else {
       AppToast.showError('Failed to send message');
@@ -182,14 +177,10 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
     final currentAdminId = authProvider.adminUser?.id;
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: isDesktop ? BorderRadius.circular(16) : BorderRadius.zero,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: isDesktop ? BorderRadius.circular(16) : BorderRadius.zero),
       backgroundColor: AppColors.surface,
       surfaceTintColor: Colors.transparent,
-      insetPadding: isDesktop
-          ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
-          : EdgeInsets.zero,
+      insetPadding: isDesktop ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24) : EdgeInsets.zero,
       child: Container(
         width: dialogWidth,
         height: dialogHeight,
@@ -227,7 +218,11 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
                           color: AppColors.primary100,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.chat_bubble_outline_rounded, color: AppColors.primary, size: 22),
+                        child: const Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          color: AppColors.primary,
+                          size: 22,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -281,75 +276,81 @@ class _AdminChatDialogState extends State<AdminChatDialog> {
                   child: chatProvider.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : messages.isEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.mark_chat_read_rounded,
+                                size: 48,
+                                color: AppColors.textMuted.withValues(alpha: 0.5),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'no_messages_yet'.tr(),
+                                style: AppTextStyles.body2.copyWith(color: AppColors.textMuted),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          color: AppColors.background,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            reverse: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            itemCount: messages.length + (chatProvider.isLoadingMore ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == messages.length && chatProvider.isLoadingMore) {
+                                return const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              // Reverse indexed
+                              final messageIndex = messages.length - 1 - index;
+                              final message = messages[messageIndex];
+                              final isMe =
+                                  message.senderId == currentAdminId || message.senderType == 'admin';
+
+                              // Date separator logic
+                              bool showDateSeparator = false;
+                              if (messageIndex == 0) {
+                                showDateSeparator = true;
+                              } else {
+                                final prev = messages[messageIndex - 1];
+                                final currDate = message.createdAt.toLocal();
+                                final prevDate = prev.createdAt.toLocal();
+                                showDateSeparator =
+                                    currDate.year != prevDate.year ||
+                                    currDate.month != prevDate.month ||
+                                    currDate.day != prevDate.day;
+                              }
+
+                              return Column(
                                 children: [
-                                  Icon(Icons.mark_chat_read_rounded, size: 48, color: AppColors.textMuted.withValues(alpha: 0.5)),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'no_messages_yet'.tr(),
-                                    style: AppTextStyles.body2.copyWith(color: AppColors.textMuted),
+                                  if (showDateSeparator) AdminChatDateSeparator(date: message.createdAt),
+                                  AdminChatBubbleWidget(
+                                    message: message,
+                                    isMe: isMe,
+                                    onReply: () {
+                                      setState(() => _replyingToMessage = message);
+                                    },
+                                    onEdit: () => _handleEditMessage(message),
+                                    onDelete: () => _handleDeleteMessage(message),
                                   ),
                                 ],
-                              ),
-                            )
-                          : Container(
-                              color: AppColors.background,
-                              child: ListView.builder(
-                                controller: _scrollController,
-                                reverse: true,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                itemCount: messages.length + (chatProvider.isLoadingMore ? 1 : 0),
-                                itemBuilder: (context, index) {
-                                  if (index == messages.length && chatProvider.isLoadingMore) {
-                                    return const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(strokeWidth: 2),
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  // Reverse indexed
-                                  final messageIndex = messages.length - 1 - index;
-                                  final message = messages[messageIndex];
-                                  final isMe = message.senderId == currentAdminId || message.senderType == 'admin';
-
-                                  // Date separator logic
-                                  bool showDateSeparator = false;
-                                  if (messageIndex == 0) {
-                                    showDateSeparator = true;
-                                  } else {
-                                    final prev = messages[messageIndex - 1];
-                                    final currDate = message.createdAt.toLocal();
-                                    final prevDate = prev.createdAt.toLocal();
-                                    showDateSeparator = currDate.year != prevDate.year ||
-                                        currDate.month != prevDate.month ||
-                                        currDate.day != prevDate.day;
-                                  }
-
-                                  return Column(
-                                    children: [
-                                      if (showDateSeparator) AdminChatDateSeparator(date: message.createdAt),
-                                      AdminChatBubbleWidget(
-                                        message: message,
-                                        isMe: isMe,
-                                        onReply: () {
-                                          setState(() => _replyingToMessage = message);
-                                        },
-                                        onEdit: () => _handleEditMessage(message),
-                                        onDelete: () => _handleDeleteMessage(message),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
+                              );
+                            },
+                          ),
+                        ),
                 ),
 
                 // ── Input Bar ─────────────────────────────────────────────────

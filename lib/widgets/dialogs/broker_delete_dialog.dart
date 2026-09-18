@@ -35,19 +35,14 @@ class _BrokerDeleteDialogState extends State<BrokerDeleteDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'broker_delete_select_action'.tr(args: [widget.businessName]),
-              style: context.dialogBody,
-            ),
+            Text('broker_delete_select_action'.tr(args: [widget.businessName]), style: context.dialogBody),
             const SizedBox(height: 16),
             RadioListTile<bool>(
               title: Text(
                 'broker_delete_soft_title'.tr(),
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
-              subtitle: Text(
-                'broker_delete_soft_desc'.tr(),
-              ),
+              subtitle: Text('broker_delete_soft_desc'.tr()),
               value: false,
               groupValue: _hardDelete,
               onChanged: (val) {

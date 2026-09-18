@@ -81,10 +81,7 @@ class StepPropertyTypeWidget extends StatelessWidget {
             Flexible(
               child: Text(
                 'select_property_category'.tr(),
-                style: AppTextStyles.h3.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
             ),
             const SizedBox(width: 8.0),
