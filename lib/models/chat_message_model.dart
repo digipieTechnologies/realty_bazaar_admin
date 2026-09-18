@@ -78,7 +78,9 @@ class ChatMessageModel extends Equatable {
       replyMessage: json['reply_message'] != null ? ChatMessageModel.fromJson(json['reply_message']) : null,
       isEdited: json['is_edited'] == true || json['is_edited']?.toString() == 'true',
       isDeleted: json['is_deleted'] == true || json['is_deleted']?.toString() == 'true',
-      deletedAt: json['deleted_at'] != null ? DateTime.tryParse(json['deleted_at'].toString())?.toLocal() : null,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.tryParse(json['deleted_at'].toString())?.toLocal()
+          : null,
       createdAt: json['created_at'] != null
           ? (DateTime.tryParse(json['created_at'].toString())?.toLocal() ?? DateTime.now())
           : DateTime.now(),
@@ -145,20 +147,20 @@ class ChatMessageModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        roomId,
-        senderId,
-        senderType,
-        message,
-        messageType,
-        medias,
-        locationData,
-        replyMessageId,
-        replyMessage,
-        isEdited,
-        isDeleted,
-        deletedAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    roomId,
+    senderId,
+    senderType,
+    message,
+    messageType,
+    medias,
+    locationData,
+    replyMessageId,
+    replyMessage,
+    isEdited,
+    isDeleted,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
 }

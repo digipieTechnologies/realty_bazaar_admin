@@ -235,8 +235,10 @@ class LeadDetailDesktop extends StatelessWidget {
                         isSolid: true,
                         status: lead.status,
                         onStatusChanged: (newStatus) async {
-                          final success =
-                              await context.read<AdminLeadsProvider>().updateLeadStatus(lead.id!, newStatus);
+                          final success = await context.read<AdminLeadsProvider>().updateLeadStatus(
+                            lead.id!,
+                            newStatus,
+                          );
                           if (success && context.mounted) {
                             AppToast.showSuccess('leads_toast_status_updated'.tr());
                           }

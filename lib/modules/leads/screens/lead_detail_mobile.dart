@@ -85,23 +85,23 @@ class LeadDetailMobile extends StatelessWidget {
             end: Alignment.bottomRight,
           )
         : (isFacebook
-            ? const LinearGradient(
-                colors: [AppColors.facebook, AppColors.facebookDark],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : LinearGradient(
-                colors: [context.primaryColor, context.primaryColor.withValues(alpha: 0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ));
+              ? const LinearGradient(
+                  colors: [AppColors.facebook, AppColors.facebookDark],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : LinearGradient(
+                  colors: [context.primaryColor, context.primaryColor.withValues(alpha: 0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ));
 
     final PropertyModel? property = lead.socialPost?.property;
     final propertyTitle = (property?.propertyTitle.isNotEmpty == true)
         ? property!.propertyTitle
         : (lead.propertyDetails?.isNotEmpty == true
-            ? lead.propertyDetails!
-            : (lead.socialPost?.caption ?? ''));
+              ? lead.propertyDetails!
+              : (lead.socialPost?.caption ?? ''));
 
     final notesText = lead.notes;
     final mediaList = lead.socialPost?.medias ?? property?.medias;
@@ -171,12 +171,7 @@ class LeadDetailMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroCard(
-    BuildContext context,
-    Gradient coverGradient,
-    bool isInstagram,
-    bool isFacebook,
-  ) {
+  Widget _buildHeroCard(BuildContext context, Gradient coverGradient, bool isInstagram, bool isFacebook) {
     return Container(
       decoration: BoxDecoration(
         color: context.surfaceColor,
@@ -205,8 +200,10 @@ class LeadDetailMobile extends StatelessWidget {
                         isSolid: true,
                         status: lead.status,
                         onStatusChanged: (newStatus) async {
-                          final success =
-                              await context.read<AdminLeadsProvider>().updateLeadStatus(lead.id!, newStatus);
+                          final success = await context.read<AdminLeadsProvider>().updateLeadStatus(
+                            lead.id!,
+                            newStatus,
+                          );
                           if (success && context.mounted) {
                             AppToast.showSuccess('leads_toast_status_updated'.tr());
                           }
@@ -363,17 +360,29 @@ class LeadDetailMobile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('leads_contact_info'.tr(), style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            'leads_contact_info'.tr(),
+            style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 12),
-          _buildInfoRow(context, 'leads_phone_number'.tr(), lead.contactNumber, trailing: InkWell(
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: lead.contactNumber));
-              AppToast.showSuccess('leads_copied_toast'.tr());
-            },
-            child: Icon(Icons.copy_rounded, size: 16, color: context.primaryColor),
-          )),
+          _buildInfoRow(
+            context,
+            'leads_phone_number'.tr(),
+            lead.contactNumber,
+            trailing: InkWell(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: lead.contactNumber));
+                AppToast.showSuccess('leads_copied_toast'.tr());
+              },
+              child: Icon(Icons.copy_rounded, size: 16, color: context.primaryColor),
+            ),
+          ),
           const SizedBox(height: 8),
-          _buildInfoRow(context, 'leads_platform_source'.tr(), lead.socialPost?.platform ?? 'leads_direct_inquiry'.tr()),
+          _buildInfoRow(
+            context,
+            'leads_platform_source'.tr(),
+            lead.socialPost?.platform ?? 'leads_direct_inquiry'.tr(),
+          ),
         ],
       ),
     );
@@ -397,7 +406,10 @@ class LeadDetailMobile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('leads_assigned_broker'.tr(), style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold)),
+              Text(
+                'leads_assigned_broker'.tr(),
+                style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold),
+              ),
               AppButton.outline(
                 text: hasBroker ? 'leads_reassign_broker'.tr() : 'leads_assign_broker'.tr(),
                 height: 32,
@@ -439,7 +451,10 @@ class LeadDetailMobile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('leads_inquired_property'.tr(), style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  'leads_inquired_property'.tr(),
+                  style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 10),
                 Text(title, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
                 if (property != null && property.price > 0) ...[
@@ -493,7 +508,10 @@ class LeadDetailMobile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('leads_inquiry_notes'.tr(), style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            'leads_inquiry_notes'.tr(),
+            style: AppTextStyles.heading3.copyWith(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(12),

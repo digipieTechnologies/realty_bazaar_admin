@@ -44,7 +44,9 @@ class ChatRoomModel extends Equatable {
       updatedAt: json['updated_at'] != null
           ? (DateTime.tryParse(json['updated_at'].toString())?.toLocal() ?? DateTime.now())
           : DateTime.now(),
-      supportTicket: json['support_ticket'] != null ? SupportTicketModel.fromJson(json['support_ticket']) : null,
+      supportTicket: json['support_ticket'] != null
+          ? SupportTicketModel.fromJson(json['support_ticket'])
+          : null,
       title: json['title']?.toString(),
       roomType: json['room_type']?.toString() ?? 'support_ticket',
     );
@@ -64,5 +66,14 @@ class ChatRoomModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, videoRequestId, supportTicketId, brokerId, createdAt, updatedAt, title, roomType];
+  List<Object?> get props => [
+    id,
+    videoRequestId,
+    supportTicketId,
+    brokerId,
+    createdAt,
+    updatedAt,
+    title,
+    roomType,
+  ];
 }

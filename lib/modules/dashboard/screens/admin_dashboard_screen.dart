@@ -45,10 +45,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         children: [
           Text('welcome_back'.tr(), style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4.0),
-          Text(
-            'dashboard_subtitle'.tr(),
-            style: AppTextStyles.body2,
-          ),
+          Text('dashboard_subtitle'.tr(), style: AppTextStyles.body2),
           const SizedBox(height: 24.0),
           // Metric Cards Grid
           LayoutBuilder(
@@ -99,7 +96,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Container(
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
-              
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(color: AppColors.border, width: 1.0),
             ),

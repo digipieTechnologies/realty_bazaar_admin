@@ -76,9 +76,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final provider = context.watch<AdminLeadsProvider>();
@@ -110,10 +108,7 @@ class _LeadDetailScreenState extends State<LeadDetailScreen> {
               const SizedBox(height: 16),
               Text(_errorMessage ?? 'no_data'.tr(), style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => context.pop(),
-                child: Text('cancel'.tr()),
-              ),
+              ElevatedButton(onPressed: () => context.pop(), child: Text('cancel'.tr())),
             ],
           ),
         ),

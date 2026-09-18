@@ -26,7 +26,6 @@ class AdminProfileScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(32.0),
         decoration: BoxDecoration(
-          
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(color: AppColors.border, width: 1.0),
         ),

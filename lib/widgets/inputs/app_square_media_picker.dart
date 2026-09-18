@@ -73,9 +73,9 @@ class _AppSquareMediaPickerState extends State<AppSquareMediaPicker> {
     if (remaining <= 0) return;
 
     final picked = await MediaPickerHelper.pickImages(
-        context: context,
-        currentMedias: _medias,
-        maxImages: remaining,
+      context: context,
+      currentMedias: _medias,
+      maxImages: remaining,
     );
     if (picked.isNotEmpty) {
       setState(() {
@@ -92,9 +92,9 @@ class _AppSquareMediaPickerState extends State<AppSquareMediaPicker> {
     if (remaining <= 0) return;
 
     final picked = await MediaPickerHelper.pickVideos(
-        context: context,
-        currentMedias: _medias,
-        maxVideos: remaining,
+      context: context,
+      currentMedias: _medias,
+      maxVideos: remaining,
     );
     if (picked.isNotEmpty) {
       setState(() {
@@ -108,10 +108,7 @@ class _AppSquareMediaPickerState extends State<AppSquareMediaPicker> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FullScreenMediaViewer(
-          medias: _medias,
-          initialIndex: index,
-        ),
+        builder: (context) => FullScreenMediaViewer(medias: _medias, initialIndex: index),
       ),
     );
   }
@@ -185,7 +182,11 @@ class _AppSquareMediaPickerState extends State<AppSquareMediaPicker> {
                 onDelete: () => _removeMediaModel(media),
               ),
             if (!isFull && !widget.readOnly)
-              _buildAddSquareButton(label: 'media_picker_add_photo'.tr(), icon: Icons.add_a_photo_rounded, onTap: _pickImages),
+              _buildAddSquareButton(
+                label: 'media_picker_add_photo'.tr(),
+                icon: Icons.add_a_photo_rounded,
+                onTap: _pickImages,
+              ),
           ],
         ),
       ],
@@ -278,11 +279,7 @@ class _AppSquareMediaPickerState extends State<AppSquareMediaPicker> {
           decoration: BoxDecoration(
             color: accentColor.withOpacity(0.04),
             borderRadius: BorderRadius.circular(14.0),
-            border: Border.all(
-              color: accentColor.withOpacity(0.4),
-              width: 1.5,
-              style: BorderStyle.solid,
-            ),
+            border: Border.all(color: accentColor.withOpacity(0.4), width: 1.5, style: BorderStyle.solid),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

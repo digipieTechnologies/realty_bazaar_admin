@@ -25,6 +25,13 @@ NC='\033[0m' # No Color
 WORKSPACE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$WORKSPACE"
 
+# Ensure Flutter is in PATH if not already available
+if ! command -v flutter &> /dev/null; then
+    if [ -d "$HOME/StudioProjects/flutter_sdks/3.44.9/flutter/bin" ]; then
+        export PATH="$HOME/StudioProjects/flutter_sdks/3.44.9/flutter/bin:$PATH"
+    fi
+fi
+
 # Helper function to detect FVM (Flutter Version Manager)
 FLUTTER_CMD="flutter"
 if [ -d ".fvm" ]; then
@@ -39,8 +46,8 @@ PROD_ENV_FILE=".env.prod"
 
 # Firebase Hosting Configuration
 FIREBASE_PROJECT="the-realty-bazaar"
-DEV_HOSTING_TARGET="dev"           # Target dev -> the-realty-bazaar-portal-dev
-PROD_HOSTING_TARGET="admin"         # Target admin -> the-realty-bazaar-portal (admin.realtybazaar.com)
+DEV_HOSTING_TARGET="dev"           # Target dev -> the-realty-bazaar-admin-dev
+PROD_HOSTING_TARGET="admin"         # Target admin -> the-realty-bazaar-admin (admin.therealtybazaar.com)
 
 # Validate environment files
 validate_env_file() {
@@ -75,8 +82,8 @@ print_banner() {
     echo -e "Firebase Project: ${BOLD}$FIREBASE_PROJECT${NC}"
     echo -e "Dev Env (.env.dev):  $([ -f "$DEV_ENV_FILE" ] && echo -e "${GREEN}✔ Present${NC}" || echo -e "${RED}✖ Missing${NC}")"
     echo -e "Prod Env (.env.prod): $([ -f "$PROD_ENV_FILE" ] && echo -e "${GREEN}✔ Present${NC}" || echo -e "${RED}✖ Missing${NC}")"
-    echo -e "Targets:          ${YELLOW}dev${NC} (the-realty-bazaar-portal-dev.web.app)"
-    echo -e "                  ${GREEN}admin${NC} (admin.realtybazaar.com / the-realty-bazaar-portal.web.app)"
+    echo -e "Targets:          ${YELLOW}dev${NC} (the-realty-bazaar-admin-dev.web.app)"
+    echo -e "                  ${GREEN}admin${NC} (the-realty-bazaar-admin.web.app / admin.therealtybazaar.com)"
     echo -e "${CYAN}----------------------------------------------------------------------${NC}"
     echo ""
 }
@@ -127,14 +134,14 @@ deploy_web_prod() {
 build_and_deploy_web_dev() {
     build_web_dev
     deploy_web_dev
-    echo -e "\n${GREEN}${BOLD}✔ Dev Web deployed to: https://the-realty-bazaar-portal-dev.web.app${NC}"
+    echo -e "\n${GREEN}${BOLD}✔ Dev Web deployed to: https://the-realty-bazaar-admin-dev.web.app${NC}"
 }
 
 build_and_deploy_web_prod() {
     build_web_prod
     deploy_web_prod
-    echo -e "\n${GREEN}${BOLD}✔ Admin Web deployed to: https://admin.realtybazaar.com${NC}"
-    echo -e "${GREEN}${BOLD}  (Also live on: https://the-realty-bazaar-portal.web.app)${NC}"
+    echo -e "\n${GREEN}${BOLD}✔ Admin Web deployed to: https://admin.therealtybazaar.com${NC}"
+    echo -e "${GREEN}${BOLD}  (Also live on: https://the-realty-bazaar-admin.web.app)${NC}"
 }
 
 build_and_deploy_web_both() {
@@ -280,6 +287,10 @@ if [ "$1" != "" ]; then
             build_android_apk_dev
             exit 0
             ;;
+        bundle-dev|appbundle-dev|--bundle-dev|--appbundle-dev)
+            build_android_appbundle_dev
+            exit 0
+            ;;
         bundle-prod|appbundle-prod|--bundle|--appbundle|10)
             build_android_appbundle_prod
             exit 0
@@ -305,7 +316,7 @@ if [ "$1" != "" ]; then
             echo ""
             echo "Commands:"
             echo "  web-dev           Build & deploy web to DEV target (portal-dev)"
-            echo "  web-admin (web)   Build & deploy web to ADMIN target (admin.realtybazaar.com)"
+            echo "  web-admin (web)   Build & deploy web to ADMIN target (admin.therealtybazaar.com)"
             echo "  web-both          Build & deploy web to both DEV and ADMIN"
             echo "  build-web-dev     Build web release with .env.dev"
             echo "  build-web-admin   Build web release with .env.prod"
@@ -313,6 +324,7 @@ if [ "$1" != "" ]; then
             echo "  deploy-web-admin  Deploy current build to ADMIN target"
             echo "  apk-dev           Build Android release APK with .env.dev"
             echo "  apk-prod (apk)    Build Android release APK with .env.prod"
+            echo "  bundle-dev        Build Android App Bundle with .env.dev"
             echo "  bundle-prod       Build Android App Bundle with .env.prod"
             echo "  android-both      Build Android App Bundle and APK (PROD)"
             echo "  ios-prod (ios)    Build iOS release IPA with .env.prod"

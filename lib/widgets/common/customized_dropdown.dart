@@ -169,7 +169,11 @@ class CustomizedDropdown<T> extends FormField<T?> {
 
                      return [
                        if (showAllOption)
-                         DropdownMenuEntry<T?>(value: null, label: 'common.all'.tr(), style: _menuItemStyle(context)),
+                         DropdownMenuEntry<T?>(
+                           value: null,
+                           label: 'common.all'.tr(),
+                           style: _menuItemStyle(context),
+                         ),
                        ...sortedItems.map((item) {
                          final pinned = isPinned?.call(item) ?? false;
                          return DropdownMenuEntry<T?>(

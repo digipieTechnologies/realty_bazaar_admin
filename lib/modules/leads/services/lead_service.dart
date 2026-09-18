@@ -34,7 +34,9 @@ class LeadService {
     LeadStatus? status,
   }) async {
     try {
-      final sanitizedBrokerId = (brokerId != null && brokerId.isNotEmpty && brokerId != 'all') ? brokerId : null;
+      final sanitizedBrokerId = (brokerId != null && brokerId.isNotEmpty && brokerId != 'all')
+          ? brokerId
+          : null;
 
       final response = await _client.rpc(
         'get_social_leads',
@@ -85,7 +87,9 @@ class LeadService {
     try {
       final response = await _client
           .from('social_leads')
-          .select('*, broker:brokers(*), social_post:social_posts(*, property:properties(*, address:addresses(*)))')
+          .select(
+            '*, broker:brokers(*), social_post:social_posts(*, property:properties(*, address:addresses(*)))',
+          )
           .eq('id', leadId.trim())
           .maybeSingle();
 
@@ -113,7 +117,9 @@ class LeadService {
   }) async {
     try {
       final cleanPhone = phone.replaceAll(RegExp(r'\D'), '').trim();
-      final sanitizedBrokerId = (brokerId != null && brokerId.isNotEmpty && brokerId != 'all') ? brokerId : null;
+      final sanitizedBrokerId = (brokerId != null && brokerId.isNotEmpty && brokerId != 'all')
+          ? brokerId
+          : null;
 
       final response = await _client
           .from('social_leads')
@@ -171,10 +177,7 @@ class LeadService {
   /// Updates just the status of an existing lead.
   Future<void> updateLeadStatus(String leadId, LeadStatus status) async {
     try {
-      await _client
-          .from('social_leads')
-          .update({'status': status.apiValue})
-          .eq('id', leadId);
+      await _client.from('social_leads').update({'status': status.apiValue}).eq('id', leadId);
     } on PostgrestException catch (e) {
       debugPrint('[LeadService] PostgrestException updating lead status: ${e.message}');
       throw ApiException(e.message, code: 500);
@@ -187,8 +190,9 @@ class LeadService {
   /// Reassigns an existing lead to a different broker and optionally updates property details.
   Future<void> reassignBroker(String leadId, String? newBrokerId, {String? propertyDetails}) async {
     try {
-      final sanitizedBrokerId =
-          (newBrokerId != null && newBrokerId.isNotEmpty && newBrokerId != 'all') ? newBrokerId : null;
+      final sanitizedBrokerId = (newBrokerId != null && newBrokerId.isNotEmpty && newBrokerId != 'all')
+          ? newBrokerId
+          : null;
 
       final payload = <String, dynamic>{
         'broker_id': sanitizedBrokerId,
@@ -208,10 +212,10 @@ class LeadService {
   /// Soft deletes a lead by setting is_deleted = true and deleted_at = now().
   Future<void> deleteLead(String leadId) async {
     try {
-      await _client.from('social_leads').update({
-        'is_deleted': true,
-        'deleted_at': DateTime.now().toUtc().toIso8601String(),
-      }).eq('id', leadId);
+      await _client
+          .from('social_leads')
+          .update({'is_deleted': true, 'deleted_at': DateTime.now().toUtc().toIso8601String()})
+          .eq('id', leadId);
     } on PostgrestException catch (e) {
       debugPrint('[LeadService] PostgrestException soft-deleting lead: ${e.message}');
       throw ApiException(e.message, code: 500);

@@ -125,7 +125,8 @@ class SupportTicketModel extends Equatable {
     if (json['assigned_user'] is Map) {
       adminName = json['assigned_user']['name']?.toString() ?? json['assigned_user']['full_name']?.toString();
     } else if (json['assigned_to_user'] is Map) {
-      adminName = json['assigned_to_user']['name']?.toString() ?? json['assigned_to_user']['full_name']?.toString();
+      adminName =
+          json['assigned_to_user']['name']?.toString() ?? json['assigned_to_user']['full_name']?.toString();
     } else if (json['assigned_to'] is Map) {
       adminName = json['assigned_to']['name']?.toString() ?? json['assigned_to']['full_name']?.toString();
     }
@@ -160,9 +161,7 @@ class SupportTicketModel extends Equatable {
       resolvedAt: json['resolved_at'] != null
           ? DateTime.tryParse(json['resolved_at'].toString())?.toLocal()
           : null,
-      closedAt: json['closed_at'] != null
-          ? DateTime.tryParse(json['closed_at'].toString())?.toLocal()
-          : null,
+      closedAt: json['closed_at'] != null ? DateTime.tryParse(json['closed_at'].toString())?.toLocal() : null,
       createdAt: json['created_at'] != null
           ? (DateTime.tryParse(json['created_at'].toString())?.toLocal() ?? DateTime.now())
           : DateTime.now(),
@@ -274,34 +273,34 @@ class SupportTicketModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        ticketNumber,
-        ticketCounter,
-        brokerId,
-        userId,
-        fullName,
-        email,
-        phone,
-        category,
-        subject,
-        description,
-        attachments,
-        status,
-        priority,
-        adminNotes,
-        assignedTo,
-        assignedAdminName,
-        reopenRequested,
-        reopenReason,
-        resolvedAt,
-        closedAt,
-        createdAt,
-        updatedAt,
-        brokerBusinessName,
-        brokerCode,
-        chatRoomId,
-        lastMessage,
-        lastMessageAt,
-        unreadCount,
-      ];
+    id,
+    ticketNumber,
+    ticketCounter,
+    brokerId,
+    userId,
+    fullName,
+    email,
+    phone,
+    category,
+    subject,
+    description,
+    attachments,
+    status,
+    priority,
+    adminNotes,
+    assignedTo,
+    assignedAdminName,
+    reopenRequested,
+    reopenReason,
+    resolvedAt,
+    closedAt,
+    createdAt,
+    updatedAt,
+    brokerBusinessName,
+    brokerCode,
+    chatRoomId,
+    lastMessage,
+    lastMessageAt,
+    unreadCount,
+  ];
 }

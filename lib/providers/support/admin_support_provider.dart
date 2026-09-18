@@ -16,7 +16,8 @@ class AdminSupportProvider extends ChangeNotifier {
 
   // Filters & Search
   String _searchQuery = '';
-  String _selectedStatusFilter = 'all'; // 'all', 'open', 'in_progress', 'reopen_requested', 'resolved', 'closed'
+  String _selectedStatusFilter =
+      'all'; // 'all', 'open', 'in_progress', 'reopen_requested', 'resolved', 'closed'
   SupportCategory? _selectedCategory;
   SupportTicketPriority? _selectedPriority;
 
@@ -187,10 +188,7 @@ class AdminSupportProvider extends ChangeNotifier {
     }
     if (roomId != null && roomId.isNotEmpty) {
       try {
-        await SupabaseConfig.client.rpc(
-          'mark_chat_room_read',
-          params: {'p_room_id': roomId},
-        );
+        await SupabaseConfig.client.rpc('mark_chat_room_read', params: {'p_room_id': roomId});
       } catch (e) {
         debugPrint('[AdminSupportProvider] Error marking room read: $e');
       }
@@ -206,13 +204,7 @@ class AdminSupportProvider extends ChangeNotifier {
       try {
         final rpcRes = await SupabaseConfig.client.rpc(
           'get_admin_support_tickets',
-          params: {
-            'p_status': null,
-            'p_priority': null,
-            'p_category': null,
-            'p_limit': 500,
-            'p_offset': 0,
-          },
+          params: {'p_status': null, 'p_priority': null, 'p_category': null, 'p_limit': 500, 'p_offset': 0},
         );
         if (rpcRes != null && rpcRes is Map && rpcRes['tickets'] != null) {
           final rawList = rpcRes['tickets'] as List<dynamic>;
@@ -261,17 +253,10 @@ class AdminSupportProvider extends ChangeNotifier {
   }
 
   /// Updates ticket status with automatic timestamps
-  Future<bool> updateTicketStatus(
-    String ticketId,
-    String newStatus, {
-    String? adminNotes,
-  }) async {
+  Future<bool> updateTicketStatus(String ticketId, String newStatus, {String? adminNotes}) async {
     try {
       final now = DateTime.now().toUtc();
-      final updates = <String, dynamic>{
-        'status': newStatus,
-        'updated_at': now.toIso8601String(),
-      };
+      final updates = <String, dynamic>{'status': newStatus, 'updated_at': now.toIso8601String()};
 
       if (newStatus == 'resolved') {
         updates['resolved_at'] = now.toIso8601String();
@@ -286,10 +271,7 @@ class AdminSupportProvider extends ChangeNotifier {
         updates['admin_notes'] = adminNotes.trim();
       }
 
-      await SupabaseConfig.client
-          .from('support_tickets')
-          .update(updates)
-          .eq('id', ticketId);
+      await SupabaseConfig.client.from('support_tickets').update(updates).eq('id', ticketId);
 
       // Local optimistic update
       final index = _allTickets.indexWhere((t) => t.id == ticketId);
@@ -298,8 +280,12 @@ class AdminSupportProvider extends ChangeNotifier {
         _allTickets[index] = current.copyWith(
           status: newStatus,
           adminNotes: adminNotes ?? current.adminNotes,
-          resolvedAt: newStatus == 'resolved' ? now.toLocal() : (newStatus == 'open' || newStatus == 'in_progress' ? null : current.resolvedAt),
-          closedAt: newStatus == 'closed' ? now.toLocal() : (newStatus == 'open' || newStatus == 'in_progress' ? null : current.closedAt),
+          resolvedAt: newStatus == 'resolved'
+              ? now.toLocal()
+              : (newStatus == 'open' || newStatus == 'in_progress' ? null : current.resolvedAt),
+          closedAt: newStatus == 'closed'
+              ? now.toLocal()
+              : (newStatus == 'open' || newStatus == 'in_progress' ? null : current.closedAt),
           updatedAt: now.toLocal(),
         );
         _applyFilters();
@@ -317,18 +303,12 @@ class AdminSupportProvider extends ChangeNotifier {
       final now = DateTime.now().toUtc();
       await SupabaseConfig.client
           .from('support_tickets')
-          .update({
-            'priority': newPriority,
-            'updated_at': now.toIso8601String(),
-          })
+          .update({'priority': newPriority, 'updated_at': now.toIso8601String()})
           .eq('id', ticketId);
 
       final index = _allTickets.indexWhere((t) => t.id == ticketId);
       if (index != -1) {
-        _allTickets[index] = _allTickets[index].copyWith(
-          priority: newPriority,
-          updatedAt: now.toLocal(),
-        );
+        _allTickets[index] = _allTickets[index].copyWith(priority: newPriority, updatedAt: now.toLocal());
         _applyFilters();
       }
       return true;
@@ -344,10 +324,7 @@ class AdminSupportProvider extends ChangeNotifier {
       final now = DateTime.now().toUtc();
       await SupabaseConfig.client
           .from('support_tickets')
-          .update({
-            'assigned_to': adminUserId,
-            'updated_at': now.toIso8601String(),
-          })
+          .update({'assigned_to': adminUserId, 'updated_at': now.toIso8601String()})
           .eq('id', ticketId);
 
       final index = _allTickets.indexWhere((t) => t.id == ticketId);
@@ -367,17 +344,10 @@ class AdminSupportProvider extends ChangeNotifier {
   }
 
   /// Resolves or approves a reopen request
-  Future<bool> resolveReopenRequest(
-    String ticketId, {
-    required bool approve,
-    String? adminNote,
-  }) async {
+  Future<bool> resolveReopenRequest(String ticketId, {required bool approve, String? adminNote}) async {
     try {
       final now = DateTime.now().toUtc();
-      final updates = <String, dynamic>{
-        'reopen_requested': false,
-        'updated_at': now.toIso8601String(),
-      };
+      final updates = <String, dynamic>{'reopen_requested': false, 'updated_at': now.toIso8601String()};
 
       if (approve) {
         updates['status'] = 'in_progress';
@@ -389,10 +359,7 @@ class AdminSupportProvider extends ChangeNotifier {
         updates['admin_notes'] = adminNote.trim();
       }
 
-      await SupabaseConfig.client
-          .from('support_tickets')
-          .update(updates)
-          .eq('id', ticketId);
+      await SupabaseConfig.client.from('support_tickets').update(updates).eq('id', ticketId);
 
       final index = _allTickets.indexWhere((t) => t.id == ticketId);
       if (index != -1) {
@@ -420,18 +387,12 @@ class AdminSupportProvider extends ChangeNotifier {
       final now = DateTime.now().toUtc();
       await SupabaseConfig.client
           .from('support_tickets')
-          .update({
-            'admin_notes': notes.trim(),
-            'updated_at': now.toIso8601String(),
-          })
+          .update({'admin_notes': notes.trim(), 'updated_at': now.toIso8601String()})
           .eq('id', ticketId);
 
       final index = _allTickets.indexWhere((t) => t.id == ticketId);
       if (index != -1) {
-        _allTickets[index] = _allTickets[index].copyWith(
-          adminNotes: notes.trim(),
-          updatedAt: now.toLocal(),
-        );
+        _allTickets[index] = _allTickets[index].copyWith(adminNotes: notes.trim(), updatedAt: now.toLocal());
         _applyFilters();
       }
       return true;
@@ -505,11 +466,7 @@ class AdminSupportProvider extends ChangeNotifier {
       // Create chat room
       final roomResponse = await SupabaseConfig.client
           .from('chat_rooms')
-          .insert({
-            'support_ticket_id': ticketId,
-            'broker_id': brokerId,
-            'room_type': 'support_ticket',
-          })
+          .insert({'support_ticket_id': ticketId, 'broker_id': brokerId, 'room_type': 'support_ticket'})
           .select()
           .single();
 

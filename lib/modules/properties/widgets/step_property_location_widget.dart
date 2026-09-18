@@ -43,10 +43,7 @@ class StepPropertyLocationWidget extends StatelessWidget {
             Flexible(
               child: Text(
                 'Broker Association',
-                style: AppTextStyles.h4.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
             ),
             const SizedBox(width: 8.0),
@@ -89,10 +86,7 @@ class StepPropertyLocationWidget extends StatelessWidget {
             Flexible(
               child: Text(
                 'section_location_details'.tr(),
-                style: AppTextStyles.h4.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
             ),
             const SizedBox(width: 8.0),
@@ -118,10 +112,7 @@ class StepPropertyLocationWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6.0),
-        Text(
-          'location_subtitle'.tr(),
-          style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
-        ),
+        Text('location_subtitle'.tr(), style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary)),
         const SizedBox(height: 18.0),
 
         // Full Address Line Input

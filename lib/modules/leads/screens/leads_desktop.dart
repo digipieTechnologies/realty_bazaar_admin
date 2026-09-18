@@ -157,12 +157,7 @@ class LeadsDesktop extends StatelessWidget {
         // 1. Client Prospect (Avatar, Name, Phone)
         Row(
           children: [
-            CachedImageInitials(
-              imageUrl: "",
-              initials: lead.userName.forImage,
-              width: 40,
-              height: 40,
-            ),
+            CachedImageInitials(imageUrl: "", initials: lead.userName.forImage, width: 40, height: 40),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

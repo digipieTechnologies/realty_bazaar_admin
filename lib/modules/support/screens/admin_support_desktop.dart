@@ -167,15 +167,9 @@ class AdminSupportDesktop extends StatelessWidget {
                     value: provider.selectedCategory,
                     hint: Text('all_categories'.tr(), style: AppTextStyles.body2),
                     items: [
-                      DropdownMenuItem<SupportCategory?>(
-                        value: null,
-                        child: Text('all_categories'.tr()),
-                      ),
+                      DropdownMenuItem<SupportCategory?>(value: null, child: Text('all_categories'.tr())),
                       ...SupportCategory.values.map((c) {
-                        return DropdownMenuItem<SupportCategory?>(
-                          value: c,
-                          child: Text(c.labelKey.tr()),
-                        );
+                        return DropdownMenuItem<SupportCategory?>(value: c, child: Text(c.labelKey.tr()));
                       }),
                     ],
                     onChanged: (cat) => provider.setCategoryFilter(cat),
@@ -266,210 +260,218 @@ class AdminSupportDesktop extends StatelessWidget {
                 : AppDataTable(
                     isLoading: provider.isLoading,
                     emptyMessage: 'no_support_tickets_found'.tr(),
-              columns: [
-                AppDataColumn(label: 'ticket_number'.tr(), flex: 1.5),
-                AppDataColumn(label: 'broker'.tr(), flex: 2.0),
-                AppDataColumn(label: 'category'.tr(), flex: 1.5),
-                AppDataColumn(label: 'subject'.tr(), flex: 2.5),
-                AppDataColumn(label: 'priority'.tr(), flex: 1.2),
-                AppDataColumn(label: 'status'.tr(), flex: 1.3),
-                AppDataColumn(label: 'last_activity'.tr(), flex: 1.8),
-                AppDataColumn(label: 'actions'.tr(), flex: 1.2),
-              ],
-              rows: tickets.map((ticket) {
-                return DataRowItem(
-                  cells: [
-                    // Ticket # & Reopen indicator
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          ticket.ticketNumber,
-                          style: AppTextStyles.body2.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        if (ticket.unreadCount > 0) ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade600,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '${ticket.unreadCount} NEW',
-                              style: const TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                        if (ticket.reopenRequested) ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                            decoration: BoxDecoration(
-                              color: AppColors.errorLight,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: AppColors.errorBorder),
-                            ),
-                            child: const Text(
-                              'REOPEN',
-                              style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.error,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-
-                    // Broker & Requester
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          ticket.brokerBusinessName ?? 'Broker',
-                          style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          ticket.fullName,
-                          style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-
-                    // Category
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary50,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        ticket.categoryEnum.labelKey.tr(),
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-
-                    // Subject
-                    Text(
-                      ticket.subject,
-                      style: AppTextStyles.body2,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    // Priority
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: ticket.priorityEnum.color,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          ticket.priorityEnum.labelKey.tr(),
-                          style: AppTextStyles.caption.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: ticket.priorityEnum.color,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Status
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: ticket.statusEnum.backgroundColor,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        ticket.statusEnum.labelKey.tr(),
-                        style: AppTextStyles.caption.copyWith(
-                          color: ticket.statusEnum.color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
-                    // Last Activity
-                    Text(
-                      _formatDate(ticket.lastMessageAt ?? ticket.updatedAt),
-                      style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-                    ),
-
-                    // Actions: Chat & Manage
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: AppColors.primary),
-                              tooltip: 'open_broker_chat'.tr(),
-                              onPressed: () {
-                                provider.markTicketAsRead(ticket.id, ticket.chatRoomId);
-                                AdminChatDialog.show(context, supportTicket: ticket);
-                              },
-                            ),
-                            if (ticket.unreadCount > 0)
-                              Positioned(
-                                right: 4,
-                                top: 4,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.shade600,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                                  child: Text(
-                                    '${ticket.unreadCount}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9.5,
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.0,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                    columns: [
+                      AppDataColumn(label: 'ticket_number'.tr(), flex: 1.5),
+                      AppDataColumn(label: 'broker'.tr(), flex: 2.0),
+                      AppDataColumn(label: 'category'.tr(), flex: 1.5),
+                      AppDataColumn(label: 'subject'.tr(), flex: 2.5),
+                      AppDataColumn(label: 'priority'.tr(), flex: 1.2),
+                      AppDataColumn(label: 'status'.tr(), flex: 1.3),
+                      AppDataColumn(label: 'last_activity'.tr(), flex: 1.8),
+                      AppDataColumn(label: 'actions'.tr(), flex: 1.2),
+                    ],
+                    rows: tickets.map((ticket) {
+                      return DataRowItem(
+                        cells: [
+                          // Ticket # & Reopen indicator
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                ticket.ticketNumber,
+                                style: AppTextStyles.body2.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
                                 ),
                               ),
-                          ],
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit_note_rounded, size: 20, color: AppColors.iconDefault),
-                          tooltip: 'manage_ticket'.tr(),
-                          onPressed: () => AdminTicketDetailDialog.show(context, ticket),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
+                              if (ticket.unreadCount > 0) ...[
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade600,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    '${ticket.unreadCount} NEW',
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              if (ticket.reopenRequested) ...[
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.errorLight,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: AppColors.errorBorder),
+                                  ),
+                                  child: const Text(
+                                    'REOPEN',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.error,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+
+                          // Broker & Requester
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                ticket.brokerBusinessName ?? 'Broker',
+                                style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                ticket.fullName,
+                                style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+
+                          // Category
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary50,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              ticket.categoryEnum.labelKey.tr(),
+                              style: AppTextStyles.caption.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+
+                          // Subject
+                          Text(
+                            ticket.subject,
+                            style: AppTextStyles.body2,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          // Priority
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: ticket.priorityEnum.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                ticket.priorityEnum.labelKey.tr(),
+                                style: AppTextStyles.caption.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: ticket.priorityEnum.color,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // Status
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: ticket.statusEnum.backgroundColor,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              ticket.statusEnum.labelKey.tr(),
+                              style: AppTextStyles.caption.copyWith(
+                                color: ticket.statusEnum.color,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+
+                          // Last Activity
+                          Text(
+                            _formatDate(ticket.lastMessageAt ?? ticket.updatedAt),
+                            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+                          ),
+
+                          // Actions: Chat & Manage
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.chat_bubble_outline_rounded,
+                                      size: 18,
+                                      color: AppColors.primary,
+                                    ),
+                                    tooltip: 'open_broker_chat'.tr(),
+                                    onPressed: () {
+                                      provider.markTicketAsRead(ticket.id, ticket.chatRoomId);
+                                      AdminChatDialog.show(context, supportTicket: ticket);
+                                    },
+                                  ),
+                                  if (ticket.unreadCount > 0)
+                                    Positioned(
+                                      right: 4,
+                                      top: 4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade600,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                        child: Text(
+                                          '${ticket.unreadCount}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1.0,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit_note_rounded,
+                                  size: 20,
+                                  color: AppColors.iconDefault,
+                                ),
+                                tooltip: 'manage_ticket'.tr(),
+                                onPressed: () => AdminTicketDetailDialog.show(context, ticket),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
           ),
           const SizedBox(height: 16),
 
@@ -503,21 +505,14 @@ class AdminSupportDesktop extends StatelessWidget {
           width: isAlert ? 1.5 : 1.0,
         ),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(10)),
             child: Icon(icon, color: color, size: 22),
           ),
           const SizedBox(width: 14),
@@ -561,9 +556,7 @@ class AdminSupportDesktop extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-          ),
+          border: Border.all(color: isSelected ? AppColors.primary : AppColors.border),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -585,11 +578,7 @@ class AdminSupportDesktop extends StatelessWidget {
                 ),
                 child: Text(
                   countBadge.toString(),
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],

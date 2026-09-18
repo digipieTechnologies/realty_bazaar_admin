@@ -675,9 +675,7 @@ class _StepPropertyDetailsWidgetState extends State<StepPropertyDetailsWidget> {
                       Container(
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
-                          color: isSel
-                              ? Colors.white.withOpacity(0.2)
-                              : AppColors.primary.withOpacity(0.08),
+                          color: isSel ? Colors.white.withOpacity(0.2) : AppColors.primary.withOpacity(0.08),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -933,7 +931,10 @@ class _StepPropertyDetailsWidgetState extends State<StepPropertyDetailsWidget> {
                         const SizedBox(height: 2.0),
                         Text(
                           subtitle,
-                          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 11.0),
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.0,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

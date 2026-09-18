@@ -186,9 +186,9 @@ class _SocialPostEditDialogState extends State<SocialPostEditDialog> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               if (_status == 'scheduled' && _scheduledAt == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('scheduled_time_req'.tr())),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('scheduled_time_req'.tr())));
                 return;
               }
               widget.onSave(

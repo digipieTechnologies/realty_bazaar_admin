@@ -15,10 +15,7 @@ class AdminChatInputBarWidget extends StatefulWidget {
   final bool isSending;
   final ChatMessageModel? replyMessage;
   final VoidCallback? onCancelReply;
-  final Future<void> Function({
-    required String text,
-    List<MediaModel> attachments,
-  }) onSendMessage;
+  final Future<void> Function({required String text, List<MediaModel> attachments}) onSendMessage;
 
   const AdminChatInputBarWidget({
     super.key,
@@ -57,12 +54,14 @@ class _AdminChatInputBarWidgetState extends State<AdminChatInputBarWidget> {
           final path = file.path ?? file.name;
           final isImage = ['jpg', 'jpeg', 'png'].contains(file.extension?.toLowerCase());
 
-          _selectedAttachments.add(MediaModel(
-            type: isImage ? 'image' : 'document',
-            url: path,
-            bytes: bytes,
-            thumbnailBytes: isImage ? bytes : null,
-          ));
+          _selectedAttachments.add(
+            MediaModel(
+              type: isImage ? 'image' : 'document',
+              url: path,
+              bytes: bytes,
+              thumbnailBytes: isImage ? bytes : null,
+            ),
+          );
         }
         setState(() {});
       }
@@ -81,10 +80,7 @@ class _AdminChatInputBarWidgetState extends State<AdminChatInputBarWidget> {
       _selectedAttachments.clear();
     });
 
-    widget.onSendMessage(
-      text: text,
-      attachments: attachmentsCopy,
-    );
+    widget.onSendMessage(text: text, attachments: attachmentsCopy);
   }
 
   @override
@@ -245,10 +241,7 @@ class _AdminChatInputBarWidgetState extends State<AdminChatInputBarWidget> {
               ),
               const SizedBox(width: 8),
               Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10)),
                 child: IconButton(
                   icon: widget.isSending
                       ? const SizedBox(

@@ -143,11 +143,14 @@ class AdminAuthProvider extends ChangeNotifier {
 
   /// Syncs logged in admin session with OneSignal push service.
   void _syncDeviceToken(String userId) {
-    NotificationService.instance.initialize().then((_) {
-      NotificationService.instance.bindUserToOneSignal(userId);
-    }).catchError((e) {
-      debugPrint('Error syncing OneSignal user ID: $e');
-    });
+    NotificationService.instance
+        .initialize()
+        .then((_) {
+          NotificationService.instance.bindUserToOneSignal(userId);
+        })
+        .catchError((e) {
+          debugPrint('Error syncing OneSignal user ID: $e');
+        });
   }
 
   /// Unbinds admin user from OneSignal on sign out.

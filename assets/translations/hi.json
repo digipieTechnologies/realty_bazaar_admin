@@ -543,7 +543,6 @@
   "create_ticket": "टिकट बनाएं",
   "create_ticket_title": "सहायता टिकट बनाएं",
   "create_ticket_subtitle": "ब्रोकर की ओर से नया सहायता टिकट खोलें",
-  "select_broker": "ब्रोकर चुनें",
   "search_broker_hint": "ब्रोकर खोजें और चुनें...",
   "please_select_broker": "कृपया एक ब्रोकर चुनें",
   "requester_name": "अनुरोधकर्ता का नाम",
@@ -597,6 +596,9 @@
   "priority_urgent": "अत्यावश्यक",
   "field_required": "यह फ़ील्ड आवश्यक है",
   "invalid_email": "कृपया एक मान्य ईमेल दर्ज करें",
+  "category": "वर्ग",
+  "filters": "फिल्टर",
+  "apply": "आवेदन करना",
   "common": {
     "collapse_sidebar": "साइडबार को संक्षिप्त करें",
     "expand_sidebar": "साइडबार का विस्तार करें",
