@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app/app_colors.dart';
+import '../../../app/app_text_styles.dart';
+import '../../../app/context_ext.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
 import '../../../providers/brokers/brokers_provider.dart';
@@ -30,16 +31,39 @@ class VideoRequestsDesktop extends StatelessWidget {
     final list = videoRequestsProv.requests;
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row with Title
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'video_requests'.tr(),
+                style: AppTextStyles.heading1.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: context.textColor,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Manage property walkthrough video requests and admin approvals',
+                style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Search Bar & Filter Controls
           AppSearchBar(
             hintText: 'video_requests_search_notes_desktop_hint'.tr(),
             onSearch: (query) => state.filterProvider.updateSearch(query),
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
             activeFilterCount: state.filterProvider.activeFiltersCount,
+            onAdd: () => _showAddRequestDialog(context, videoRequestsProv),
           ),
           const SizedBox(height: 8),
           EnterpriseQuickFilters(
@@ -49,6 +73,9 @@ class VideoRequestsDesktop extends StatelessWidget {
                 .toList(),
             isMobile: false,
           ),
+          const SizedBox(height: 12),
+
+          // Main Table Area & Optional Filter Sidebar
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,13 +86,14 @@ class VideoRequestsDesktop extends StatelessWidget {
                       Expanded(
                         child: AppDataTable(
                           isLoading: videoRequestsProv.isLoading,
+                          minWidth: 800,
                           columns: [
-                            AppDataColumn(label: 'video_request_col_property'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_col_property'.tr(), flex: 3),
                             AppDataColumn(label: 'video_request_col_broker'.tr(), flex: 2),
-                            AppDataColumn(label: 'video_request_workflow_status_col'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'video_request_approval_status_col'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'video_request_date_created_col'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'video_request_col_actions'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_workflow_status_col'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_approval_status_col'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_date_created_col'.tr(), flex: 2),
+                            AppDataColumn(label: 'video_request_col_actions'.tr(), flex: 2),
                           ],
                           rows: list
                               .map((request) => _buildRow(context, request, videoRequestsProv))
@@ -100,15 +128,18 @@ class VideoRequestsDesktop extends StatelessWidget {
   }
 
   void _showAddRequestDialog(BuildContext context, VideoRequestsProvider prov) async {
-    // Fetch brokers and properties to populate select dropdowns
     final brokersProv = context.read<BrokersProvider>();
     final propertiesProv = context.read<AdminPropertyProvider>();
 
-    if (brokersProv.brokers.isEmpty) {
-      await brokersProv.fetchBrokers();
-    }
-    if (propertiesProv.properties.isEmpty) {
-      await propertiesProv.fetchProperties();
+    if (brokersProv.brokers.isEmpty || propertiesProv.properties.isEmpty) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      );
+      if (brokersProv.brokers.isEmpty) await brokersProv.fetchBrokers();
+      if (propertiesProv.properties.isEmpty) await propertiesProv.fetchProperties();
+      if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
     }
 
     if (context.mounted) {
@@ -123,7 +154,7 @@ class VideoRequestsDesktop extends StatelessWidget {
             notes: model.notes,
           );
           if (id != null) {
-            AppToast.showSuccess('Request Created', 'Video request was created successfully.');
+            AppToast.showSuccess('Request Created', 'Video request created successfully.');
           }
         },
       );
@@ -139,8 +170,8 @@ class VideoRequestsDesktop extends StatelessWidget {
       cells: [
         DataCellText(text: request.property?.propertyTitle ?? '-'),
         DataCellText(text: request.broker?.businessName ?? '-'),
-        Align(alignment: Alignment.centerLeft, child: _buildStatusBadge(request.status)),
-        Align(alignment: Alignment.centerLeft, child: _buildApprovalBadge(request.adminApprovalStatus)),
+        Align(alignment: Alignment.centerLeft, child: _buildStatusBadge(context, request.status)),
+        Align(alignment: Alignment.centerLeft, child: _buildApprovalBadge(context, request.adminApprovalStatus)),
         DataCellText(
           text: request.createdAt != null
               ? DateFormat('dd MMM yyyy, hh:mm a').format(request.createdAt!)
@@ -148,19 +179,31 @@ class VideoRequestsDesktop extends StatelessWidget {
         ),
         DataCellActions(
           onView: () => context.push('/video-requests/detail/${request.id}', extra: request),
-          onEdit: () {
+          onEdit: () async {
             final brokersProv = context.read<BrokersProvider>();
             final propertiesProv = context.read<AdminPropertyProvider>();
-            VideoRequestEditDialog.show(
-              context,
-              request: request,
-              brokers: brokersProv.brokers,
-              properties: propertiesProv.properties,
-              onSave: (updated) {
-                videoRequestsProv.updateVideoRequest(updated);
-                AppToast.showSuccess('Request Updated', 'Video request details updated.');
-              },
-            );
+            if (brokersProv.brokers.isEmpty || propertiesProv.properties.isEmpty) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Center(child: CircularProgressIndicator()),
+              );
+              if (brokersProv.brokers.isEmpty) await brokersProv.fetchBrokers();
+              if (propertiesProv.properties.isEmpty) await propertiesProv.fetchProperties();
+              if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
+            }
+            if (context.mounted) {
+              VideoRequestEditDialog.show(
+                context,
+                request: request,
+                brokers: brokersProv.brokers,
+                properties: propertiesProv.properties,
+                onSave: (updated) {
+                  videoRequestsProv.updateVideoRequest(updated);
+                  AppToast.showSuccess('Request Updated', 'Video request details updated.');
+                },
+              );
+            }
           },
           onDelete: () => state.confirmAndDeleteRequest(request),
         ),
@@ -168,26 +211,26 @@ class VideoRequestsDesktop extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(VideoRequestStatus status) {
-    Color bg = AppColors.primaryLight;
-    Color fg = AppColors.primary;
+  Widget _buildStatusBadge(BuildContext context, VideoRequestStatus status) {
+    Color bg = context.primaryContainerColor;
+    Color fg = context.primaryColor;
     if (status == VideoRequestStatus.completed) {
-      bg = Colors.green.shade50;
-      fg = Colors.green.shade700;
+      bg = context.successContainerColor;
+      fg = context.successColor;
     } else if (status == VideoRequestStatus.cancelled) {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
+      bg = context.errorContainerColor;
+      fg = context.errorColor;
     } else if (status == VideoRequestStatus.inProgress) {
-      bg = Colors.blue.shade50;
-      fg = Colors.blue.shade700;
+      bg = context.infoContainerColor;
+      fg = context.infoColor;
     } else if (status == VideoRequestStatus.assigned) {
-      bg = Colors.orange.shade50;
-      fg = Colors.orange.shade700;
+      bg = context.warningContainerColor;
+      fg = context.warningColor;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(10.0)),
       child: Text(
         status.displayName.toUpperCase(),
         style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
@@ -195,23 +238,23 @@ class VideoRequestsDesktop extends StatelessWidget {
     );
   }
 
-  Widget _buildApprovalBadge(VideoRequestApprovalStatus status) {
-    Color bg = AppColors.primaryLight;
-    Color fg = AppColors.primary;
+  Widget _buildApprovalBadge(BuildContext context, VideoRequestApprovalStatus status) {
+    Color bg = context.primaryContainerColor;
+    Color fg = context.primaryColor;
     if (status == VideoRequestApprovalStatus.approved) {
-      bg = Colors.green.shade50;
-      fg = Colors.green.shade700;
+      bg = context.successContainerColor;
+      fg = context.successColor;
     } else if (status == VideoRequestApprovalStatus.rejected) {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
+      bg = context.errorContainerColor;
+      fg = context.errorColor;
     } else if (status == VideoRequestApprovalStatus.pending) {
-      bg = Colors.yellow.shade100;
-      fg = Colors.orange.shade800;
+      bg = context.warningContainerColor;
+      fg = context.warningColor;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(10.0)),
       child: Text(
         status.displayName.toUpperCase(),
         style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),

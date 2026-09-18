@@ -80,6 +80,22 @@ class VideoRequestsProvider extends ChangeNotifier {
 
   Future<void> refresh() => fetchVideoRequests();
 
+  /// Fetch a single video request by ID directly from service
+  Future<VideoRequestModel?> fetchRequestById(String id) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      return await _service.getVideoRequestById(id);
+    } catch (e) {
+      _error = e.toString().replaceFirst('Exception: ', '');
+      return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void updateFilter(VideoRequestFilterModel newFilter) {
     _filter = newFilter;
     fetchVideoRequests();

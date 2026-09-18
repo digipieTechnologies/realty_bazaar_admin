@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app_routes.dart';
 import 'app/app_strings.dart';
@@ -25,9 +26,12 @@ import 'providers/support/admin_support_provider.dart';
 import 'providers/users/users_provider.dart';
 import 'providers/video_requests/video_requests_provider.dart';
 
+late SharedPreferences sharedPrefs;
+
 void main() async {
   usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
+  sharedPrefs = await SharedPreferences.getInstance();
   await EasyLocalization.ensureInitialized();
 
   // Disable all easy_localization logs completely

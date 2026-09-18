@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app/common_ext.dart';
+import '../../../app/context_ext.dart';
 import '../../../core/filters/filter_provider.dart';
 import '../../../models/models.dart';
 import '../../../providers/video_requests/video_requests_provider.dart';
@@ -49,7 +51,7 @@ class VideoRequestsScreenState extends State<VideoRequestsScreen> {
   }
 
   void toggleFilterSidebar() {
-    setState(() {
+    setStateIfMounted(() {
       showFilterSidebar = !showFilterSidebar;
     });
   }
@@ -85,8 +87,7 @@ class VideoRequestsScreenState extends State<VideoRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
-    if (isDesktop) {
+    if (context.isDesktop) {
       return VideoRequestsDesktop(state: this);
     }
     return VideoRequestsMobile(state: this);

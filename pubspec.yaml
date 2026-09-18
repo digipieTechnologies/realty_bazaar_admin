@@ -34,8 +34,9 @@ dependencies:
   universal_platform: ^1.1.0
   file_picker: ^11.0.2
   easy_localization: ^3.0.7
-  video_player: ^2.13.0
+  video_player: ^2.11.1
   flutter_typeahead: ^6.0.0
+  onesignal_flutter: ^5.2.8
 
 dev_dependencies:
   flutter_test:

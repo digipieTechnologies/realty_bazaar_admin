@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app/app_bootstrap.dart';
 import '../app/app_constants.dart';
+import '../main.dart';
 import '../models/models.dart';
 import '../modules/auth/screens/admin_login_screen.dart';
 import '../modules/brokers/screens/broker_detail_screen.dart';
@@ -77,31 +77,49 @@ class AppRoutes {
   static const String videoRequests = '/video-requests';
   static const String videoRequestDetail = '/video-requests/detail/:id';
 
+  /// Storage key for preserving deep link URL across auth flows
+  static const String pendingRedirectKey = AppConstants.pendingRedirectKey;
+
+  // --- Helper Methods for Parameterized Paths ---
+  static String userDetailPathHelper(String id) => '/users/detail/$id';
+  static String brokerDetailPathHelper(String id) => '/brokers/detail/$id';
+  static String propertyDetailPathHelper(String id) => '/properties/detail/$id';
+  static String socialLeadDetailPath(String id) => '/social-leads/detail/$id';
+  static String socialPostDetailPath(String id) => '/social-posts/detail/$id';
+  static String videoRequestDetailPathHelper(String id) => '/video-requests/detail/$id';
+
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: dashboard,
     debugLogDiagnostics: true,
     extraCodec: const _ExtraCodec(),
-    redirect: (context, state) async {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString(AppConstants.sessionKey);
+    redirect: (context, state) {
+      final userId = sharedPrefs.getString(AppConstants.sessionKey);
       final isLoggedIn = userId != null && userId.isNotEmpty;
       final goingToLogin = state.matchedLocation == login;
 
       if (!isLoggedIn && !goingToLogin) {
+        // Save the intended destination URL so user returns here after login
+        final targetUri = state.uri.toString();
+        if (targetUri.isNotEmpty && targetUri != '/' && targetUri != login) {
+          sharedPrefs.setString(pendingRedirectKey, targetUri);
+        }
         return login;
       }
       if (isLoggedIn && goingToLogin) {
+        // Consume pending redirect URL stored from notification cold launch
+        final pendingUrl = sharedPrefs.getString(pendingRedirectKey);
+        if (pendingUrl != null && pendingUrl.isNotEmpty && pendingUrl != login && pendingUrl != '/') {
+          sharedPrefs.remove(pendingRedirectKey);
+          return pendingUrl;
+        }
         return dashboard;
       }
       return null;
     },
     errorBuilder: (context, state) => Scaffold(
       body: Center(
-        child: Text(
-          'Route not found: ${state.uri.path}',
-          style: const TextStyle(color: Colors.red, fontSize: 16),
-        ),
+        child: Text('Route not found: ${state.uri.path}', style: const TextStyle(color: Colors.red, fontSize: 16)),
       ),
     ),
     routes: <RouteBase>[
@@ -123,8 +141,7 @@ class AppRoutes {
           GoRoute(
             name: dashboardPath,
             path: dashboard,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const AdminDashboardScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminDashboardScreen()),
           ),
           GoRoute(
             name: usersPath,
@@ -153,8 +170,7 @@ class AppRoutes {
           GoRoute(
             name: brokersPath,
             path: brokers,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const BrokersScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const BrokersScreen()),
             routes: [
               GoRoute(
                 name: brokerDetailPath,
@@ -178,8 +194,7 @@ class AppRoutes {
           GoRoute(
             name: propertiesPath,
             path: properties,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const AdminPropertiesScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminPropertiesScreen()),
             routes: [
               GoRoute(
                 name: propertyDetailPath,
@@ -203,8 +218,7 @@ class AppRoutes {
           GoRoute(
             name: socialPostsPath,
             path: socialPosts,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const SocialPostsScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const SocialPostsScreen()),
             routes: [
               GoRoute(
                 name: socialPostsDetailPath,
@@ -228,8 +242,7 @@ class AppRoutes {
           GoRoute(
             name: socialLeadsPath,
             path: socialLeads,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const LeadsScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const LeadsScreen()),
             routes: [
               GoRoute(
                 name: socialLeadsDetailPath,
@@ -253,20 +266,17 @@ class AppRoutes {
           GoRoute(
             name: settingsPath,
             path: settings,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const AdminSettingsScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminSettingsScreen()),
           ),
           GoRoute(
             name: profilePath,
             path: profile,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const AdminProfileScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminProfileScreen()),
           ),
           GoRoute(
             name: videoRequestsPath,
             path: videoRequests,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const VideoRequestsScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const VideoRequestsScreen()),
             routes: [
               GoRoute(
                 name: videoRequestDetailPath,
@@ -281,7 +291,7 @@ class AppRoutes {
                       : null;
                   return NoTransitionPage(
                     key: state.pageKey,
-                    child: VideoRequestDetailScreen(requestId: id!, request: request),
+                    child: VideoRequestDetailScreen(requestId: id!),
                   );
                 },
               ),
@@ -290,8 +300,7 @@ class AppRoutes {
           GoRoute(
             name: supportPath,
             path: support,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
+            pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
           ),
         ],
       ),

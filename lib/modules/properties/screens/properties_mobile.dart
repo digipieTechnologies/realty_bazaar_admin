@@ -121,28 +121,6 @@ class PropertiesMobile extends StatelessWidget {
                     fit: BoxFit.cover,
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     backgroundColor: colorScheme.surface,
-                    errorWidget: (_) {
-                      return Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
-                      );
-                    },
-                    placeholderWidget: (_) {
-                      return Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(Icons.apartment_rounded, color: context.infoColor, size: 18),
-                      );
-                    },
                   ),
 
                   // Top Floating Badges: Status (Left)

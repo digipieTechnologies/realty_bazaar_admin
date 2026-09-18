@@ -420,3 +420,13 @@ extension ColorX on Color? {
   String? get toColorCode =>
       this == null ? null : '#${this!.value.toRadixString(16).padLeft(8, '0').toUpperCase()}';
 }
+
+extension StateExtension<T extends StatefulWidget> on State<T> {
+  /// Safely calls setState if the State widget is currently mounted.
+  void setStateIfMounted(VoidCallback fn) {
+    if (mounted) {
+      // ignore: invalid_use_of_protected_member
+      setState(fn);
+    }
+  }
+}

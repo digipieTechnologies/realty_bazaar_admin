@@ -3,11 +3,12 @@
 
 import 'package:brokerflow_admin/models/models.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/app_constants.dart';
+import '../../core/services/notification_service.dart';
 import '../../core/supabase/supabase_config.dart';
+import '../../main.dart';
 
 class AdminAuthProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -85,8 +86,11 @@ class AdminAuthProvider extends ChangeNotifier {
       }
 
       _adminUser = userProfile;
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(AppConstants.sessionKey, user.id);
+      await sharedPrefs.setString(AppConstants.sessionKey, user.id);
+
+      // Initialize OneSignal and bind admin user for push notifications
+      _syncDeviceToken(user.id);
+
       _setLoading(false);
       return true;
     } catch (e) {
@@ -110,6 +114,9 @@ class AdminAuthProvider extends ChangeNotifier {
         if (profileResponse != null) {
           _adminUser = UserModel.fromJson(profileResponse);
           notifyListeners();
+
+          // Re-bind OneSignal user on session restore
+          _syncDeviceToken(currentUser.id);
         }
       } catch (e) {
         debugPrint('Error restoring admin profile session: $e');
@@ -121,14 +128,34 @@ class AdminAuthProvider extends ChangeNotifier {
   Future<void> signOut() async {
     _setLoading(true);
     try {
+      // Unbind user from OneSignal before signing out
+      await _removeDeviceTokenOnLogout();
+
       await SupabaseConfig.client.auth.signOut();
     } catch (e) {
       debugPrint('Logout error: $e');
     } finally {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(AppConstants.sessionKey);
+      await sharedPrefs.remove(AppConstants.sessionKey);
       _adminUser = null;
       _setLoading(false);
+    }
+  }
+
+  /// Syncs logged in admin session with OneSignal push service.
+  void _syncDeviceToken(String userId) {
+    NotificationService.instance.initialize().then((_) {
+      NotificationService.instance.bindUserToOneSignal(userId);
+    }).catchError((e) {
+      debugPrint('Error syncing OneSignal user ID: $e');
+    });
+  }
+
+  /// Unbinds admin user from OneSignal on sign out.
+  Future<void> _removeDeviceTokenOnLogout() async {
+    try {
+      await NotificationService.instance.unbindUserFromOneSignal();
+    } catch (e) {
+      debugPrint('Error removing device token on logout: $e');
     }
   }
 }

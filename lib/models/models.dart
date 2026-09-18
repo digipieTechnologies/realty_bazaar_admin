@@ -9,6 +9,7 @@ export 'dashboard_summary_model.dart';
 export 'language_model.dart';
 export 'lead_status_enum.dart';
 export 'media_model.dart';
+export 'notification_enums.dart';
 export 'property_enums.dart';
 export 'property_model.dart';
 export 'social_account_model.dart';

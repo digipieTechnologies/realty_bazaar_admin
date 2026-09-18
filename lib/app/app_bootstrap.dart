@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../app/app_constants.dart';
+import '../app/app_routes.dart';
+import '../main.dart';
 import '../providers/auth/admin_auth_provider.dart';
 
 class AppBootstrap extends StatefulWidget {
@@ -36,12 +39,31 @@ class AppBootstrapState extends State<AppBootstrap> {
       final authProvider = context.read<AdminAuthProvider>();
       await authProvider.checkSessionStatus();
 
+      // Check for pending notification redirect after session restore
+      _consumePendingRedirect();
+
       _hasBootstrapped = true;
       if (mounted) setState(() => _isInitialized = true);
     } catch (e) {
       debugPrint('AppBootstrap error: $e');
       if (mounted) setState(() => _hasError = true);
     }
+  }
+
+  /// Consumes any stored notification redirect URL from cold launch.
+  void _consumePendingRedirect() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final pendingUrl = sharedPrefs.getString(AppConstants.pendingRedirectKey);
+        if (pendingUrl != null && pendingUrl.isNotEmpty && pendingUrl != AppRoutes.login) {
+          await sharedPrefs.remove(AppConstants.pendingRedirectKey);
+          debugPrint('👉 [AppBootstrap] Consuming pending notification redirect: $pendingUrl');
+          AppRoutes.router.push(pendingUrl);
+        }
+      } catch (e) {
+        debugPrint('Error consuming pending redirect: $e');
+      }
+    });
   }
 
   static void reset() {
