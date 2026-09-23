@@ -7,10 +7,14 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+
 import 'app/app_routes.dart';
 import 'app/app_strings.dart';
 import 'app/app_theme.dart';
 import 'core/network/supabase_client.dart';
+import 'core/services/notification_service.dart';
+import 'firebase_options.dart';
 import 'providers/activity_logs/activity_logs_provider.dart';
 import 'providers/auth/admin_auth_provider.dart';
 import 'providers/brokers/brokers_provider.dart';
@@ -42,6 +46,16 @@ void main() async {
     debugPrint('Supabase initialized successfully in Super Admin!');
   } catch (e) {
     debugPrint('Failed to initialize Supabase: $e');
+  }
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('Firebase initialized successfully in Admin app!');
+    await NotificationService.instance.initialize();
+  } catch (e) {
+    debugPrint('Firebase/NotificationService initialization note: $e');
   }
 
   runApp(
