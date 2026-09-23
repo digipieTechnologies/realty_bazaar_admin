@@ -34,16 +34,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <!-- OneSignal & FCM Default Notification Small Icon & Accent Color -->
-        <meta-data
-            android:name="com.onesignal.NotificationIcon.DEFAULT"
-            android:resource="@drawable/ic_stat_onesignal_default"/>
-        <meta-data
-            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
-            android:value="FF397BCF"/>
+        <!-- FCM Default Notification Small Icon & Accent Color -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_stat_onesignal_default"/>
+            android:resource="@drawable/ic_notification"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:value="FF397BCF"/>

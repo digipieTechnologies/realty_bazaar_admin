@@ -1,56 +1,109 @@
 // File: lib/widgets/toast/app_toast.dart
-// Purpose: Overlay toast notification system for success and error alerts.
+// Purpose: Custom Overlay toast helper for success, error, and in-app notification status messages with ValueNotifier reactive updates.
+
+// ignore_for_file: deprecated_member_use
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../app/app_colors.dart';
 import '../../app/app_routes.dart';
 
-enum ToastType { success, error }
+enum ToastType { success, error, info, warning }
+
+class _ToastContent {
+  final String title;
+  final String? description;
+  final ToastType type;
+  final VoidCallback? onTap;
+
+  _ToastContent({
+    required this.title,
+    this.description,
+    required this.type,
+    this.onTap,
+  });
+}
 
 class AppToast {
   static OverlayEntry? _overlayEntry;
   static Timer? _timer;
-  static final GlobalKey<_AppToastWidgetState> _toastKey = GlobalKey<_AppToastWidgetState>();
+  static ValueNotifier<_ToastContent?>? _toastNotifier;
+  static AnimationController? _activeAnimationController;
 
+  /// Show a success toast notification
   static void showSuccess(String title, [String? description]) {
     _show(title, description, ToastType.success);
   }
 
+  /// Show an error toast notification
   static void showError(String title, [String? description]) {
     _show(title, description, ToastType.error);
   }
 
-  static void _show(String title, String? description, ToastType type) {
-    if (_overlayEntry != null && _toastKey.currentState != null) {
+  /// Show an in-app push notification banner that drops from the top
+  static void showNotification(String title, String body, {VoidCallback? onTap}) {
+    _show(title, body, ToastType.info, onTap: onTap, isTop: true);
+  }
+
+  /// Dismiss active toast notification
+  static void dismiss() {
+    _hideWithAnimation();
+  }
+
+  static void _show(
+    String title,
+    String? description,
+    ToastType type, {
+    VoidCallback? onTap,
+    bool isTop = false,
+  }) {
+    final content = _ToastContent(
+      title: title,
+      description: description,
+      type: type,
+      onTap: onTap,
+    );
+
+    // If an overlay entry is currently active, update the ValueNotifier dynamically
+    if (_overlayEntry != null && _toastNotifier != null) {
       _timer?.cancel();
-      _toastKey.currentState?.updateContent(title, description, type);
+      _toastNotifier!.value = content;
       _startTimer();
       return;
     }
 
+    // Otherwise clean up any previous overlay entry
     _hideAbruptly();
 
     final overlayState = AppRoutes.rootNavigatorKey.currentState?.overlay;
     if (overlayState == null) return;
 
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        bottom: 50,
-        left: 0,
-        right: 0,
-        child: _AppToastWidget(
-          key: _toastKey,
-          initialTitle: title,
-          initialDescription: description,
-          initialType: type,
-          onClose: _hideWithAnimation,
-        ),
-      ),
+    final notifier = ValueNotifier<_ToastContent?>(content);
+    _toastNotifier = notifier;
+
+    final entry = OverlayEntry(
+      builder: (context) {
+        final currentNotifier = _toastNotifier;
+        if (currentNotifier == null) return const SizedBox.shrink();
+        return Positioned(
+          top: isTop ? 50 : null,
+          bottom: isTop ? null : 50,
+          left: 0,
+          right: 0,
+          child: _AppToastWidget(
+            notifier: currentNotifier,
+            onClose: _hideWithAnimation,
+            isTop: isTop,
+            onControllerCreated: (controller) => _activeAnimationController = controller,
+          ),
+        );
+      },
     );
 
-    overlayState.insert(_overlayEntry!);
+    _overlayEntry = entry;
+    overlayState.insert(entry);
     _startTimer();
   }
 
@@ -63,10 +116,16 @@ class AppToast {
 
   static void _hideWithAnimation() {
     _timer?.cancel();
-    if (_toastKey.currentState != null) {
-      _toastKey.currentState!.reverseAnimation().then((_) {
-        _hideAbruptly();
-      });
+    final controller = _activeAnimationController;
+    if (controller != null && !controller.isAnimating) {
+      controller
+          .reverse()
+          .then((_) {
+            _hideAbruptly();
+          })
+          .catchError((_) {
+            _hideAbruptly();
+          });
     } else {
       _hideAbruptly();
     }
@@ -74,25 +133,31 @@ class AppToast {
 
   static void _hideAbruptly() {
     _timer?.cancel();
-    if (_overlayEntry?.mounted ?? false) {
-      _overlayEntry?.remove();
+    final entry = _overlayEntry;
+    if (entry != null) {
+      try {
+        if (entry.mounted) {
+          entry.remove();
+        }
+      } catch (_) {}
     }
     _overlayEntry = null;
+    _toastNotifier = null;
+    _activeAnimationController = null;
   }
 }
 
 class _AppToastWidget extends StatefulWidget {
-  final String initialTitle;
-  final String? initialDescription;
-  final ToastType initialType;
+  final ValueNotifier<_ToastContent?> notifier;
   final VoidCallback onClose;
+  final ValueChanged<AnimationController> onControllerCreated;
+  final bool isTop;
 
   const _AppToastWidget({
-    super.key,
-    required this.initialTitle,
-    this.initialDescription,
-    required this.initialType,
+    required this.notifier,
     required this.onClose,
+    required this.onControllerCreated,
+    this.isTop = false,
   });
 
   @override
@@ -104,18 +169,11 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  late String _title;
-  late String? _description;
-  late ToastType _type;
-
   @override
   void initState() {
     super.initState();
-    _title = widget.initialTitle;
-    _description = widget.initialDescription;
-    _type = widget.initialType;
-
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    widget.onControllerCreated(_controller);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -123,114 +181,143 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
+      begin: Offset(0, widget.isTop ? -0.5 : 0.5),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
+    widget.notifier.addListener(_onToastDataChanged);
     _controller.forward();
   }
 
-  void updateContent(String newTitle, String? newDesc, ToastType newType) {
-    setState(() {
-      _title = newTitle;
-      _description = newDesc;
-      _type = newType;
-    });
-    _controller.forward(from: 0.0);
-  }
-
-  Future<void> reverseAnimation() async {
+  void _onToastDataChanged() {
     if (mounted) {
-      await _controller.reverse();
+      setState(() {});
+      _controller.forward(from: 0.0);
     }
   }
 
   @override
   void dispose() {
+    widget.notifier.removeListener(_onToastDataChanged);
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isError = _type == ToastType.error;
-    final bgColor = isError ? const Color(0xFFFDD4D7) : const Color(0xFFCEF4D8);
-    final iconColor = isError ? const Color(0xFFE53935) : const Color(0xFF388E3C);
-    final iconData = isError ? Icons.priority_high_rounded : Icons.check_rounded;
+    final content = widget.notifier.value;
+    if (content == null) return const SizedBox.shrink();
 
-    return IgnorePointer(
-      child: Material(
-        color: Colors.transparent,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                constraints: const BoxConstraints(maxWidth: 400),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+    final isError = content.type == ToastType.error;
+    final isNotification = widget.isTop;
+    final bgColor = isNotification ? Colors.white : (isError ? AppColors.errorLight : AppColors.successLight);
+    final iconColor = isNotification ? AppColors.primary : (isError ? AppColors.error : AppColors.success);
+    final iconData = isNotification
+        ? Icons.notifications_active_rounded
+        : (isError ? Icons.priority_high_rounded : Icons.check_rounded);
+
+    Widget contentWidget = Material(
+      color: Colors.transparent,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Align(
+            alignment: isNotification ? Alignment.topCenter : Alignment.bottomCenter,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              constraints: const BoxConstraints(maxWidth: 400),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 12, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Stack(
+                  children: [
+                    // Decorative background shapes matching the design
+                    Positioned(
+                      left: -20,
+                      bottom: -20,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.12)),
+                      ),
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                          child: Icon(iconData, color: iconColor, size: 20),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                _title,
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              if (_description != null && _description!.isNotEmpty) ...[
-                                const SizedBox(height: 2),
+                    Positioned(
+                      left: 20,
+                      top: -10,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.08)),
+                      ),
+                    ),
+
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Icon Container
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: isNotification ? AppColors.primary.withOpacity(0.1) : Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(iconData, color: iconColor, size: 20),
+                          ),
+                          const SizedBox(width: 16),
+
+                          // Texts
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
                                 Text(
-                                  _description!,
+                                  content.title,
                                   style: const TextStyle(
                                     color: Colors.black87,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
+                                if (content.description != null && content.description!.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    content.description!,
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        GestureDetector(
-                          onTap: widget.onClose,
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(Icons.close_rounded, color: Colors.black38, size: 18),
+
+                          // Close Button
+                          const SizedBox(width: 12),
+                          InkWell(
+                            onTap: widget.onClose,
+                            borderRadius: BorderRadius.circular(100),
+                            child: const Padding(
+                              padding: EdgeInsets.all(6.0),
+                              child: Icon(Icons.close_rounded, color: Colors.black45, size: 18),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -238,5 +325,17 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
         ),
       ),
     );
+
+    if (content.onTap != null) {
+      return GestureDetector(
+        onTap: () {
+          widget.onClose();
+          content.onTap!();
+        },
+        child: contentWidget,
+      );
+    }
+
+    return IgnorePointer(child: contentWidget);
   }
 }

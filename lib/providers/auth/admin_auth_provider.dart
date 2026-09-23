@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/app_constants.dart';
-import '../../core/services/notification_service.dart';
-import '../../core/supabase/supabase_config.dart';
+import '../../core/services/device_service.dart';
+import '../../core/network/supabase_client.dart';
 import '../../main.dart';
 
 class AdminAuthProvider extends ChangeNotifier {
@@ -88,7 +88,7 @@ class AdminAuthProvider extends ChangeNotifier {
       _adminUser = userProfile;
       await sharedPrefs.setString(AppConstants.sessionKey, user.id);
 
-      // Initialize OneSignal and bind admin user for push notifications
+      // Sync device metadata and FCM token
       _syncDeviceToken(user.id);
 
       _setLoading(false);
@@ -115,7 +115,7 @@ class AdminAuthProvider extends ChangeNotifier {
           _adminUser = UserModel.fromJson(profileResponse);
           notifyListeners();
 
-          // Re-bind OneSignal user on session restore
+          // Re-sync FCM token on session restore
           _syncDeviceToken(currentUser.id);
         }
       } catch (e) {
@@ -128,7 +128,7 @@ class AdminAuthProvider extends ChangeNotifier {
   Future<void> signOut() async {
     _setLoading(true);
     try {
-      // Unbind user from OneSignal before signing out
+      // Deactivate device and revoke FCM token on logout
       await _removeDeviceTokenOnLogout();
 
       await SupabaseConfig.client.auth.signOut();
@@ -141,22 +141,18 @@ class AdminAuthProvider extends ChangeNotifier {
     }
   }
 
-  /// Syncs logged in admin session with OneSignal push service.
+  /// Syncs logged in admin session and FCM token with Supabase via DeviceService.
   void _syncDeviceToken(String userId) {
-    NotificationService.instance
-        .initialize()
-        .then((_) {
-          NotificationService.instance.bindUserToOneSignal(userId);
-        })
-        .catchError((e) {
-          debugPrint('Error syncing OneSignal user ID: $e');
-        });
+    DeviceService.instance.syncCurrentDevice(userId).catchError((e) {
+      debugPrint('Error syncing user device & FCM token: $e');
+      return false;
+    });
   }
 
-  /// Unbinds admin user from OneSignal on sign out.
+  /// Deactivates device session and revokes FCM token upon admin user sign out.
   Future<void> _removeDeviceTokenOnLogout() async {
     try {
-      await NotificationService.instance.unbindUserFromOneSignal();
+      await DeviceService.instance.deactivateCurrentDevice();
     } catch (e) {
       debugPrint('Error removing device token on logout: $e');
     }

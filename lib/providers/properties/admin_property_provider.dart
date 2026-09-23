@@ -189,4 +189,19 @@ class AdminPropertyProvider extends ChangeNotifier {
     updateLocalProperty(updated);
     return true;
   }
+
+  /// Fetch a single property by ID directly from backend service.
+  Future<PropertyModel?> fetchPropertyById(String id) async {
+    try {
+      final property = await _service.getPropertyById(id: id);
+      updateLocalProperty(property);
+      return property;
+    } on ApiException catch (e) {
+      _error = e.message;
+      return null;
+    } catch (e) {
+      _error = e.toString().replaceFirst('ApiException: ', '').replaceFirst('Exception: ', '');
+      return null;
+    }
+  }
 }

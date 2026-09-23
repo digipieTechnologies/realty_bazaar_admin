@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_routes.dart';
 import '../../../app/app_text_styles.dart';
+import '../../../core/network/supabase_client.dart';
+import '../../../core/services/device_service.dart';
 import '../../../providers/dashboard/admin_dashboard_provider.dart';
 import '../../../widgets/shimmer/admin_shimmer_widget.dart';
 
@@ -26,6 +28,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AdminDashboardProvider>().fetchDashboardSummary();
+      final user = SupabaseConfig.client.auth.currentUser;
+      if (user != null) {
+        DeviceService.instance.syncCurrentDevice(user.id);
+      }
     });
   }
 

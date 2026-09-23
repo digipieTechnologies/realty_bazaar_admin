@@ -1,13 +1,24 @@
 // File: lib/core/services/notification_service.dart
-// Purpose: Cross-platform Push Notification service for OneSignal with tap routing for Admin app.
+// Purpose: Cross-platform Firebase Cloud Messaging (FCM) Notification Service for Admin app with foreground, background, and cold-launch handling.
 
+import 'dart:convert';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../app/app_constants.dart';
 import '../../app/app_routes.dart';
 import '../../main.dart';
 import '../../models/notification_enums.dart';
+import '../../widgets/toast/app_toast.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  debugPrint('🔔 [FCM Admin Background Handler] Message: ${message.messageId}');
+}
 
 class NotificationService {
   NotificationService._();
@@ -16,76 +27,100 @@ class NotificationService {
 
   bool _isInitialized = false;
 
-  /// Initializes OneSignal SDK using ONE_SIGNAL_APP_ID passed via --dart-define-from-file=..env.dev or ..env.prod.
-  Future<void> initialize() async {
-    if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
-      debugPrint('OneSignal is only enabled for Android and iOS. Skipping initialization on desktop/web.');
-      return;
-    }
+  final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    importance: Importance.max,
+  );
+
+  /// Initializes FCM listeners and notification click handlers across Android, iOS, macOS, and Web.
+  Future<void> initialize() async {
     if (_isInitialized) return;
 
     try {
-      const String oneSignalAppId = String.fromEnvironment('ONE_SIGNAL_APP_ID');
+      if (Firebase.apps.isEmpty) {
+        debugPrint('⚠️ [NotificationService] Firebase not initialized yet.');
+        return;
+      }
 
-      if (oneSignalAppId.isNotEmpty) {
-        OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-        OneSignal.initialize(oneSignalAppId);
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-        // Prompt native system notification permission directly
-        OneSignal.Notifications.requestPermission(true);
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-        OneSignal.Notifications.addClickListener((event) {
-          final data = event.notification.additionalData;
-          if (data != null) {
-            _handleNotificationClick(Map<String, dynamic>.from(data));
+      const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
+        '@drawable/ic_notification',
+      );
+
+      const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
+
+      const InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsIOS,
+      );
+
+      await _localNotificationsPlugin.initialize(
+        settings: initializationSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+          if (response.payload != null) {
+            try {
+              final data = jsonDecode(response.payload!) as Map<String, dynamic>;
+              debugPrint('🔔 [Local Notification Tapped] payload: $data');
+              _handleNotificationClick(data);
+            } catch (e) {
+              debugPrint('Error parsing local notification payload: $e');
+            }
           }
-        });
+        },
+      );
 
-        _isInitialized = true;
-        debugPrint('OneSignal NotificationService initialized successfully with App ID: $oneSignalAppId');
-      } else {
-        debugPrint(
-          'ONE_SIGNAL_APP_ID missing from String.fromEnvironment. Make sure to build/run with --dart-define-from-file=..env.dev or ..env.prod',
-        );
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        await _localNotificationsPlugin
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            ?.createNotificationChannel(_channel);
       }
-    } catch (e) {
-      debugPrint('Error initializing OneSignal NotificationService: $e');
-    }
-  }
 
-  /// Binds logged in admin user's Supabase UUID to OneSignal's external_id.
-  Future<void> bindUserToOneSignal(String userId) async {
-    if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
-      return;
-    }
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        final notification = message.notification;
+        final title = notification?.title ?? 'New Notification';
+        final body = notification?.body ?? '';
 
-    try {
-      if (!_isInitialized) {
-        await initialize();
+        if (notification != null) {
+          final ctx = AppRoutes.rootNavigatorKey.currentContext;
+          if (ctx != null) {
+            AppToast.showNotification(
+              title,
+              body,
+              onTap: () {
+                _handleNotificationClick(message.data);
+              },
+            );
+          }
+        }
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        debugPrint('🔔 [FCM App Opened] Notification tapped with payload data: ${message.data}');
+        _handleNotificationClick(message.data);
+      });
+
+      final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+      if (initialMessage != null) {
+        debugPrint('🔔 [FCM Initial Message] App opened from terminated state via payload data: ${initialMessage.data}');
+        _handleNotificationClick(initialMessage.data);
       }
-      if (_isInitialized) {
-        await OneSignal.login(userId);
-        debugPrint('OneSignal user logged in with ID: $userId');
-      }
-    } catch (e) {
-      debugPrint('Error logging user into OneSignal: $e');
-    }
-  }
 
-  /// Unbinds user from OneSignal on logout.
-  Future<void> unbindUserFromOneSignal() async {
-    if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
-      return;
-    }
-
-    try {
-      if (_isInitialized) {
-        await OneSignal.logout();
-        debugPrint('OneSignal user logged out.');
-      }
-    } catch (e) {
-      debugPrint('Error logging out from OneSignal: $e');
+      _isInitialized = true;
+      debugPrint('✅ FCM Admin NotificationService initialized successfully!');
+    } catch (e, stack) {
+      debugPrint('❌ Error initializing FCM Admin NotificationService: $e\n$stack');
     }
   }
 
@@ -119,6 +154,7 @@ class NotificationService {
             targetPath = AppRoutes.videoRequests;
           }
           break;
+
         case NotificationType.launchProperty:
           final propertyId = data['property_id']?.toString() ?? data['id']?.toString();
           if (propertyId != null && propertyId.isNotEmpty && propertyId != 'null') {
@@ -135,14 +171,10 @@ class NotificationService {
       final isAppOpen = currentRoute.isNotEmpty && currentRoute != '/' && currentRoute != AppRoutes.login;
 
       if (isAppOpen) {
-        // App is already open and running: navigate directly
         debugPrint('👉 [NotificationService] App is open ($currentRoute). Pushing $targetPath');
         AppRoutes.router.push(targetPath);
       } else {
-        // App is not open (cold launch): store pendingRedirectKey for AppBootstrap to consume
-        debugPrint(
-          '👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath',
-        );
+        debugPrint('👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath');
         _storePendingRedirect(targetPath);
       }
     } catch (e, stack) {
@@ -150,7 +182,6 @@ class NotificationService {
     }
   }
 
-  /// Stores the pending redirect path using SharedPreferences (async-safe fallback)
   Future<void> _storePendingRedirect(String path) async {
     try {
       await sharedPrefs.setString(AppConstants.pendingRedirectKey, path);
