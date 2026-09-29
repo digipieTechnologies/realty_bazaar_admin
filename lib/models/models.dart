@@ -8,6 +8,7 @@ export 'chat_room_participant_model.dart';
 export 'dashboard_summary_model.dart';
 export 'language_model.dart';
 export 'lead_status_enum.dart';
+export 'marketing_team_model.dart';
 export 'media_model.dart';
 export 'notification_enums.dart';
 export 'property_enums.dart';
@@ -21,5 +22,3 @@ export 'user_model.dart';
 export 'user_role.dart';
 export 'video_request_enums.dart';
 export 'video_request_model.dart';
-export 'marketing_team_model.dart';
-

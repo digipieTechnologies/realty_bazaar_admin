@@ -2,13 +2,13 @@
 // Purpose: Responsive navigation shell layout supporting Sidebar on desktop/web/macOS
 // and Bottom Navigation Bar + Drawer on mobile, bound to active user session.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
-import 'package:realty_bazaar_admin/app/context_ext.dart';
-import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';

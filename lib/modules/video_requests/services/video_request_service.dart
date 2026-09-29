@@ -28,7 +28,7 @@ class VideoRequestService extends BaseSupabaseService {
   }) async {
     return getPaginated<VideoRequestModel>(
       table: 'video_requests',
-      select: '*, property_id(*), broker_id(*)',
+      select: '*, property_id(*), broker_id(*), marketing_team:marketing_team_id(*)',
       fromJson: VideoRequestModel.fromJson,
       page: page,
       pageSize: pageSize,
@@ -131,7 +131,9 @@ class VideoRequestService extends BaseSupabaseService {
     try {
       final response = await _client
           .from('video_requests')
-          .select('*, property_id(*), broker_id(*)')
+          .select(
+            '*, property_id(*), broker_id(*, marketing_team:marketing_team_id(*), primary_marketing_user:primary_marketing_user_id(*)), marketing_team:marketing_team_id(*), primary_marketing_user:primary_marketing_user_id(*)',
+          )
           .eq('id', id)
           .single();
       return VideoRequestModel.fromJson(response);

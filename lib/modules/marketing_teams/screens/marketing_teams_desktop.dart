@@ -1,16 +1,15 @@
 // File: lib/modules/marketing_teams/screens/marketing_teams_desktop.dart
 // Purpose: Desktop layout for Marketing Teams management with AppDataTable, quick filters, and KPI summary.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../core/filters/filter_field.dart';
 import '../../../models/models.dart';
 import '../../../providers/marketing_teams/marketing_teams_provider.dart';
-import '../../../widgets/buttons/app_button.dart';
 import '../../../widgets/common/app_data_table.dart';
 import '../../../widgets/common/app_search_field.dart';
 import '../../../widgets/common/enterprise_filter_panel.dart';
@@ -36,39 +35,6 @@ class MarketingTeamsDesktop extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Bar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Marketing Teams',
-                    style: AppTextStyles.heading1.copyWith(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Manage regional marketing divisions, staff rosters, and broker assignments.',
-                    style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-                  ),
-                ],
-              ),
-              AppButton.solid(
-                text: 'Create Team',
-                iconData: Icons.add_rounded,
-                height: 40,
-                onPressed: () {
-                  TeamEditDialog.show(
-                    context,
-                    onSave: (team) => state.createTeam(team),
-                  );
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
           // KPI Summary Cards
           TeamSummarySection(
             totalTeams: teamsProv.totalTeams,
@@ -85,7 +51,11 @@ class MarketingTeamsDesktop extends StatelessWidget {
             onSearch: (query) => state.filterProvider.updateSearch(query),
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
+            addLabel: 'Add Team',
             activeFilterCount: state.filterProvider.activeFiltersCount,
+            onAdd: () {
+              TeamEditDialog.show(context, onSave: (team) => state.createTeam(team));
+            },
           ),
           const SizedBox(height: 8),
 
@@ -320,21 +290,14 @@ class MarketingTeamsDesktop extends StatelessWidget {
         // Column 5: Status Switch
         Align(
           alignment: Alignment.centerLeft,
-          child: Switch(
-            value: team.isActive,
-            onChanged: (val) => state.toggleTeamStatus(team),
-          ),
+          child: Switch(value: team.isActive, onChanged: (val) => state.toggleTeamStatus(team)),
         ),
 
         // Column 6: Actions
         DataCellActions(
           onView: () => context.push(AppRoutes.marketingTeamDetailPath(team.id), extra: team),
           onEdit: () {
-            TeamEditDialog.show(
-              context,
-              team: team,
-              onSave: (updated) => state.updateTeam(updated),
-            );
+            TeamEditDialog.show(context, team: team, onSave: (updated) => state.updateTeam(updated));
           },
           onDelete: () => state.confirmAndDeleteTeam(team),
         ),

@@ -42,6 +42,7 @@ class ChatMessageModel extends Equatable {
   });
 
   bool get isAdmin => senderType == 'admin';
+
   bool get isBroker => senderType == 'broker';
 
   factory ChatMessageModel.fromJson(dynamic json) {

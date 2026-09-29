@@ -62,7 +62,9 @@ class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
     try {
       final users = await _service.fetchAvailableMarketingUsers();
       // Exclude users already in THIS team
-      final filtered = users.where((u) => u.user.id != null && !widget.existingMemberUserIds.contains(u.user.id)).toList();
+      final filtered = users
+          .where((u) => u.user.id != null && !widget.existingMemberUserIds.contains(u.user.id))
+          .toList();
       setState(() {
         _availableUsers = filtered;
         if (filtered.isNotEmpty) {
@@ -91,11 +93,7 @@ class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
 
     setState(() => _isSubmitting = true);
     try {
-      await _service.addOrTransferMember(
-        teamId: widget.teamId,
-        userId: _selectedUserId!,
-        isLead: _isLead,
-      );
+      await _service.addOrTransferMember(teamId: widget.teamId, userId: _selectedUserId!, isLead: _isLead);
       if (mounted) {
         Navigator.of(context).pop(true);
       }
@@ -117,98 +115,89 @@ class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
     return AppDialog(
       title: 'Add Member to ${widget.teamName}',
       content: _isLoading
-          ? const SizedBox(
-              height: 120,
-              child: Center(child: CircularProgressIndicator()),
-            )
+          ? const SizedBox(height: 120, child: Center(child: CircularProgressIndicator()))
           : _availableUsers.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  child: Center(
-                    child: Text(
-                      'No available marketing users found.',
-                      style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24.0),
+              child: Center(
+                child: Text(
+                  'No available marketing users found.',
+                  style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+                ),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_error != null) ...[
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(_error!, style: AppTextStyles.caption.copyWith(color: Colors.redAccent)),
+                    ),
+                  ],
+                  CustomizedDropdown<String>(
+                    label: 'Select Marketing User',
+                    value: _selectedUserId,
+                    items: _availableUsers.map((u) => u.user.id!).toList(),
+                    showAllOption: false,
+                    displayValue: (id) {
+                      final item = _availableUsers.firstWhere((u) => u.user.id == id);
+                      final teamSuffix = item.hasTeam ? ' (${item.currentTeamName})' : ' (Unassigned)';
+                      return '${item.user.name ?? item.user.email}$teamSuffix';
+                    },
+                    onChanged: (val) => setState(() => _selectedUserId = val),
+                  ),
+                  const SizedBox(height: 12),
+                  if (isTransfer) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.warning.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info_outline, color: AppColors.warning, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              '${selected.user.name ?? "User"} is currently assigned to "${selected.currentTeamName}". Adding them here will transfer them from their current team.',
+                              style: AppTextStyles.caption.copyWith(color: const Color(0xFFB45309)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  Material(
+                    color: Colors.transparent,
+                    child: SwitchListTile(
+                      title: const Text('Designate as Team Lead'),
+                      subtitle: Text(
+                        _isLead
+                            ? 'This user will be set as the lead of ${widget.teamName}'
+                            : 'Regular field member',
+                        style: AppTextStyles.caption,
+                      ),
+                      value: _isLead,
+                      onChanged: (val) => setState(() => _isLead = val),
+                      contentPadding: EdgeInsets.zero,
                     ),
                   ),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (_error != null) ...[
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(bottom: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            _error!,
-                            style: AppTextStyles.caption.copyWith(color: Colors.redAccent),
-                          ),
-                        ),
-                      ],
-                      CustomizedDropdown<String>(
-                        label: 'Select Marketing User',
-                        value: _selectedUserId,
-                        items: _availableUsers.map((u) => u.user.id!).toList(),
-                        showAllOption: false,
-                        displayValue: (id) {
-                          final item = _availableUsers.firstWhere((u) => u.user.id == id);
-                          final teamSuffix = item.hasTeam ? ' (${item.currentTeamName})' : ' (Unassigned)';
-                          return '${item.user.name ?? item.user.email}$teamSuffix';
-                        },
-                        onChanged: (val) => setState(() => _selectedUserId = val),
-                      ),
-                      const SizedBox(height: 12),
-                      if (isTransfer) ...[
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.warning.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.info_outline, color: AppColors.warning, size: 20),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  '${selected.user.name ?? "User"} is currently assigned to "${selected.currentTeamName}". Adding them here will transfer them from their current team.',
-                                  style: AppTextStyles.caption.copyWith(color: const Color(0xFFB45309)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                      Material(
-                        color: Colors.transparent,
-                        child: SwitchListTile(
-                          title: const Text('Designate as Team Lead'),
-                          subtitle: Text(
-                            _isLead
-                                ? 'This user will be set as the lead of ${widget.teamName}'
-                                : 'Regular field member',
-                            style: AppTextStyles.caption,
-                          ),
-                          value: _isLead,
-                          onChanged: (val) => setState(() => _isLead = val),
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
+              ),
+            ),
       actions: [
-        AppButton.outline(
-          text: 'cancel'.tr(),
-          onPressed: () => Navigator.of(context).pop(false),
-        ),
+        AppButton.outline(text: 'cancel'.tr(), onPressed: () => Navigator.of(context).pop(false)),
         if (_availableUsers.isNotEmpty) ...[
           const SizedBox(width: 12),
           AppButton.solid(

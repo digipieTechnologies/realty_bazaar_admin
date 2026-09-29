@@ -1,13 +1,13 @@
 // File: lib/modules/properties/screens/property_detail_mobile.dart
 // Purpose: Clean Mobile layout for Property Detail screen delegating tab views to modular widgets.
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:realty_bazaar_admin/app/app_colors.dart';
 import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:realty_bazaar_admin/models/property_model.dart';
 import 'package:realty_bazaar_admin/providers/properties/admin_property_provider.dart';
 import 'package:realty_bazaar_admin/widgets/dialogs/property_edit_dialog.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 
 import '../widgets/property_detail_overview_tab.dart';
 import '../widgets/property_media_gallery.dart';

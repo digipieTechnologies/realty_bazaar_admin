@@ -168,6 +168,18 @@ class VideoRequestsMobile extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          if (request.effectiveMarketingTeam != null) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              'Team: ${request.effectiveMarketingTeam!.name}${request.effectivePrimaryRep != null ? " • ${request.effectivePrimaryRep!.name}" : ""}',
+                              style: AppTextStyles.caption.copyWith(
+                                color: context.primaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ],
                       ),
                     ),

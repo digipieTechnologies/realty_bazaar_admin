@@ -1,13 +1,13 @@
 // File: lib/providers/auth/admin_auth_provider.dart
 // Purpose: Super Admin Authentication provider with real Supabase Auth and database role verification.
 
-import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/app_constants.dart';
-import '../../core/services/device_service.dart';
 import '../../core/network/supabase_client.dart';
+import '../../core/services/device_service.dart';
 import '../../main.dart';
 
 class AdminAuthProvider extends ChangeNotifier {

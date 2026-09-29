@@ -113,7 +113,9 @@ class NotificationService {
 
       final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
       if (initialMessage != null) {
-        debugPrint('🔔 [FCM Initial Message] App opened from terminated state via payload data: ${initialMessage.data}');
+        debugPrint(
+          '🔔 [FCM Initial Message] App opened from terminated state via payload data: ${initialMessage.data}',
+        );
         _handleNotificationClick(initialMessage.data);
       }
 
@@ -174,7 +176,9 @@ class NotificationService {
         debugPrint('👉 [NotificationService] App is open ($currentRoute). Pushing $targetPath');
         AppRoutes.router.push(targetPath);
       } else {
-        debugPrint('👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath');
+        debugPrint(
+          '👉 [NotificationService] App is not open ($currentRoute). Storing pendingRedirectKey: $targetPath',
+        );
         _storePendingRedirect(targetPath);
       }
     } catch (e, stack) {

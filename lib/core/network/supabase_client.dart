@@ -1,7 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'supabase_logger.dart';
-
 class SupabaseConfig {
   static const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
   static const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');

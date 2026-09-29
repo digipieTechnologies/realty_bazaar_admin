@@ -1,11 +1,11 @@
 // File: lib/modules/marketing_teams/screens/marketing_teams_mobile.dart
 // Purpose: Mobile layout for Marketing Teams management with card list and bottom sheet filters.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
-import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
@@ -33,10 +33,7 @@ class MarketingTeamsMobile extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          TeamEditDialog.show(
-            context,
-            onSave: (team) => state.createTeam(team),
-          );
+          TeamEditDialog.show(context, onSave: (team) => state.createTeam(team));
         },
         backgroundColor: AppColors.primary,
         child: const Icon(Icons.add, color: Colors.white),
@@ -81,21 +78,21 @@ class MarketingTeamsMobile extends StatelessWidget {
               child: teamsProv.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : teamsList.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No marketing teams found',
-                            style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
-                          ),
-                        )
-                      : ListView.separated(
-                          itemCount: teamsList.length,
-                          padding: const EdgeInsets.only(bottom: 80),
-                          separatorBuilder: (context, index) => const SizedBox(height: 10),
-                          itemBuilder: (context, index) {
-                            final team = teamsList[index];
-                            return _buildTeamCard(context, team, teamsProv);
-                          },
-                        ),
+                  ? Center(
+                      child: Text(
+                        'No marketing teams found',
+                        style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: teamsList.length,
+                      padding: const EdgeInsets.only(bottom: 80),
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final team = teamsList[index];
+                        return _buildTeamCard(context, team, teamsProv);
+                      },
+                    ),
             ),
             PaginationWidget(
               pagination: teamsProv.pagination,
@@ -162,10 +159,7 @@ class MarketingTeamsMobile extends StatelessWidget {
                   ],
                 ),
               ),
-              Switch(
-                value: team.isActive,
-                onChanged: (val) => state.toggleTeamStatus(team),
-              ),
+              Switch(value: team.isActive, onChanged: (val) => state.toggleTeamStatus(team)),
             ],
           ),
           const Divider(height: 20),
@@ -231,11 +225,7 @@ class MarketingTeamsMobile extends StatelessWidget {
                 icon: const Icon(Icons.edit_outlined, size: 16),
                 label: Text('edit'.tr()),
                 onPressed: () {
-                  TeamEditDialog.show(
-                    context,
-                    team: team,
-                    onSave: (updated) => state.updateTeam(updated),
-                  );
+                  TeamEditDialog.show(context, team: team, onSave: (updated) => state.updateTeam(updated));
                 },
               ),
               TextButton.icon(

@@ -1,6 +1,8 @@
 // File: lib/modules/brokers/widgets/broker_posts_tab.dart
 // Purpose: Tab child widget displaying social posts created by the selected broker using BrokerService.
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:realty_bazaar_admin/app/app_colors.dart';
 import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:realty_bazaar_admin/models/media_model.dart';
@@ -9,8 +11,6 @@ import 'package:realty_bazaar_admin/modules/brokers/services/broker_service.dart
 import 'package:realty_bazaar_admin/widgets/common/pagination_widget.dart';
 import 'package:realty_bazaar_admin/widgets/common/tab_header.dart';
 import 'package:realty_bazaar_admin/widgets/media/full_screen_media_viewer.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 
 class BrokerPostsTab extends StatefulWidget {
   final String? brokerId;

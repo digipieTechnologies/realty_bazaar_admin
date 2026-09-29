@@ -70,11 +70,11 @@ class MarketingTeamsScreenState extends State<MarketingTeamsScreen> {
 
   Future<void> createTeam(MarketingTeamModel team) async {
     final created = await context.read<MarketingTeamsProvider>().createTeam(
-          name: team.name,
-          territory: team.territory,
-          description: team.description,
-          isActive: team.isActive,
-        );
+      name: team.name,
+      territory: team.territory,
+      description: team.description,
+      isActive: team.isActive,
+    );
 
     if (created != null && mounted) {
       AppToast.showSuccess('Team Created', 'Marketing team "${created.name}" created successfully.');
@@ -100,9 +100,9 @@ class MarketingTeamsScreenState extends State<MarketingTeamsScreen> {
     if (result != null && result['confirmed'] == true && mounted) {
       final String? reassignTeamId = result['reassignTeamId'] as String?;
       final success = await context.read<MarketingTeamsProvider>().deleteTeam(
-            teamId: team.id,
-            reassignTeamId: reassignTeamId,
-          );
+        teamId: team.id,
+        reassignTeamId: reassignTeamId,
+      );
       if (success && mounted) {
         AppToast.showSuccess(
           'Team Deleted',

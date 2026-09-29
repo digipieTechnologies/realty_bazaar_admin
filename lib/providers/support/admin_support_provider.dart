@@ -2,6 +2,7 @@
 // Purpose: Super Admin provider for managing broker support tickets, status workflows, reopen requests, staff assignment, and real-time synchronization.
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -28,31 +29,47 @@ class AdminSupportProvider extends ChangeNotifier {
   // Realtime subscription
   RealtimeChannel? _subscription;
   String? _activeChatRoomId;
+
   String? get activeChatRoomId => _activeChatRoomId;
 
   // Getters
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
+
   String get searchQuery => _searchQuery;
+
   String get selectedStatusFilter => _selectedStatusFilter;
+
   SupportCategory? get selectedCategory => _selectedCategory;
+
   SupportTicketPriority? get selectedPriority => _selectedPriority;
+
   int get currentPage => _currentPage;
+
   int get pageSize => _pageSize;
 
   List<SupportTicketModel> get tickets => _getPaginatedTickets();
+
   List<SupportTicketModel> get allFilteredTickets => _filteredTickets;
 
   int get totalFilteredCount => _filteredTickets.length;
+
   int get totalPages => (_filteredTickets.isEmpty) ? 1 : (_filteredTickets.length / _pageSize).ceil();
 
   // Metrics
   int get totalTicketsCount => _allTickets.length;
+
   int get openCount => _allTickets.where((t) => t.isOpen).length;
+
   int get inProgressCount => _allTickets.where((t) => t.isInProgress).length;
+
   int get reopenRequestedCount => _allTickets.where((t) => t.reopenRequested).length;
+
   int get resolvedCount => _allTickets.where((t) => t.isResolved || t.isClosed).length;
+
   int get totalUnreadCount => _allTickets.fold(0, (sum, t) => sum + t.unreadCount);
+
   int get unreadTicketsCount => _allTickets.where((t) => t.unreadCount > 0).length;
 
   List<SupportTicketModel> _getPaginatedTickets() {

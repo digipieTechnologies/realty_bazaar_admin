@@ -225,7 +225,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             final cleanQuery = searchTerm.toLowerCase();
 
             return brokers.where((b) {
-              final name = (b.businessName ?? '').toLowerCase();
+              final name = (b.businessName ?? b.userId?.name ?? '').toLowerCase();
               final id = (b.id ?? '').toLowerCase();
               final plan = (b.plan ?? '').toLowerCase();
               final fullDisplay = '$name ($plan)'.toLowerCase();
@@ -237,9 +237,7 @@ class _BrokerTypeAheadFieldState extends State<BrokerTypeAheadField> {
             }).toList();
           },
           itemBuilder: (context, broker) {
-            final name = (broker.businessName != null && broker.businessName!.isNotEmpty)
-                ? broker.businessName!
-                : (broker.id ?? 'Broker');
+            final name = broker.businessName ?? broker.userId?.name ?? "-";
             final isSelected = broker.id == widget.selectedBrokerId;
 
             return ListTile(

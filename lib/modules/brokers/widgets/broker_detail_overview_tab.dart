@@ -1,13 +1,13 @@
 // File: lib/modules/brokers/widgets/broker_detail_overview_tab.dart
 // Purpose: Mobile Overview Tab child widget for Broker Details screen with AutomaticKeepAliveClientMixin and TabHeader.
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:realty_bazaar_admin/models/broker_model.dart';
 import 'package:realty_bazaar_admin/providers/brokers/brokers_provider.dart';
 import 'package:realty_bazaar_admin/widgets/common/tab_header.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class BrokerDetailOverviewTab extends StatefulWidget {
   final BrokerModel broker;

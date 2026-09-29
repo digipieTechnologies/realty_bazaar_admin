@@ -1,13 +1,13 @@
 // File: lib/modules/properties/screens/properties_mobile.dart
 // Purpose: Mobile layout for Super Admin Properties management screen with MakeMyTrip-style vertical property cards copied from brokerflow-app.
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:realty_bazaar_admin/app/app_routes.dart';
 import 'package:realty_bazaar_admin/app/common_ext.dart';
 import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:realty_bazaar_admin/widgets/dialogs/property_edit_dialog.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../app/app_text_styles.dart';
 import '../../../core/filters/filter_field.dart';

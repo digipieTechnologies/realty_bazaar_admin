@@ -1,9 +1,9 @@
 // File: lib/widgets/inputs/app_dropdown.dart
 // Purpose: Reusable Dropdown selection input field matching Admin App design system.
 
-import 'package:realty_bazaar_admin/app/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:realty_bazaar_admin/app/app_text_styles.dart';
 
 import '../../app/app_colors.dart';
 

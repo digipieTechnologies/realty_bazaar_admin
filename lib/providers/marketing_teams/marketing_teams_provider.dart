@@ -116,20 +116,12 @@ class MarketingTeamsProvider extends ChangeNotifier {
   }
 
   void setTerritoryFilter(String? territory) {
-    _filter = _filter.copyWith(
-      territory: territory,
-      clearTerritory: territory == null,
-      page: 1,
-    );
+    _filter = _filter.copyWith(territory: territory, clearTerritory: territory == null, page: 1);
     fetchTeams();
   }
 
   void setIsActiveFilter(bool? isActive) {
-    _filter = _filter.copyWith(
-      isActive: isActive,
-      clearIsActive: isActive == null,
-      page: 1,
-    );
+    _filter = _filter.copyWith(isActive: isActive, clearIsActive: isActive == null, page: 1);
     fetchTeams();
   }
 
@@ -239,10 +231,7 @@ class MarketingTeamsProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteTeam({
-    required String teamId,
-    String? reassignTeamId,
-  }) async {
+  Future<bool> deleteTeam({required String teamId, String? reassignTeamId}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();

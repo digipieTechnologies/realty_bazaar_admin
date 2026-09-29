@@ -70,13 +70,19 @@ class SupportTicketModel extends Equatable {
   });
 
   bool get isOpen => status == 'open';
+
   bool get isInProgress => status == 'in_progress';
+
   bool get isResolved => status == 'resolved';
+
   bool get isClosed => status == 'closed';
+
   bool get isReadOnly => isResolved || isClosed;
 
   SupportCategory get categoryEnum => SupportCategory.fromDbValue(category);
+
   SupportTicketStatus get statusEnum => SupportTicketStatus.fromDbValue(status);
+
   SupportTicketPriority get priorityEnum => SupportTicketPriority.fromDbValue(priority);
 
   factory SupportTicketModel.fromJson(dynamic json) {

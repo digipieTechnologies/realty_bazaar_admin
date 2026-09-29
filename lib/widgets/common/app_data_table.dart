@@ -243,5 +243,4 @@ class DataCellActions extends StatelessWidget {
       ],
     );
   }
-
 }

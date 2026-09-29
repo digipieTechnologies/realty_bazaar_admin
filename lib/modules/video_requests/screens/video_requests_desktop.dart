@@ -35,27 +35,6 @@ class VideoRequestsDesktop extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row with Title
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'video_requests'.tr(),
-                style: AppTextStyles.heading1.copyWith(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: context.textColor,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                'Manage property walkthrough video requests and admin approvals',
-                style: AppTextStyles.body2.copyWith(color: context.textColorMuted),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
           // Search Bar & Filter Controls
           AppSearchBar(
             hintText: 'video_requests_search_notes_desktop_hint'.tr(),
@@ -63,6 +42,7 @@ class VideoRequestsDesktop extends StatelessWidget {
             isMobile: false,
             onFilter: state.toggleFilterSidebar,
             activeFilterCount: state.filterProvider.activeFiltersCount,
+            addLabel: 'Add Video Request',
             onAdd: () => _showAddRequestDialog(context, videoRequestsProv),
           ),
           const SizedBox(height: 8),
@@ -86,14 +66,15 @@ class VideoRequestsDesktop extends StatelessWidget {
                       Expanded(
                         child: AppDataTable(
                           isLoading: videoRequestsProv.isLoading,
-                          minWidth: 800,
+                          minWidth: 1000,
                           columns: [
-                            AppDataColumn(label: 'video_request_col_property'.tr(), flex: 3),
+                            AppDataColumn(label: 'video_request_col_property'.tr(), flex: 2.5),
                             AppDataColumn(label: 'video_request_col_broker'.tr(), flex: 2),
-                            AppDataColumn(label: 'video_request_workflow_status_col'.tr(), flex: 2),
-                            AppDataColumn(label: 'video_request_approval_status_col'.tr(), flex: 2),
-                            AppDataColumn(label: 'video_request_date_created_col'.tr(), flex: 2),
-                            AppDataColumn(label: 'video_request_col_actions'.tr(), flex: 2),
+                            const AppDataColumn(label: 'Marketing Team', flex: 2),
+                            AppDataColumn(label: 'video_request_workflow_status_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_approval_status_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_date_created_col'.tr(), flex: 1.5),
+                            AppDataColumn(label: 'video_request_col_actions'.tr(), flex: 1.5),
                           ],
                           rows: list
                               .map((request) => _buildRow(context, request, videoRequestsProv))
@@ -138,7 +119,9 @@ class VideoRequestsDesktop extends StatelessWidget {
         builder: (_) => const Center(child: CircularProgressIndicator()),
       );
       if (brokersProv.brokers.isEmpty) await brokersProv.fetchBrokers();
-      if (propertiesProv.properties.isEmpty) await propertiesProv.fetchProperties();
+      if (propertiesProv.properties.isEmpty) {
+        await propertiesProv.fetchProperties();
+      }
       if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
     }
 
@@ -170,6 +153,7 @@ class VideoRequestsDesktop extends StatelessWidget {
       cells: [
         DataCellText(text: request.property?.propertyTitle ?? '-'),
         DataCellText(text: request.broker?.businessName ?? '-'),
+        _buildTeamCell(context, request),
         Align(alignment: Alignment.centerLeft, child: _buildStatusBadge(context, request.status)),
         Align(
           alignment: Alignment.centerLeft,
@@ -192,8 +176,12 @@ class VideoRequestsDesktop extends StatelessWidget {
                 builder: (_) => const Center(child: CircularProgressIndicator()),
               );
               if (brokersProv.brokers.isEmpty) await brokersProv.fetchBrokers();
-              if (propertiesProv.properties.isEmpty) await propertiesProv.fetchProperties();
-              if (context.mounted) Navigator.of(context, rootNavigator: true).pop();
+              if (propertiesProv.properties.isEmpty) {
+                await propertiesProv.fetchProperties();
+              }
+              if (context.mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
             }
             if (context.mounted) {
               VideoRequestEditDialog.show(
@@ -262,6 +250,63 @@ class VideoRequestsDesktop extends StatelessWidget {
         status.displayName.toUpperCase(),
         style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
       ),
+    );
+  }
+
+  Widget _buildTeamCell(BuildContext context, VideoRequestModel request) {
+    final team = request.effectiveMarketingTeam;
+    final rep = request.effectivePrimaryRep;
+
+    if (team == null) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: context.textColorMuted.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            'Unassigned',
+            style: AppTextStyles.caption.copyWith(
+              color: context.textColorMuted,
+              fontWeight: FontWeight.w500,
+              fontSize: 11,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.groups_outlined, size: 14, color: context.primaryColor),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                team.name,
+                style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600, color: context.textColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        if (rep != null) ...[
+          const SizedBox(height: 2),
+          Text(
+            rep.name ?? rep.email ?? '',
+            style: AppTextStyles.caption.copyWith(color: context.textColorMuted, fontSize: 11),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
     );
   }
 }

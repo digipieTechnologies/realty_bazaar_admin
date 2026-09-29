@@ -1,6 +1,8 @@
 // File: lib/modules/properties/widgets/property_posts_tab.dart
 // Purpose: Posts tab child widget displaying social posts related to a property ID with AutomaticKeepAliveClientMixin and TabHeader.
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:realty_bazaar_admin/app/app_colors.dart';
 import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:realty_bazaar_admin/core/services/admin_data_service.dart';
@@ -9,8 +11,6 @@ import 'package:realty_bazaar_admin/models/social_post_model.dart';
 import 'package:realty_bazaar_admin/widgets/common/pagination_widget.dart';
 import 'package:realty_bazaar_admin/widgets/common/tab_header.dart';
 import 'package:realty_bazaar_admin/widgets/media/full_screen_media_viewer.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 
 class PropertyPostsTab extends StatefulWidget {
   final String? propertyId;

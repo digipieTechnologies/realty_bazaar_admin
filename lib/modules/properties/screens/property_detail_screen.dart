@@ -94,9 +94,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(title: Text('properties_details'.tr())),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 

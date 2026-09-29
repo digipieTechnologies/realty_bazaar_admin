@@ -39,12 +39,30 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyA3Ph_KMEyq3jORvbNPESIxr7LEfFzNPS8',
-    appId: '1:872541492683:web:436b55b6e44c0f8a00924e',
+    appId: '1:872541492683:web:65a9595ede79b4a900924e',
     messagingSenderId: '872541492683',
     projectId: 'the-realty-bazaar',
     authDomain: 'the-realty-bazaar.firebaseapp.com',
     storageBucket: 'the-realty-bazaar.firebasestorage.app',
-    measurementId: 'G-4V21CELJVZ',
+    measurementId: 'G-HEQY0KN7VH',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
+    appId: '1:872541492683:ios:98575b215f48b61a00924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
+    iosBundleId: 'com.therealtybazaar.admin',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
+    appId: '1:872541492683:ios:98575b215f48b61a00924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
+    iosBundleId: 'com.therealtybazaar.admin',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -54,30 +72,14 @@ class DefaultFirebaseOptions {
     projectId: 'the-realty-bazaar',
     storageBucket: 'the-realty-bazaar.firebasestorage.app',
   );
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
-    appId: '1:872541492683:ios:98575b215f48b61a00924e',
-    messagingSenderId: '872541492683',
-    projectId: 'the-realty-bazaar',
-    storageBucket: 'the-realty-bazaar.firebasestorage.app',
-    iosBundleId: 'com.therealtybazaar.admin',
-  );
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
-    appId: '1:872541492683:ios:0ec91a8a29c1f9a900924e',
-    messagingSenderId: '872541492683',
-    projectId: 'the-realty-bazaar',
-    storageBucket: 'the-realty-bazaar.firebasestorage.app',
-    iosBundleId: 'com.example.brokerflowAdmin',
-  );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyA3Ph_KMEyq3jORvbNPESIxr7LEfFzNPS8',
-    appId: '1:872541492683:web:436b55b6e44c0f8a00924e',
+    appId: '1:872541492683:web:93cc1e065519a65500924e',
     messagingSenderId: '872541492683',
     projectId: 'the-realty-bazaar',
     authDomain: 'the-realty-bazaar.firebaseapp.com',
     storageBucket: 'the-realty-bazaar.firebasestorage.app',
-    measurementId: 'G-4V21CELJVZ',
+    measurementId: 'G-X2DP4SFFPX',
   );
 }
