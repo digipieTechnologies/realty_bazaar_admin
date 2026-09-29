@@ -1,5 +1,5 @@
-import 'package:realty_bazaar_admin/models/media_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:realty_bazaar_admin/models/media_model.dart';
 
 import 'broker_model.dart';
 import 'property_model.dart';

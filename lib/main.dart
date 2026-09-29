@@ -2,12 +2,11 @@
 // Purpose: Super Admin Application entry point, service initialization, and routing setup.
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:firebase_core/firebase_core.dart';
 
 import 'app/app_routes.dart';
 import 'app/app_strings.dart';
@@ -18,18 +17,18 @@ import 'firebase_options.dart';
 import 'providers/activity_logs/activity_logs_provider.dart';
 import 'providers/auth/admin_auth_provider.dart';
 import 'providers/brokers/brokers_provider.dart';
+import 'providers/chat/admin_chat_provider.dart';
 import 'providers/dashboard/admin_dashboard_provider.dart';
 import 'providers/language/language_provider.dart';
 import 'providers/leads/admin_leads_provider.dart';
+import 'providers/marketing_teams/marketing_teams_provider.dart';
 import 'providers/properties/admin_property_provider.dart';
 import 'providers/reports/reports_provider.dart';
 import 'providers/social/admin_social_provider.dart';
 import 'providers/social_posts/social_posts_provider.dart';
-import 'providers/chat/admin_chat_provider.dart';
 import 'providers/support/admin_support_provider.dart';
 import 'providers/users/users_provider.dart';
 import 'providers/video_requests/video_requests_provider.dart';
-import 'providers/marketing_teams/marketing_teams_provider.dart';
 
 late SharedPreferences sharedPrefs;
 
@@ -50,9 +49,7 @@ void main() async {
   }
 
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     debugPrint('Firebase initialized successfully in Admin app!');
     await NotificationService.instance.initialize();
   } catch (e) {

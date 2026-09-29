@@ -1,8 +1,8 @@
 // File: lib/modules/marketing_teams/widgets/team_summary_section.dart
 // Purpose: Collapsible KPI summary header showing key team metrics and broker assignment distribution.
 
-import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
@@ -69,9 +69,7 @@ class _TeamSummarySectionState extends State<TeamSummarySection> {
               final isDesktop = constraints.maxWidth > 900;
               final cardWidth = isDesktop
                   ? (constraints.maxWidth - (3 * 12)) / 4
-                  : (constraints.maxWidth > 550
-                      ? (constraints.maxWidth - 12) / 2
-                      : constraints.maxWidth);
+                  : (constraints.maxWidth > 550 ? (constraints.maxWidth - 12) / 2 : constraints.maxWidth);
 
               return Wrap(
                 spacing: 12.0,
@@ -90,7 +88,8 @@ class _TeamSummarySectionState extends State<TeamSummarySection> {
                     context,
                     title: 'Active Teams',
                     value: widget.activeTeams.toString(),
-                    subtitle: '${((widget.activeTeams / (widget.totalTeams == 0 ? 1 : widget.totalTeams)) * 100).round()}% operational',
+                    subtitle:
+                        '${((widget.activeTeams / (widget.totalTeams == 0 ? 1 : widget.totalTeams)) * 100).round()}% operational',
                     icon: Icons.check_circle_outline_rounded,
                     color: AppColors.success,
                     width: cardWidth,
@@ -101,7 +100,8 @@ class _TeamSummarySectionState extends State<TeamSummarySection> {
                     value: widget.totalMembers.toString(),
                     subtitle: 'Assigned staff',
                     icon: Icons.badge_outlined,
-                    color: const Color(0xFF6366F1), // Indigo
+                    color: const Color(0xFF6366F1),
+                    // Indigo
                     width: cardWidth,
                   ),
                   _buildCard(
@@ -165,17 +165,11 @@ class _TeamSummarySectionState extends State<TeamSummarySection> {
                 const SizedBox(height: 2.0),
                 Text(
                   value,
-                  style: AppTextStyles.heading2.copyWith(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.heading2.copyWith(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   subtitle,
-                  style: AppTextStyles.caption.copyWith(
-                    fontSize: 11.0,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTextStyles.caption.copyWith(fontSize: 11.0, color: AppColors.textSecondary),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],

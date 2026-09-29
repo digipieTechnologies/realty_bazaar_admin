@@ -132,6 +132,24 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
       ],
     );
 
+    final marketingTeamCard = _buildInfoCard(
+      context,
+      title: 'Marketing Team Assignment',
+      icon: Icons.groups_rounded,
+      children: [
+        _buildDetailRow(context, 'Team Name', activeReq.effectiveMarketingTeam?.name ?? 'Unassigned'),
+        if (activeReq.effectiveMarketingTeam?.territory != null)
+          _buildDetailRow(context, 'Territory', activeReq.effectiveMarketingTeam!.territory!),
+        _buildDetailRow(
+          context,
+          'Primary Rep',
+          activeReq.effectivePrimaryRep?.name ?? activeReq.effectivePrimaryRep?.email ?? 'Shared Team Only',
+        ),
+        if (activeReq.effectivePrimaryRep?.phone != null)
+          _buildDetailRow(context, 'Rep Phone', activeReq.effectivePrimaryRep!.phone!),
+      ],
+    );
+
     Widget? rejectionCard;
     if (activeReq.adminApprovalStatus == VideoRequestApprovalStatus.rejected) {
       rejectionCard = _buildInfoCard(
@@ -170,7 +188,15 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: Column(children: [propertyCard, const SizedBox(height: 20), brokerCard]),
+                    child: Column(
+                      children: [
+                        propertyCard,
+                        const SizedBox(height: 20),
+                        brokerCard,
+                        const SizedBox(height: 20),
+                        marketingTeamCard,
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
@@ -190,6 +216,8 @@ class _VideoRequestDetailScreenState extends State<VideoRequestDetailScreen> {
                   propertyCard,
                   const SizedBox(height: 16),
                   brokerCard,
+                  const SizedBox(height: 16),
+                  marketingTeamCard,
                   const SizedBox(height: 16),
                   notesCard,
                   if (rejectionCard != null) ...[const SizedBox(height: 16), rejectionCard],

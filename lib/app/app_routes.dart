@@ -88,11 +88,17 @@ class AppRoutes {
 
   // --- Helper Methods for Parameterized Paths ---
   static String userDetailPathHelper(String id) => '/users/detail/$id';
+
   static String brokerDetailPathHelper(String id) => '/brokers/detail/$id';
+
   static String marketingTeamDetailPath(String id) => '/marketing-teams/detail/$id';
+
   static String propertyDetailPathHelper(String id) => '/properties/detail/$id';
+
   static String socialLeadDetailPath(String id) => '/social-leads/detail/$id';
+
   static String socialPostDetailPath(String id) => '/social-posts/detail/$id';
+
   static String videoRequestDetailPathHelper(String id) => '/video-requests/detail/$id';
 
   static final GoRouter router = GoRouter(

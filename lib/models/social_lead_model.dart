@@ -39,15 +39,20 @@ class SocialLeadModel extends Equatable {
   String get whatsappNumber => phone;
 
   SocialPostModel? get socialPost => socialPostId;
+
   BrokerModel? get broker => brokerId;
 
   String? get resolvedBrokerId => brokerId?.id ?? rawBrokerId;
+
   String? get resolvedSocialPostId => socialPostId?.id ?? rawSocialPostId;
 
   // Legacy field getters for compatibility
   String get leadName => userName;
+
   String get leadPhone => phone;
+
   String? get leadEmail => null;
+
   String? get platform => socialPost?.platform;
 
   /// Generates a pre-filled WhatsApp click-to-chat URL with inquiry context.

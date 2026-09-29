@@ -1,11 +1,11 @@
 // File: lib/modules/marketing_teams/screens/marketing_team_detail_screen.dart
 // Purpose: Dedicated detail screen for a Marketing Team with Overview, Members, and Assigned Brokers tabs.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
-import 'package:realty_bazaar_admin/app/context_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
@@ -18,6 +18,7 @@ import '../../../widgets/toast/app_toast.dart';
 import '../../brokers/widgets/assign_broker_dialog.dart';
 import '../services/marketing_team_service.dart';
 import '../widgets/add_team_member_dialog.dart';
+import '../widgets/assign_broker_to_team_dialog.dart';
 import '../widgets/team_delete_dialog.dart';
 import '../widgets/team_edit_dialog.dart';
 
@@ -25,11 +26,7 @@ class MarketingTeamDetailScreen extends StatefulWidget {
   final String teamId;
   final MarketingTeamModel? team;
 
-  const MarketingTeamDetailScreen({
-    super.key,
-    required this.teamId,
-    this.team,
-  });
+  const MarketingTeamDetailScreen({super.key, required this.teamId, this.team});
 
   @override
   State<MarketingTeamDetailScreen> createState() => _MarketingTeamDetailScreenState();
@@ -67,11 +64,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
   }
 
   Future<void> _loadAllData() async {
-    await Future.wait([
-      _loadTeam(),
-      _loadMembers(),
-      _loadAssignedBrokers(),
-    ]);
+    await Future.wait([_loadTeam(), _loadMembers(), _loadAssignedBrokers()]);
   }
 
   Future<void> _loadTeam() async {
@@ -185,7 +178,8 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
     final confirmed = await ConfirmDialog.show(
       context: context,
       title: 'Remove Member',
-      message: 'Are you sure you want to remove ${member.user?.name ?? member.user?.email ?? "this member"} from ${_team?.name}?',
+      message:
+          'Are you sure you want to remove ${member.user?.name ?? member.user?.email ?? "this member"} from ${_team?.name}?',
       confirmLabel: 'Remove',
       isDestructive: true,
     );
@@ -205,16 +199,10 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
   Future<void> _handleToggleLead(TeamMemberModel member) async {
     final newLeadStatus = !member.isLead;
     try {
-      await _service.setMemberLeadStatus(
-        teamId: widget.teamId,
-        userId: member.userId,
-        isLead: newLeadStatus,
-      );
+      await _service.setMemberLeadStatus(teamId: widget.teamId, userId: member.userId, isLead: newLeadStatus);
       AppToast.showSuccess(
         'Lead Updated',
-        newLeadStatus
-            ? '${member.user?.name ?? "User"} is now the Team Lead.'
-            : 'Lead designation removed.',
+        newLeadStatus ? '${member.user?.name ?? "User"} is now the Team Lead.' : 'Lead designation removed.',
       );
       _loadMembers();
       _loadTeam();
@@ -223,11 +211,26 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
     }
   }
 
+  Future<void> _handleAssignBrokerToTeam() async {
+    if (_team == null) return;
+    final assigned = await AssignBrokerToTeamDialog.show(
+      context,
+      teamId: _team!.id,
+      teamName: _team!.name,
+      teamMembers: _members,
+    );
+    if (assigned == true) {
+      _loadAssignedBrokers();
+      _loadTeam();
+    }
+  }
+
   Future<void> _handleUnassignBroker(BrokerModel broker) async {
     final confirmed = await ConfirmDialog.show(
       context: context,
       title: 'Unassign Broker',
-      message: 'Move ${broker.businessName ?? "this broker"} to unassigned backlog?',
+      message:
+          'Unassigning ${broker.businessName ?? "this broker"} will move them to the unassigned backlog and remove all associated video requests from this team. Proceed?',
       confirmLabel: 'Unassign',
       isDestructive: true,
     );
@@ -235,7 +238,10 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
     if (confirmed == true && mounted) {
       try {
         await _service.assignBrokerToTeam(brokerId: broker.id!, teamId: null);
-        AppToast.showSuccess('Broker Unassigned', 'Moved to unassigned pool.');
+        AppToast.showSuccess(
+          'Broker Unassigned',
+          'Moved broker and associated video requests to unassigned pool.',
+        );
         _loadAssignedBrokers();
         _loadTeam();
       } catch (e) {
@@ -247,9 +253,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
   @override
   Widget build(BuildContext context) {
     if (_isLoadingTeam && _team == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_team == null && _teamError != null) {
@@ -263,10 +267,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
               const SizedBox(height: 16),
               Text(_teamError ?? 'Team not found'),
               const SizedBox(height: 16),
-              AppButton.outline(
-                text: 'Back to Teams',
-                onPressed: () => context.go(AppRoutes.marketingTeams),
-              ),
+              AppButton.outline(text: 'Back to Teams', onPressed: () => context.go(AppRoutes.marketingTeams)),
             ],
           ),
         ),
@@ -353,10 +354,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                         children: [
                           Text(
                             team.name,
-                            style: AppTextStyles.heading1.copyWith(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppTextStyles.heading1.copyWith(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(width: 12),
                           Container(
@@ -416,10 +414,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
               indicatorWeight: 3,
               tabs: [
                 const Tab(icon: Icon(Icons.dashboard_outlined), text: 'Overview'),
-                Tab(
-                  icon: const Icon(Icons.people_alt_outlined),
-                  text: 'Team Members (${_members.length})',
-                ),
+                Tab(icon: const Icon(Icons.people_alt_outlined), text: 'Team Members (${_members.length})'),
                 Tab(
                   icon: const Icon(Icons.business_rounded),
                   text: 'Assigned Brokers (${_assignedBrokers.length})',
@@ -461,8 +456,22 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  _buildStatTile(context, 'Field Reps', '${_members.length}', Icons.badge_outlined, AppColors.primary, width),
-                  _buildStatTile(context, 'Assigned Brokers', '${_assignedBrokers.length}', Icons.business_center_outlined, const Color(0xFF6366F1), width),
+                  _buildStatTile(
+                    context,
+                    'Field Reps',
+                    '${_members.length}',
+                    Icons.badge_outlined,
+                    AppColors.primary,
+                    width,
+                  ),
+                  _buildStatTile(
+                    context,
+                    'Assigned Brokers',
+                    '${_assignedBrokers.length}',
+                    Icons.business_center_outlined,
+                    const Color(0xFF6366F1),
+                    width,
+                  ),
                   _buildStatTile(
                     context,
                     'Team Lead',
@@ -502,7 +511,10 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Team Details', style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold)),
+                      Text(
+                        'Team Details',
+                        style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold),
+                      ),
                       const Divider(height: 24),
                       _buildInfoRow('Team ID', team.id),
                       const SizedBox(height: 12),
@@ -535,7 +547,10 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Team Lead', style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold)),
+                          Text(
+                            'Team Lead',
+                            style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold),
+                          ),
                           if (team.leadUser != null)
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -545,7 +560,11 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                               ),
                               child: const Text(
                                 'LEAD',
-                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFD97706)),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFD97706),
+                                ),
                               ),
                             ),
                         ],
@@ -643,10 +662,7 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-                ),
+                Text(title, style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary)),
                 const SizedBox(height: 2),
                 Text(
                   value,
@@ -667,11 +683,15 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
       children: [
         SizedBox(
           width: 120,
-          child: Text(label, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          child: Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
-        Expanded(
-          child: Text(value, style: AppTextStyles.body2),
-        ),
+        Expanded(child: Text(value, style: AppTextStyles.body2)),
       ],
     );
   }
@@ -703,129 +723,132 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
             child: _isLoadingMembers
                 ? const Center(child: CircularProgressIndicator())
                 : _members.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.people_outline_rounded, size: 48, color: Colors.grey),
-                            const SizedBox(height: 12),
-                            Text('No members assigned to this team.', style: AppTextStyles.body2),
-                            const SizedBox(height: 12),
-                            AppButton.outline(
-                              text: 'Add First Member',
-                              onPressed: _handleAddMember,
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: context.surfaceColor,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: context.borderColor),
-                        ),
-                        child: AppDataTable(
-                          columns: const [
-                            AppDataColumn(label: 'Member', flex: 3),
-                            AppDataColumn(label: 'Role & Status', flex: 2),
-                            AppDataColumn(label: 'Assigned Date', flex: 2),
-                            AppDataColumn(label: 'Team Lead', flex: 1.5),
-                            AppDataColumn(label: 'Actions', flex: 1),
-                          ],
-                          rows: _members.map((member) {
-                            final user = member.user;
-                            return DataRowItem(
-                              cells: [
-                                Row(
-                                  children: [
-                                    if (user != null)
-                                      user.avatarImage(context: context, width: 34, height: 34)
-                                    else
-                                      const CircleAvatar(radius: 17, child: Icon(Icons.person, size: 16)),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            user?.name ?? 'Unknown User',
-                                            style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            user?.email ?? '',
-                                            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.people_outline_rounded, size: 48, color: Colors.grey),
+                        const SizedBox(height: 12),
+                        Text('No members assigned to this team.', style: AppTextStyles.body2),
+                        const SizedBox(height: 12),
+                        AppButton.outline(text: 'Add First Member', onPressed: _handleAddMember),
+                      ],
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: context.surfaceColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: context.borderColor),
+                    ),
+                    child: AppDataTable(
+                      columns: const [
+                        AppDataColumn(label: 'Member', flex: 3),
+                        AppDataColumn(label: 'Role & Status', flex: 2),
+                        AppDataColumn(label: 'Assigned Date', flex: 2),
+                        AppDataColumn(label: 'Team Lead', flex: 1.5),
+                        AppDataColumn(label: 'Actions', flex: 1),
+                      ],
+                      rows: _members.map((member) {
+                        final user = member.user;
+                        return DataRowItem(
+                          cells: [
+                            Row(
+                              children: [
+                                if (user != null)
+                                  user.avatarImage(context: context, width: 34, height: 34)
+                                else
+                                  const CircleAvatar(radius: 17, child: Icon(Icons.person, size: 16)),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        user?.name ?? 'Unknown User',
+                                        style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      user?.role.name.toUpperCase() ?? 'MARKETING',
-                                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    DateFormat.yMMMd().format(member.createdAt),
-                                    style: AppTextStyles.caption,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: InkWell(
-                                    onTap: () => _handleToggleLead(member),
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            member.isLead ? Icons.star_rounded : Icons.star_border_rounded,
-                                            size: 18,
-                                            color: member.isLead ? const Color(0xFFD97706) : Colors.grey,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            member.isLead ? 'Lead' : 'Set Lead',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: member.isLead ? FontWeight.bold : FontWeight.normal,
-                                              color: member.isLead ? const Color(0xFFD97706) : AppColors.textSecondary,
-                                            ),
-                                          ),
-                                        ],
+                                      Text(
+                                        user?.email ?? '',
+                                        style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete_outline, size: 18, color: Colors.redAccent),
-                                    tooltip: 'Remove from team',
-                                    onPressed: () => _handleRemoveMember(member),
+                                    ],
                                   ),
                                 ),
                               ],
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withValues(alpha: 0.08),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  user?.role.name.toUpperCase() ?? 'MARKETING',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                DateFormat.yMMMd().format(member.createdAt),
+                                style: AppTextStyles.caption,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: InkWell(
+                                onTap: () => _handleToggleLead(member),
+                                borderRadius: BorderRadius.circular(4),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        member.isLead ? Icons.star_rounded : Icons.star_border_rounded,
+                                        size: 18,
+                                        color: member.isLead ? const Color(0xFFD97706) : Colors.grey,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        member.isLead ? 'Lead' : 'Set Lead',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: member.isLead ? FontWeight.bold : FontWeight.normal,
+                                          color: member.isLead
+                                              ? const Color(0xFFD97706)
+                                              : AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: IconButton(
+                                icon: const Icon(Icons.delete_outline, size: 18, color: Colors.redAccent),
+                                tooltip: 'Remove from team',
+                                onPressed: () => _handleRemoveMember(member),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -846,11 +869,23 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
                 'Assigned Brokers (${_assignedBrokers.length})',
                 style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold),
               ),
-              AppButton.outline(
-                text: 'Go to Brokers to Assign',
-                iconData: Icons.open_in_new_rounded,
-                height: 38,
-                onPressed: () => context.go(AppRoutes.brokers),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppButton.outline(
+                    text: 'Go to Brokers',
+                    iconData: Icons.open_in_new_rounded,
+                    height: 38,
+                    onPressed: () => context.go(AppRoutes.brokers),
+                  ),
+                  const SizedBox(width: 8),
+                  AppButton(
+                    text: 'Assign Broker',
+                    iconData: Icons.person_add_rounded,
+                    height: 38,
+                    onPressed: _handleAssignBrokerToTeam,
+                  ),
+                ],
               ),
             ],
           ),
@@ -859,125 +894,146 @@ class _MarketingTeamDetailScreenState extends State<MarketingTeamDetailScreen>
             child: _isLoadingBrokers
                 ? const Center(child: CircularProgressIndicator())
                 : _assignedBrokers.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.business_center_outlined, size: 48, color: Colors.grey),
+                        const SizedBox(height: 12),
+                        Text('No brokers assigned to this team.', style: AppTextStyles.body2),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.business_center_outlined, size: 48, color: Colors.grey),
-                            const SizedBox(height: 12),
-                            Text('No brokers assigned to this team.', style: AppTextStyles.body2),
-                            const SizedBox(height: 12),
+                            AppButton(
+                              text: 'Assign Broker',
+                              iconData: Icons.person_add_rounded,
+                              onPressed: _handleAssignBrokerToTeam,
+                            ),
+                            const SizedBox(width: 8),
                             AppButton.outline(
-                              text: 'Assign Brokers',
+                              text: 'Go to Brokers',
+                              iconData: Icons.open_in_new_rounded,
                               onPressed: () => context.go(AppRoutes.brokers),
                             ),
                           ],
                         ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: context.surfaceColor,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: context.borderColor),
-                        ),
-                        child: AppDataTable(
-                          columns: const [
-                            AppDataColumn(label: 'Broker', flex: 3),
-                            AppDataColumn(label: 'Subscription', flex: 1.5),
-                            AppDataColumn(label: 'Onboarding', flex: 1.5),
-                            AppDataColumn(label: 'Primary Rep', flex: 2),
-                            AppDataColumn(label: 'Actions', flex: 1.5),
-                          ],
-                          rows: _assignedBrokers.map((broker) {
-                            return DataRowItem(
-                              cells: [
-                                Row(
-                                  children: [
-                                    broker.avatarImage(context: context, width: 34, height: 34),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            broker.businessName ?? 'Unnamed Broker',
-                                            style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            broker.id ?? '',
-                                            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 10),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
+                      ],
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: context.surfaceColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: context.borderColor),
+                    ),
+                    child: AppDataTable(
+                      columns: const [
+                        AppDataColumn(label: 'Broker', flex: 3),
+                        AppDataColumn(label: 'Subscription', flex: 1.5),
+                        AppDataColumn(label: 'Onboarding', flex: 1.5),
+                        AppDataColumn(label: 'Primary Rep', flex: 2),
+                        AppDataColumn(label: 'Actions', flex: 1.5),
+                      ],
+                      rows: _assignedBrokers.map((broker) {
+                        return DataRowItem(
+                          cells: [
+                            Row(
+                              children: [
+                                broker.avatarImage(context: context, width: 34, height: 34),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        broker.businessName ?? 'Unnamed Broker',
+                                        style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryLight,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      broker.plan ?? 'Free',
-                                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primary),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    (broker.onboardingStatus ?? 'pending').toUpperCase(),
-                                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: broker.primaryMarketingUser != null
-                                      ? Text(
-                                          broker.primaryMarketingUser!.name ?? broker.primaryMarketingUser!.email ?? '',
-                                          style: AppTextStyles.body2,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      : Text(
-                                          'Team Pool (No Rep)',
-                                          style: AppTextStyles.caption.copyWith(
-                                            fontStyle: FontStyle.italic,
-                                            color: AppColors.textSecondary,
-                                          ),
+                                      Text(
+                                        broker.id ?? '',
+                                        style: AppTextStyles.caption.copyWith(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 10,
                                         ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit_note_rounded, size: 18),
-                                      tooltip: 'Reassign Broker',
-                                      onPressed: () async {
-                                        final updated = await AssignBrokerDialog.show(context, broker);
-                                        if (updated == true) {
-                                          _loadAssignedBrokers();
-                                          _loadTeam();
-                                        }
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.link_off_rounded, size: 18, color: Colors.orange),
-                                      tooltip: 'Unassign Broker',
-                                      onPressed: () => _handleUnassignBroker(broker),
-                                    ),
-                                  ],
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryLight,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  broker.plan ?? 'Free',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                (broker.onboardingStatus ?? 'pending').toUpperCase(),
+                                style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: broker.primaryMarketingUser != null
+                                  ? Text(
+                                      broker.primaryMarketingUser!.name ??
+                                          broker.primaryMarketingUser!.email ??
+                                          '',
+                                      style: AppTextStyles.body2,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      'Team Pool (No Rep)',
+                                      style: AppTextStyles.caption.copyWith(
+                                        fontStyle: FontStyle.italic,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit_note_rounded, size: 18),
+                                  tooltip: 'Reassign Broker',
+                                  onPressed: () async {
+                                    final updated = await AssignBrokerDialog.show(context, broker);
+                                    if (updated == true) {
+                                      _loadAssignedBrokers();
+                                      _loadTeam();
+                                    }
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.link_off_rounded, size: 18, color: Colors.orange),
+                                  tooltip: 'Unassign Broker',
+                                  onPressed: () => _handleUnassignBroker(broker),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
           ),
         ],
       ),

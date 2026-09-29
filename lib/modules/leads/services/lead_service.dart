@@ -1,8 +1,8 @@
 // File: lib/modules/leads/services/lead_service.dart
 // Purpose: Network service managing social leads fetching via get_social_leads RPC, single lead retrieval, creation, updating, reassignment, and soft deletion.
 
-import 'package:realty_bazaar_admin/models/lead_status_enum.dart';
 import 'package:flutter/foundation.dart';
+import 'package:realty_bazaar_admin/models/lead_status_enum.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/network/api_exception.dart';

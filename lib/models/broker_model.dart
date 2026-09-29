@@ -1,7 +1,7 @@
-import 'package:realty_bazaar_admin/app/common_ext.dart';
-import 'package:realty_bazaar_admin/widgets/common/cached_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/widgets/common/cached_image.dart';
 
 import '../app/context_ext.dart';
 import 'address_model.dart';
@@ -24,6 +24,7 @@ class BrokerModel extends Equatable {
   final UserModel? primaryMarketingUser;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final UserModel? userId;
 
   const BrokerModel({
     this.id,
@@ -39,6 +40,7 @@ class BrokerModel extends Equatable {
     this.primaryMarketingUser,
     this.createdAt,
     this.updatedAt,
+    this.userId,
   });
 
   static BrokerModel fromJson(dynamic json) {
@@ -54,18 +56,31 @@ class BrokerModel extends Equatable {
       parsedTeam = MarketingTeamModel.fromJson(Map<String, dynamic>.from(json['marketing_team_id'] as Map));
       teamId = parsedTeam.id;
     }
-    teamId ??= (json['marketing_team_id'] is String) ? json['marketing_team_id'] as String : json['marketing_team_id']?.toString();
+    teamId ??= (json['marketing_team_id'] is String)
+        ? json['marketing_team_id'] as String
+        : json['marketing_team_id']?.toString();
 
     UserModel? parsedPrimaryUser;
     String? primaryUserId;
     if (json['primary_marketing_user'] != null && json['primary_marketing_user'] is Map) {
-      parsedPrimaryUser = UserModel.fromJson(Map<String, dynamic>.from(json['primary_marketing_user'] as Map));
+      parsedPrimaryUser = UserModel.fromJson(
+        Map<String, dynamic>.from(json['primary_marketing_user'] as Map),
+      );
       primaryUserId = parsedPrimaryUser.id;
     } else if (json['primary_marketing_user_id'] != null && json['primary_marketing_user_id'] is Map) {
-      parsedPrimaryUser = UserModel.fromJson(Map<String, dynamic>.from(json['primary_marketing_user_id'] as Map));
+      parsedPrimaryUser = UserModel.fromJson(
+        Map<String, dynamic>.from(json['primary_marketing_user_id'] as Map),
+      );
       primaryUserId = parsedPrimaryUser.id;
     }
-    primaryUserId ??= (json['primary_marketing_user_id'] is String) ? json['primary_marketing_user_id'] as String : json['primary_marketing_user_id']?.toString();
+    primaryUserId ??= (json['primary_marketing_user_id'] is String)
+        ? json['primary_marketing_user_id'] as String
+        : json['primary_marketing_user_id']?.toString();
+
+    UserModel? parsedUser;
+    if (json['user_id'] != null && json['user_id'] is Map) {
+      parsedUser = UserModel.fromJson(Map<String, dynamic>.from(json['user_id'] as Map));
+    }
 
     return BrokerModel(
       id: json['id']?.toString(),
@@ -87,6 +102,7 @@ class BrokerModel extends Equatable {
       updatedAt: json['updated_at'] != null
           ? DateTime.tryParse(json['updated_at'].toString())?.toLocal()
           : null,
+      userId: parsedUser,
     );
   }
 
@@ -108,6 +124,9 @@ class BrokerModel extends Equatable {
     if (updatedAt != null) {
       data['updated_at'] = updatedAt?.toUtc().toIso8601String();
     }
+    if (userId != null) {
+      data['user_id'] = userId?.id;
+    }
     return data;
   }
 
@@ -125,6 +144,7 @@ class BrokerModel extends Equatable {
     UserModel? primaryMarketingUser,
     DateTime? createdAt,
     DateTime? updatedAt,
+    UserModel? user,
   }) {
     return BrokerModel(
       id: id ?? this.id,
@@ -139,6 +159,7 @@ class BrokerModel extends Equatable {
       primaryMarketingUser: primaryMarketingUser ?? this.primaryMarketingUser,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      userId: user ?? this.userId,
     );
   }
 
@@ -156,8 +177,8 @@ class BrokerModel extends Equatable {
     primaryMarketingUser,
     createdAt,
     updatedAt,
+    userId,
   ];
-
 
   Widget avatarImage({
     required BuildContext context,

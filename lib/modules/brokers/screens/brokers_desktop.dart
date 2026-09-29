@@ -1,11 +1,11 @@
 // File: lib/modules/brokers/screens/brokers_desktop.dart
 // Purpose: Desktop layout for Super Admin Brokers management screen with AppDataTable and Filter Sidebar.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
-import 'package:realty_bazaar_admin/app/common_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
@@ -102,6 +102,11 @@ class BrokersDesktop extends StatelessWidget {
   }
 
   DataRowItem _buildRow(BuildContext context, BrokerModel broker, BrokersProvider brokersProv) {
+    String businessName = broker.businessName ?? '';
+
+    if (businessName.isEmpty) {
+      businessName = "-";
+    }
     return DataRowItem(
       cells: [
         Row(
@@ -113,64 +118,74 @@ class BrokersDesktop extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    broker.businessName?.wordCap() ?? 'Unnamed Broker',
-                    style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  Text(businessName, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 3),
-                  InkWell(
-                    onTap: () async {
-                      final updated = await AssignBrokerDialog.show(context, broker);
-                      if (updated == true) {
-                        brokersProv.fetchBrokers();
-                      }
-                    },
-                    child: broker.marketingTeam != null
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryLight,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.groups_outlined, size: 11, color: AppColors.primary),
-                                const SizedBox(width: 4),
-                                Text(
-                                  broker.marketingTeam!.name,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          broker.userId?.name?.wordCap() ?? '-',
+                          style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Flexible(
+                        child: InkWell(
+                          onTap: () async {
+                            final updated = await AssignBrokerDialog.show(context, broker);
+                            if (updated == true) {
+                              brokersProv.fetchBrokers();
+                            }
+                          },
+                          child: broker.marketingTeam != null
+                              ? Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryLight,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.groups_outlined, size: 11, color: AppColors.primary),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        broker.marketingTeam!.name,
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.add_circle_outline, size: 11, color: Colors.redAccent),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'Unassigned',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.red.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.add_circle_outline, size: 11, color: Colors.redAccent),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Unassigned',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -211,11 +226,10 @@ class BrokersDesktop extends StatelessWidget {
               },
             );
           },
-          onDelete: () => state.confirmAndDeleteBroker(broker),
+          // onDelete: () => state.confirmAndDeleteBroker(broker),
         ),
       ],
     );
-
   }
 
   Widget _buildPlanBadge(String plan) {

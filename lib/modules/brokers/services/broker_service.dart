@@ -30,7 +30,7 @@ class BrokerService extends BaseSupabaseService {
     return getPaginated<BrokerModel>(
       table: 'brokers',
       select:
-          '*, address_id(*), marketing_team:marketing_teams(*)',
+          '*, user_id(id, name, email, phone, phone_country_code, phone_country_iso, gender), address_id(*), marketing_team:marketing_teams(*)',
       fromJson: BrokerModel.fromJson,
       page: page,
       pageSize: pageSize,
@@ -44,7 +44,6 @@ class BrokerService extends BaseSupabaseService {
         if (onboardingStatus != null && onboardingStatus != 'All') 'onboarding_status': onboardingStatus,
       },
     );
-
   }
 
   /// Create a new brokerage account.
@@ -164,7 +163,9 @@ class BrokerService extends BaseSupabaseService {
     try {
       final response = await _client
           .from('brokers')
-          .select('*, address_id(*), marketing_team:marketing_teams(*)')
+          .select(
+            '*, user_id(id, name, email, phone, phone_country_code, phone_country_iso, gender), address_id(*), marketing_team:marketing_teams(*)',
+          )
           .eq('id', id)
           .single();
 
@@ -172,11 +173,7 @@ class BrokerService extends BaseSupabaseService {
       final primaryUserId = brokerMap['primary_marketing_user_id'];
       if (primaryUserId != null) {
         try {
-          final userRes = await _client
-              .from('users')
-              .select('*')
-              .eq('id', primaryUserId)
-              .maybeSingle();
+          final userRes = await _client.from('users').select('*').eq('id', primaryUserId).maybeSingle();
           if (userRes != null) {
             brokerMap['primary_marketing_user'] = userRes;
           }
