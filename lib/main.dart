@@ -25,6 +25,7 @@ import 'providers/chat/admin_chat_provider.dart';
 import 'providers/support/admin_support_provider.dart';
 import 'providers/users/users_provider.dart';
 import 'providers/video_requests/video_requests_provider.dart';
+import 'providers/marketing_teams/marketing_teams_provider.dart';
 
 late SharedPreferences sharedPrefs;
 
@@ -75,6 +76,7 @@ class SuperAdminApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AdminLeadsProvider()),
         ChangeNotifierProvider(create: (_) => AdminSupportProvider()),
         ChangeNotifierProvider(create: (_) => AdminChatProvider()),
+        ChangeNotifierProvider(create: (_) => MarketingTeamsProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {

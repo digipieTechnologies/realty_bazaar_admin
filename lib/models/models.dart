@@ -21,3 +21,5 @@ export 'user_model.dart';
 export 'user_role.dart';
 export 'video_request_enums.dart';
 export 'video_request_model.dart';
+export 'marketing_team_model.dart';
+

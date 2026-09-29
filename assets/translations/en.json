@@ -4,6 +4,7 @@
   "dashboard": "Dashboard",
   "users": "Users",
   "brokers": "Brokers",
+  "marketing_teams": "Marketing Teams",
   "properties": "Properties",
   "social_accounts": "Social Accounts",
   "social_leads": "Social Leads",
@@ -600,6 +601,9 @@
   "category": "Category",
   "filters": "Filters",
   "apply": "Apply",
+  "super_admins": "Super Admins",
+  "has_assigned_brokers": "Has Assigned Brokers",
+  "empty_teams_only": "Empty Teams Only",
   "common": {
     "collapse_sidebar": "Collapse Sidebar",
     "expand_sidebar": "Expand Sidebar",

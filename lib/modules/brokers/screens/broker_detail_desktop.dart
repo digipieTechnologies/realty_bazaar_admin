@@ -1,12 +1,12 @@
 // File: lib/modules/brokers/screens/broker_detail_desktop.dart
 // Purpose: Desktop view for Broker Detail screen modularized with standalone tab widgets.
 
-import 'package:brokerflow_admin/app/app_colors.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/broker_model.dart';
-import 'package:brokerflow_admin/providers/brokers/brokers_provider.dart';
-import 'package:brokerflow_admin/widgets/common/app_breadcrumbs.dart';
-import 'package:brokerflow_admin/widgets/dialogs/broker_edit_dialog.dart';
+import 'package:realty_bazaar_admin/app/app_colors.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/broker_model.dart';
+import 'package:realty_bazaar_admin/providers/brokers/brokers_provider.dart';
+import 'package:realty_bazaar_admin/widgets/common/app_breadcrumbs.dart';
+import 'package:realty_bazaar_admin/widgets/dialogs/broker_edit_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +15,7 @@ import '../widgets/broker_detail_desktop_overview_tab.dart';
 import '../widgets/broker_detail_sidebar_card.dart';
 import '../widgets/broker_posts_tab.dart';
 import '../widgets/broker_properties_tab.dart';
+import '../widgets/assign_broker_dialog.dart';
 
 class BrokerDetailDesktop extends StatefulWidget {
   final BrokerModel broker;
@@ -96,6 +97,21 @@ class _BrokerDetailDesktopState extends State<BrokerDetailDesktop> with SingleTi
                 ),
               ),
               const SizedBox(width: 12),
+              FilledButton.icon(
+                onPressed: () async {
+                  final updated = await AssignBrokerDialog.show(context, broker);
+                  if (updated == true) {
+                    widget.brokersProv.fetchBrokers();
+                  }
+                },
+                icon: const Icon(Icons.assignment_ind_outlined, size: 18),
+                label: Text(broker.marketingTeam != null ? broker.marketingTeam!.name : 'Assign Team'),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  backgroundColor: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
               ElevatedButton.icon(
                 onPressed: () {
                   BrokerEditDialog.show(
@@ -113,6 +129,7 @@ class _BrokerDetailDesktopState extends State<BrokerDetailDesktop> with SingleTi
             ],
           ),
         ),
+
 
         // Horizontal Tab Bar Header Navigation
         Container(

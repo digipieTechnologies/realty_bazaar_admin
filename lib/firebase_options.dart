@@ -38,46 +38,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCih1Kp59mpAoJw15Hp1IGN523I2vdo0HU',
-    appId: '1:209800510781:web:d597da015be9ba994d1954',
-    messagingSenderId: '209800510781',
-    projectId: 'broker-agencies-flutter',
-    authDomain: 'broker-agencies-flutter.firebaseapp.com',
-    storageBucket: 'broker-agencies-flutter.firebasestorage.app',
+    apiKey: 'AIzaSyA3Ph_KMEyq3jORvbNPESIxr7LEfFzNPS8',
+    appId: '1:872541492683:web:436b55b6e44c0f8a00924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    authDomain: 'the-realty-bazaar.firebaseapp.com',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
+    measurementId: 'G-4V21CELJVZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDxplSV83y_AWx5K2wa8LiB6j3zUA-g2MI',
-    appId: '1:209800510781:android:ec47db589c29274c4d1954',
-    messagingSenderId: '209800510781',
-    projectId: 'broker-agencies-flutter',
-    storageBucket: 'broker-agencies-flutter.firebasestorage.app',
+    apiKey: 'AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs',
+    appId: '1:872541492683:android:9aa21e6fb9d4bb4900924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD_BtXGGx0QOEHLdCZDwIQAXWRiFRxAqyI',
-    appId: '1:209800510781:ios:dc8bdbbf88ed6b924d1954',
-    messagingSenderId: '209800510781',
-    projectId: 'broker-agencies-flutter',
-    storageBucket: 'broker-agencies-flutter.firebasestorage.app',
-    iosBundleId: 'com.digipie.admin.brokerflow',
+    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
+    appId: '1:872541492683:ios:98575b215f48b61a00924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
+    iosBundleId: 'com.therealtybazaar.admin',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD_BtXGGx0QOEHLdCZDwIQAXWRiFRxAqyI',
-    appId: '1:209800510781:ios:cc652997f2884f8f4d1954',
-    messagingSenderId: '209800510781',
-    projectId: 'broker-agencies-flutter',
-    storageBucket: 'broker-agencies-flutter.firebasestorage.app',
+    apiKey: 'AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w',
+    appId: '1:872541492683:ios:0ec91a8a29c1f9a900924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
     iosBundleId: 'com.example.brokerflowAdmin',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCih1Kp59mpAoJw15Hp1IGN523I2vdo0HU',
-    appId: '1:209800510781:web:85c0681dd7af1a934d1954',
-    messagingSenderId: '209800510781',
-    projectId: 'broker-agencies-flutter',
-    authDomain: 'broker-agencies-flutter.firebaseapp.com',
-    storageBucket: 'broker-agencies-flutter.firebasestorage.app',
+    apiKey: 'AIzaSyA3Ph_KMEyq3jORvbNPESIxr7LEfFzNPS8',
+    appId: '1:872541492683:web:436b55b6e44c0f8a00924e',
+    messagingSenderId: '872541492683',
+    projectId: 'the-realty-bazaar',
+    authDomain: 'the-realty-bazaar.firebaseapp.com',
+    storageBucket: 'the-realty-bazaar.firebasestorage.app',
+    measurementId: 'G-4V21CELJVZ',
   );
 }

@@ -1,4 +1,4 @@
-package com.digipie.admin.brokerflow
+package com.therealtybazaar.admin
 
 import io.flutter.embedding.android.FlutterActivity
 

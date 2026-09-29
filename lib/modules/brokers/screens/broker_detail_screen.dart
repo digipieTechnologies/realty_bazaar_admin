@@ -26,7 +26,8 @@ class BrokerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brokersProv = context.watch<BrokersProvider>();
-    final targetBroker = broker ?? brokersProv.brokers.firstWhereOrNull((b) => b.id == brokerId);
+    final targetId = broker?.id ?? brokerId;
+    final targetBroker = brokersProv.brokers.firstWhereOrNull((b) => b.id == targetId) ?? broker;
 
     final colorScheme = context.colorScheme;
 

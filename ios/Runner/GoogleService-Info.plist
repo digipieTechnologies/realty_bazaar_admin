@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD_BtXGGx0QOEHLdCZDwIQAXWRiFRxAqyI</string>
+	<string>AIzaSyAnLN9bwVWcW4k0m1FjfKil-AlsaX4Xq_w</string>
 	<key>GCM_SENDER_ID</key>
-	<string>209800510781</string>
+	<string>872541492683</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.digipie.admin.brokerflow</string>
+	<string>com.therealtybazaar.admin</string>
 	<key>PROJECT_ID</key>
-	<string>broker-agencies-flutter</string>
+	<string>the-realty-bazaar</string>
 	<key>STORAGE_BUCKET</key>
-	<string>broker-agencies-flutter.firebasestorage.app</string>
+	<string>the-realty-bazaar.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:209800510781:ios:dc8bdbbf88ed6b924d1954</string>
+	<string>1:872541492683:ios:98575b215f48b61a00924e</string>
 </dict>
 </plist>

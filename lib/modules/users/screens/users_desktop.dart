@@ -1,8 +1,8 @@
 // File: lib/modules/users/screens/users_desktop.dart
 // Purpose: Desktop layout for Super Admin Users management screen with AppDataTable and Filter Sidebar.
 
-import 'package:brokerflow_admin/app/app_routes.dart';
-import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

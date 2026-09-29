@@ -1,11 +1,11 @@
 // File: lib/modules/properties/widgets/property_detail_sidebar_card.dart
 // Purpose: Reusable master sidebar card for Property Detail desktop screen.
 
-import 'package:brokerflow_admin/app/app_colors.dart';
-import 'package:brokerflow_admin/app/common_ext.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/property_enums.dart';
-import 'package:brokerflow_admin/models/property_model.dart';
+import 'package:realty_bazaar_admin/app/app_colors.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/property_enums.dart';
+import 'package:realty_bazaar_admin/models/property_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

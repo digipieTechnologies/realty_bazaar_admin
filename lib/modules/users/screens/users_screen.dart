@@ -1,7 +1,7 @@
 // File: lib/modules/users/screens/users_screen.dart
 // Purpose: Entrypoint for Super Admin Users screen. Owns state and delegates UI layout to UsersDesktop or UsersMobile.
 
-import 'package:brokerflow_admin/models/models.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

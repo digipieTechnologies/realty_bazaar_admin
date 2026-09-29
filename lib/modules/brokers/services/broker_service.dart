@@ -29,7 +29,8 @@ class BrokerService extends BaseSupabaseService {
   }) async {
     return getPaginated<BrokerModel>(
       table: 'brokers',
-      select: '*, address_id(*)',
+      select:
+          '*, address_id(*), marketing_team:marketing_teams(*)',
       fromJson: BrokerModel.fromJson,
       page: page,
       pageSize: pageSize,
@@ -43,6 +44,7 @@ class BrokerService extends BaseSupabaseService {
         if (onboardingStatus != null && onboardingStatus != 'All') 'onboarding_status': onboardingStatus,
       },
     );
+
   }
 
   /// Create a new brokerage account.
@@ -115,10 +117,9 @@ class BrokerService extends BaseSupabaseService {
       final payload = <String, dynamic>{
         if (broker.businessName != null) 'business_name': broker.businessName!.trim(),
         if (broker.onboardingStatus != null) 'onboarding_status': broker.onboardingStatus,
-        if (broker.isActive != null) 'is_active': broker.isActive,
-        if (broker.autoApproveVideoRequests != null)
-          'auto_approve_video_requests': broker.autoApproveVideoRequests,
-        if (addressId != null) 'address_id': addressId,
+        'is_active': ?broker.isActive,
+        'auto_approve_video_requests': ?broker.autoApproveVideoRequests,
+        'address_id': ?addressId,
       };
 
       await _client.from('brokers').update(payload).eq('id', broker.id!);
@@ -161,8 +162,28 @@ class BrokerService extends BaseSupabaseService {
   /// Get a broker by ID.
   Future<BrokerModel> getBrokerById({required String id}) async {
     try {
-      final response = await _client.from('brokers').select('*, address_id(*)').eq('id', id).single();
-      return BrokerModel.fromJson(response);
+      final response = await _client
+          .from('brokers')
+          .select('*, address_id(*), marketing_team:marketing_teams(*)')
+          .eq('id', id)
+          .single();
+
+      final brokerMap = Map<String, dynamic>.from(response);
+      final primaryUserId = brokerMap['primary_marketing_user_id'];
+      if (primaryUserId != null) {
+        try {
+          final userRes = await _client
+              .from('users')
+              .select('*')
+              .eq('id', primaryUserId)
+              .maybeSingle();
+          if (userRes != null) {
+            brokerMap['primary_marketing_user'] = userRes;
+          }
+        } catch (_) {}
+      }
+
+      return BrokerModel.fromJson(brokerMap);
     } catch (e) {
       throw handleException(e, 'Unexpected error fetching broker');
     }

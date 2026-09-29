@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,4 +1,4 @@
-import 'package:brokerflow_admin/widgets/brand/app_logo.dart';
+import 'package:realty_bazaar_admin/widgets/brand/app_logo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

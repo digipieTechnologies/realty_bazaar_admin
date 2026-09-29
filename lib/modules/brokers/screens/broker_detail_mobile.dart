@@ -1,14 +1,15 @@
 // File: lib/modules/brokers/screens/broker_detail_mobile.dart
 // Purpose: Mobile layout for Broker Detail screen with Overview, Properties, and Posts tabs.
 
-import 'package:brokerflow_admin/app/app_colors.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/broker_model.dart';
-import 'package:brokerflow_admin/providers/brokers/brokers_provider.dart';
-import 'package:brokerflow_admin/widgets/dialogs/broker_edit_dialog.dart';
+import 'package:realty_bazaar_admin/app/app_colors.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/broker_model.dart';
+import 'package:realty_bazaar_admin/providers/brokers/brokers_provider.dart';
+import 'package:realty_bazaar_admin/widgets/dialogs/broker_edit_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/assign_broker_dialog.dart';
 import '../widgets/broker_detail_overview_tab.dart';
 import '../widgets/broker_posts_tab.dart';
 import '../widgets/broker_properties_tab.dart';
@@ -35,6 +36,16 @@ class BrokerDetailMobile extends StatelessWidget {
         appBar: AppBar(
           title: Text(broker.businessName ?? 'brokers_details'.tr()),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.assignment_ind_outlined),
+              tooltip: broker.marketingTeam?.name ?? 'Assign Marketing Team',
+              onPressed: () async {
+                final updated = await AssignBrokerDialog.show(context, broker);
+                if (updated == true) {
+                  brokersProv.fetchBrokers();
+                }
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               onPressed: () {

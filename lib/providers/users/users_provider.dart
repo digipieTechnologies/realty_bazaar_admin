@@ -1,5 +1,5 @@
-import 'package:brokerflow_admin/modules/users/models/user_filter_model.dart';
-import 'package:brokerflow_admin/modules/users/services/user_service.dart';
+import 'package:realty_bazaar_admin/modules/users/models/user_filter_model.dart';
+import 'package:realty_bazaar_admin/modules/users/services/user_service.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../core/network/api_exception.dart';

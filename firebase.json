@@ -3,36 +3,36 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "broker-agencies-flutter",
-          "appId": "1:209800510781:android:ec47db589c29274c4d1954",
+          "projectId": "the-realty-bazaar",
+          "appId": "1:872541492683:android:9aa21e6fb9d4bb4900924e",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "ios": {
         "default": {
-          "projectId": "broker-agencies-flutter",
-          "appId": "1:209800510781:ios:dc8bdbbf88ed6b924d1954",
+          "projectId": "the-realty-bazaar",
+          "appId": "1:872541492683:ios:98575b215f48b61a00924e",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
       },
       "macos": {
         "default": {
-          "projectId": "broker-agencies-flutter",
-          "appId": "1:209800510781:ios:cc652997f2884f8f4d1954",
+          "projectId": "the-realty-bazaar",
+          "appId": "1:872541492683:ios:0ec91a8a29c1f9a900924e",
           "uploadDebugSymbols": false,
           "fileOutput": "macos/Runner/GoogleService-Info.plist"
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "broker-agencies-flutter",
+          "projectId": "the-realty-bazaar",
           "configurations": {
-            "android": "1:209800510781:android:ec47db589c29274c4d1954",
-            "ios": "1:209800510781:ios:dc8bdbbf88ed6b924d1954",
-            "macos": "1:209800510781:ios:cc652997f2884f8f4d1954",
-            "web": "1:209800510781:web:d597da015be9ba994d1954",
-            "windows": "1:209800510781:web:85c0681dd7af1a934d1954"
+            "android": "1:872541492683:android:9aa21e6fb9d4bb4900924e",
+            "ios": "1:872541492683:ios:98575b215f48b61a00924e",
+            "macos": "1:872541492683:ios:0ec91a8a29c1f9a900924e",
+            "web": "1:872541492683:web:436b55b6e44c0f8a00924e",
+            "windows": "1:872541492683:web:436b55b6e44c0f8a00924e"
           }
         }
       }

@@ -1,8 +1,8 @@
 // File: lib/modules/brokers/screens/brokers_desktop.dart
 // Purpose: Desktop layout for Super Admin Brokers management screen with AppDataTable and Filter Sidebar.
 
-import 'package:brokerflow_admin/app/app_routes.dart';
-import 'package:brokerflow_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +20,7 @@ import '../../../widgets/common/pagination_widget.dart';
 import '../../../widgets/dialogs/broker_edit_dialog.dart';
 import '../../../widgets/toast/app_toast.dart';
 import '../models/broker_filter_model.dart';
+import '../widgets/assign_broker_dialog.dart';
 import 'brokers_screen.dart';
 
 class BrokersDesktop extends StatelessWidget {
@@ -108,10 +109,70 @@ class BrokersDesktop extends StatelessWidget {
             broker.avatarImage(context: context, width: 40, height: 40),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                broker.businessName?.wordCap() ?? 'Unnamed Broker',
-                style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    broker.businessName?.wordCap() ?? 'Unnamed Broker',
+                    style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  InkWell(
+                    onTap: () async {
+                      final updated = await AssignBrokerDialog.show(context, broker);
+                      if (updated == true) {
+                        brokersProv.fetchBrokers();
+                      }
+                    },
+                    child: broker.marketingTeam != null
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryLight,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.groups_outlined, size: 11, color: AppColors.primary),
+                                const SizedBox(width: 4),
+                                Text(
+                                  broker.marketingTeam!.name,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.add_circle_outline, size: 11, color: Colors.redAccent),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Unassigned',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -132,6 +193,12 @@ class BrokersDesktop extends StatelessWidget {
           ),
         ),
         DataCellActions(
+          onAssign: () async {
+            final updated = await AssignBrokerDialog.show(context, broker);
+            if (updated == true) {
+              brokersProv.fetchBrokers();
+            }
+          },
           onView: () =>
               context.pushNamed(brokerDetailPath, pathParameters: {'id': broker.id!}, extra: broker),
           onEdit: () {
@@ -148,6 +215,7 @@ class BrokersDesktop extends StatelessWidget {
         ),
       ],
     );
+
   }
 
   Widget _buildPlanBadge(String plan) {

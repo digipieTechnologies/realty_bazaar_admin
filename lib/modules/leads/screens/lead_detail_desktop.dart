@@ -1,7 +1,7 @@
 // File: lib/modules/leads/screens/lead_detail_desktop.dart
 // Purpose: Super Admin desktop two-column view for social lead details replicating broker app hero presentation with admin broker assignment card and actions.
 
-import 'package:brokerflow_admin/widgets/media/full_screen_media_viewer.dart';
+import 'package:realty_bazaar_admin/widgets/media/full_screen_media_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

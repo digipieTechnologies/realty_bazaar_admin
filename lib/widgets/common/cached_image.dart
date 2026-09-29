@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:brokerflow_admin/app/common_ext.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/media_model.dart';
-import 'package:brokerflow_admin/widgets/media/full_screen_media_viewer.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/media_model.dart';
+import 'package:realty_bazaar_admin/widgets/media/full_screen_media_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/foundation.dart';

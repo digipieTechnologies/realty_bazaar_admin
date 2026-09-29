@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "209800510781",
-    "project_id": "broker-agencies-flutter",
-    "storage_bucket": "broker-agencies-flutter.firebasestorage.app"
+    "project_number": "872541492683",
+    "project_id": "the-realty-bazaar",
+    "storage_bucket": "the-realty-bazaar.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:209800510781:android:8e57728e5df746b94d1954",
+        "mobilesdk_app_id": "1:872541492683:android:9aa21e6fb9d4bb4900924e",
         "android_client_info": {
-          "package_name": "com.digi.tech.broker_agencies"
+          "package_name": "com.therealtybazaar.admin"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDxplSV83y_AWx5K2wa8LiB6j3zUA-g2MI"
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
         }
       ],
       "services": {
@@ -26,15 +26,53 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:209800510781:android:ec47db589c29274c4d1954",
+        "mobilesdk_app_id": "1:872541492683:android:d4e062e8b189687d00924e",
         "android_client_info": {
-          "package_name": "com.digipie.admin.brokerflow"
+          "package_name": "com.therealtybazaar.broker"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDxplSV83y_AWx5K2wa8LiB6j3zUA-g2MI"
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872541492683:android:0e91474c75291ee100924e",
+        "android_client_info": {
+          "package_name": "com.therealtybazaar.marketing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872541492683:android:e7e504035c5206e900924e",
+        "android_client_info": {
+          "package_name": "com.therealtybazaar.portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6a0PBkdOvKw7UCqKB9NYr-2gkh2AIuGs"
         }
       ],
       "services": {

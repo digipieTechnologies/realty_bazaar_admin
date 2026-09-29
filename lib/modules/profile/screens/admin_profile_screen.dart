@@ -1,8 +1,8 @@
 // File: lib/modules/profile/screens/admin_profile_screen.dart
 // Purpose: Super Admin user profile management screen.
 
-import 'package:brokerflow_admin/app/app_routes.dart';
-import 'package:brokerflow_admin/models/models.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -55,7 +55,7 @@ class AdminProfileScreen extends StatelessWidget {
                       style: AppTextStyles.heading2.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
-                    Text(user?.email ?? 'admin@brokerflow.com', style: AppTextStyles.body2),
+                    Text(user?.email ?? 'admin@realtybazaar.com', style: AppTextStyles.body2),
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),

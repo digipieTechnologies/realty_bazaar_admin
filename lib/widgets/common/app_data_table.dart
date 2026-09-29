@@ -183,9 +183,17 @@ class DataCellActions extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onView;
+  final VoidCallback? onAssign;
   final bool isMobile;
 
-  const DataCellActions({super.key, this.onEdit, this.onDelete, this.onView, this.isMobile = false});
+  const DataCellActions({
+    super.key,
+    this.onEdit,
+    this.onDelete,
+    this.onView,
+    this.onAssign,
+    this.isMobile = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +203,16 @@ class DataCellActions extends StatelessWidget {
       spacing: isMobile ? 0 : 4,
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (onAssign != null)
+          IconButton(
+            icon: Icon(Icons.assignment_ind_outlined, size: 20, color: colorScheme.secondary),
+            onPressed: onAssign,
+            tooltip: 'Assign Marketing Team',
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+          ),
+
         if (onView != null)
           IconButton(
             icon: Icon(Icons.visibility_outlined, size: 20, color: colorScheme.primary),
@@ -225,4 +243,5 @@ class DataCellActions extends StatelessWidget {
       ],
     );
   }
+
 }

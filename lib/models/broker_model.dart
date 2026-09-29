@@ -1,10 +1,12 @@
-import 'package:brokerflow_admin/app/common_ext.dart';
-import 'package:brokerflow_admin/widgets/common/cached_image.dart';
+import 'package:realty_bazaar_admin/app/common_ext.dart';
+import 'package:realty_bazaar_admin/widgets/common/cached_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../app/context_ext.dart';
 import 'address_model.dart';
+import 'marketing_team_model.dart';
+import 'user_model.dart';
 
 class BrokerModel extends Equatable {
   static String tableName = "brokers";
@@ -16,6 +18,10 @@ class BrokerModel extends Equatable {
   final bool? isActive;
   final bool? autoApproveVideoRequests;
   final AddressModel? addressId;
+  final String? marketingTeamId;
+  final MarketingTeamModel? marketingTeam;
+  final String? primaryMarketingUserId;
+  final UserModel? primaryMarketingUser;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -27,6 +33,10 @@ class BrokerModel extends Equatable {
     this.isActive,
     this.autoApproveVideoRequests,
     this.addressId,
+    this.marketingTeamId,
+    this.marketingTeam,
+    this.primaryMarketingUserId,
+    this.primaryMarketingUser,
     this.createdAt,
     this.updatedAt,
   });
@@ -35,6 +45,28 @@ class BrokerModel extends Equatable {
     if (json is! Map<String, dynamic>) {
       return BrokerModel(id: json?.toString());
     }
+    MarketingTeamModel? parsedTeam;
+    String? teamId;
+    if (json['marketing_team'] != null && json['marketing_team'] is Map) {
+      parsedTeam = MarketingTeamModel.fromJson(Map<String, dynamic>.from(json['marketing_team'] as Map));
+      teamId = parsedTeam.id;
+    } else if (json['marketing_team_id'] != null && json['marketing_team_id'] is Map) {
+      parsedTeam = MarketingTeamModel.fromJson(Map<String, dynamic>.from(json['marketing_team_id'] as Map));
+      teamId = parsedTeam.id;
+    }
+    teamId ??= (json['marketing_team_id'] is String) ? json['marketing_team_id'] as String : json['marketing_team_id']?.toString();
+
+    UserModel? parsedPrimaryUser;
+    String? primaryUserId;
+    if (json['primary_marketing_user'] != null && json['primary_marketing_user'] is Map) {
+      parsedPrimaryUser = UserModel.fromJson(Map<String, dynamic>.from(json['primary_marketing_user'] as Map));
+      primaryUserId = parsedPrimaryUser.id;
+    } else if (json['primary_marketing_user_id'] != null && json['primary_marketing_user_id'] is Map) {
+      parsedPrimaryUser = UserModel.fromJson(Map<String, dynamic>.from(json['primary_marketing_user_id'] as Map));
+      primaryUserId = parsedPrimaryUser.id;
+    }
+    primaryUserId ??= (json['primary_marketing_user_id'] is String) ? json['primary_marketing_user_id'] as String : json['primary_marketing_user_id']?.toString();
+
     return BrokerModel(
       id: json['id']?.toString(),
       businessName: json['business_name']?.toString() ?? '',
@@ -42,7 +74,13 @@ class BrokerModel extends Equatable {
       isActive: json['is_active'] as bool? ?? true,
       autoApproveVideoRequests:
           (json['auto_approve_video_requests'] ?? json['auto_approve_video_request']) as bool? ?? false,
-      addressId: json['address_id'] != null ? AddressModel.fromJson(json['address_id']) : null,
+      addressId: json['address_id'] != null
+          ? AddressModel.fromJson(json['address_id'])
+          : (json['address'] != null ? AddressModel.fromJson(json['address']) : null),
+      marketingTeamId: teamId,
+      marketingTeam: parsedTeam,
+      primaryMarketingUserId: primaryUserId,
+      primaryMarketingUser: parsedPrimaryUser,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())?.toLocal()
           : null,
@@ -60,6 +98,10 @@ class BrokerModel extends Equatable {
     data['is_active'] = isActive;
     data['auto_approve_video_requests'] = autoApproveVideoRequests;
     data['address_id'] = addressId?.id;
+    if (marketingTeamId != null) data['marketing_team_id'] = marketingTeamId;
+    if (primaryMarketingUserId != null) {
+      data['primary_marketing_user_id'] = primaryMarketingUserId;
+    }
     if (createdAt != null) {
       data['created_at'] = createdAt?.toUtc().toIso8601String();
     }
@@ -77,6 +119,10 @@ class BrokerModel extends Equatable {
     bool? isActive,
     bool? autoApproveVideoRequests,
     AddressModel? addressId,
+    String? marketingTeamId,
+    MarketingTeamModel? marketingTeam,
+    String? primaryMarketingUserId,
+    UserModel? primaryMarketingUser,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -87,6 +133,10 @@ class BrokerModel extends Equatable {
       isActive: isActive ?? this.isActive,
       autoApproveVideoRequests: autoApproveVideoRequests ?? this.autoApproveVideoRequests,
       addressId: addressId ?? this.addressId,
+      marketingTeamId: marketingTeamId ?? this.marketingTeamId,
+      marketingTeam: marketingTeam ?? this.marketingTeam,
+      primaryMarketingUserId: primaryMarketingUserId ?? this.primaryMarketingUserId,
+      primaryMarketingUser: primaryMarketingUser ?? this.primaryMarketingUser,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -100,9 +150,14 @@ class BrokerModel extends Equatable {
     isActive,
     autoApproveVideoRequests,
     addressId,
+    marketingTeamId,
+    marketingTeam,
+    primaryMarketingUserId,
+    primaryMarketingUser,
     createdAt,
     updatedAt,
   ];
+
 
   Widget avatarImage({
     required BuildContext context,

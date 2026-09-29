@@ -46,13 +46,13 @@ class UserFilterModel extends BaseFilterModel {
       const FilterField(
         key: 'superAdminOnly',
         type: FilterType.quickFilter,
-        labelKey: 'Super Admins',
+        labelKey: 'super_admins',
         isQuickFilter: true,
       ),
       const FilterField(
         key: 'brokersOnly',
         type: FilterType.quickFilter,
-        labelKey: 'Brokers',
+        labelKey: 'brokers',
         isQuickFilter: true,
       ),
     ],

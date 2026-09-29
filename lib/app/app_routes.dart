@@ -14,6 +14,8 @@ import '../modules/dashboard/screens/admin_dashboard_screen.dart';
 import '../modules/dashboard/screens/admin_shell_layout_screen.dart';
 import '../modules/leads/screens/lead_detail_screen.dart';
 import '../modules/leads/screens/leads_screen.dart';
+import '../modules/marketing_teams/screens/marketing_team_detail_screen.dart';
+import '../modules/marketing_teams/screens/marketing_teams_screen.dart';
 import '../modules/profile/screens/admin_profile_screen.dart';
 import '../modules/properties/screens/admin_properties_screen.dart';
 import '../modules/properties/screens/property_detail_screen.dart';
@@ -33,6 +35,8 @@ const String usersPath = 'users';
 const String userDetailPath = 'user_detail';
 const String brokersPath = 'brokers';
 const String brokerDetailPath = 'broker_detail';
+const String marketingTeamsPath = 'marketing_teams';
+const String marketingTeamDetailRoute = 'marketing_team_detail';
 const String propertiesPath = 'properties';
 const String propertyDetailPath = 'property_detail';
 const String socialAccountsPath = 'social_accounts';
@@ -63,6 +67,8 @@ class AppRoutes {
   static const String userDetail = '/users/detail/:id';
   static const String brokers = '/brokers';
   static const String brokerDetail = '/brokers/detail/:id';
+  static const String marketingTeams = '/marketing-teams';
+  static const String marketingTeamDetail = '/marketing-teams/detail/:id';
   static const String properties = '/properties';
   static const String propertyDetail = '/properties/detail/:id';
   static const String socialAccounts = '/social-accounts';
@@ -83,6 +89,7 @@ class AppRoutes {
   // --- Helper Methods for Parameterized Paths ---
   static String userDetailPathHelper(String id) => '/users/detail/$id';
   static String brokerDetailPathHelper(String id) => '/brokers/detail/$id';
+  static String marketingTeamDetailPath(String id) => '/marketing-teams/detail/$id';
   static String propertyDetailPathHelper(String id) => '/properties/detail/$id';
   static String socialLeadDetailPath(String id) => '/social-leads/detail/$id';
   static String socialPostDetailPath(String id) => '/social-posts/detail/$id';
@@ -197,6 +204,31 @@ class AppRoutes {
             ],
           ),
           GoRoute(
+            name: marketingTeamsPath,
+            path: marketingTeams,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const MarketingTeamsScreen()),
+            routes: [
+              GoRoute(
+                name: marketingTeamDetailRoute,
+                path: 'detail/:id',
+                pageBuilder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  final extra = state.extra;
+                  final team = extra is MarketingTeamModel
+                      ? extra
+                      : extra is Map<String, dynamic>
+                      ? MarketingTeamModel.fromJson(extra)
+                      : null;
+                  return NoTransitionPage(
+                    key: state.pageKey,
+                    child: MarketingTeamDetailScreen(teamId: id, team: team),
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
             name: propertiesPath,
             path: properties,
             pageBuilder: (context, state) =>
@@ -293,12 +325,6 @@ class AppRoutes {
                 path: 'detail/:id',
                 pageBuilder: (context, state) {
                   final id = state.pathParameters['id'];
-                  final extra = state.extra;
-                  final request = extra is VideoRequestModel
-                      ? extra
-                      : extra is Map<String, dynamic>
-                      ? VideoRequestModel.fromJson(extra)
-                      : null;
                   return NoTransitionPage(
                     key: state.pageKey,
                     child: VideoRequestDetailScreen(requestId: id!),
@@ -372,6 +398,9 @@ class _ExtraEncoder extends Converter<Object?, Object?> {
     if (input is SocialLeadModel) {
       return {'__type__': 'SocialLeadModel', 'data': input.toJson()};
     }
+    if (input is MarketingTeamModel) {
+      return {'__type__': 'MarketingTeamModel', 'data': input.toJson()};
+    }
     return input;
   }
 }
@@ -400,6 +429,8 @@ class _ExtraDecoder extends Converter<Object?, Object?> {
             return SocialPostModel.fromJson(data);
           case 'SocialLeadModel':
             return SocialLeadModel.fromJson(data);
+          case 'MarketingTeamModel':
+            return MarketingTeamModel.fromJson(data);
         }
       }
     }

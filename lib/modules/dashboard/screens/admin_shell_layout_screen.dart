@@ -2,9 +2,9 @@
 // Purpose: Responsive navigation shell layout supporting Sidebar on desktop/web/macOS
 // and Bottom Navigation Bar + Drawer on mobile, bound to active user session.
 
-import 'package:brokerflow_admin/app/app_routes.dart';
-import 'package:brokerflow_admin/app/context_ext.dart';
-import 'package:brokerflow_admin/models/models.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -54,6 +54,12 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       titleKey: 'brokers',
       path: AppRoutes.brokers,
       icon: Icons.business_rounded,
+    ),
+    _NavigationItem(
+      title: 'Marketing Teams',
+      titleKey: 'marketing_teams',
+      path: AppRoutes.marketingTeams,
+      icon: Icons.diversity_3_rounded,
     ),
     _NavigationItem(
       title: 'Properties',

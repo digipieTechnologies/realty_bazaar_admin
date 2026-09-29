@@ -1,6 +1,7 @@
 // File: lib/modules/support/screens/admin_support_desktop.dart
 // Purpose: Super Admin desktop view for support tickets featuring KPI metric cards, enterprise filtering, AppDataTable, and quick action dialogs.
 
+import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -162,18 +163,16 @@ class AdminSupportDesktop extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.border),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<SupportCategory?>(
-                    value: provider.selectedCategory,
-                    hint: Text('all_categories'.tr(), style: AppTextStyles.body2),
-                    items: [
-                      DropdownMenuItem<SupportCategory?>(value: null, child: Text('all_categories'.tr())),
-                      ...SupportCategory.values.map((c) {
-                        return DropdownMenuItem<SupportCategory?>(value: c, child: Text(c.labelKey.tr()));
-                      }),
-                    ],
-                    onChanged: (cat) => provider.setCategoryFilter(cat),
-                  ),
+                child: AppDropdown<SupportCategory?>(
+                  value: provider.selectedCategory,
+                  hintText: 'all_categories'.tr(),
+                  items: [
+                    DropdownMenuItem<SupportCategory?>(value: null, child: Text('all_categories'.tr())),
+                    ...SupportCategory.values.map((c) {
+                      return DropdownMenuItem<SupportCategory?>(value: c, child: Text(c.labelKey.tr()));
+                    }),
+                  ],
+                  onChanged: (cat) => provider.setCategoryFilter(cat),
                 ),
               ),
               const SizedBox(width: 10),
@@ -187,35 +186,33 @@ class AdminSupportDesktop extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.border),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<SupportTicketPriority?>(
-                    value: provider.selectedPriority,
-                    hint: Text('all_priorities'.tr(), style: AppTextStyles.body2),
-                    items: [
-                      DropdownMenuItem<SupportTicketPriority?>(
-                        value: null,
-                        child: Text('all_priorities'.tr()),
-                      ),
-                      ...SupportTicketPriority.values.map((p) {
-                        return DropdownMenuItem<SupportTicketPriority?>(
-                          value: p,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(color: p.color, shape: BoxShape.circle),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(p.labelKey.tr()),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
-                    onChanged: (prio) => provider.setPriorityFilter(prio),
-                  ),
+                child: AppDropdown<SupportTicketPriority?>(
+                  value: provider.selectedPriority,
+                  hintText: 'all_priorities'.tr(),
+                  items: [
+                    DropdownMenuItem<SupportTicketPriority?>(
+                      value: null,
+                      child: Text('all_priorities'.tr()),
+                    ),
+                    ...SupportTicketPriority.values.map((p) {
+                      return DropdownMenuItem<SupportTicketPriority?>(
+                        value: p,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(color: p.color, shape: BoxShape.circle),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(p.labelKey.tr()),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                  onChanged: (prio) => provider.setPriorityFilter(prio),
                 ),
               ),
 

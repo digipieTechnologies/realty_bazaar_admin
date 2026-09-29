@@ -2,6 +2,7 @@
 // Purpose: Modal dialog for Super Admins to manually record a new lead or edit an existing lead,
 // with broker as main context and broker-scoped properties typeahead.
 
+import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -245,35 +246,32 @@ class _AddLeadDialogState extends State<AddLeadDialog> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: context.borderColor),
                   ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<LeadStatus>(
-                      isExpanded: true,
-                      value: _selectedStatus,
-                      items: LeadStatus.values.map((status) {
-                        return DropdownMenuItem<LeadStatus>(
-                          value: status,
-                          child: Row(
-                            children: [
-                              Icon(status.icon, size: 16, color: status.color),
-                              const SizedBox(width: 10),
-                              Text(
-                                status.label,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: status.color,
-                                ),
+                  child: AppDropdown<LeadStatus>(
+                    value: _selectedStatus,
+                    items: LeadStatus.values.map((status) {
+                      return DropdownMenuItem<LeadStatus>(
+                        value: status,
+                        child: Row(
+                          children: [
+                            Icon(status.icon, size: 16, color: status.color),
+                            const SizedBox(width: 10),
+                            Text(
+                              status.label,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: status.color,
                               ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (newStatus) {
-                        if (newStatus != null) {
-                          setState(() => _selectedStatus = newStatus);
-                        }
-                      },
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newStatus) {
+                      if (newStatus != null) {
+                        setState(() => _selectedStatus = newStatus);
+                      }
+                    },
                   ),
                 ),
               ],
