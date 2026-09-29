@@ -64,4 +64,4 @@ temp_interactive_push.bat
 config.bat
 node_modules
 .env.dev
-.env.prod
+.env.prod.gitignore
