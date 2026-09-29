@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.brokerflowAdmin</string>
+	<string>com.therealtybazaar.admin</string>
 	<key>PROJECT_ID</key>
 	<string>the-realty-bazaar</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:872541492683:ios:0ec91a8a29c1f9a900924e</string>
+	<string>1:872541492683:ios:98575b215f48b61a00924e</string>
 </dict>
 </plist>

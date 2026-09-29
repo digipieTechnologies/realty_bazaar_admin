@@ -1,12 +1,12 @@
 // File: lib/modules/profile/screens/admin_profile_screen.dart
 // Purpose: Super Admin user profile management screen.
 
-import 'package:realty_bazaar_admin/app/app_routes.dart';
-import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:realty_bazaar_admin/app/app_routes.dart';
+import 'package:realty_bazaar_admin/models/models.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';

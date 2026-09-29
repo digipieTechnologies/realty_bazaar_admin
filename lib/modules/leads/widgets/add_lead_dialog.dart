@@ -2,11 +2,11 @@
 // Purpose: Modal dialog for Super Admins to manually record a new lead or edit an existing lead,
 // with broker as main context and broker-scoped properties typeahead.
 
-import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 
 import '../../../app/app_text_styles.dart';
 import '../../../app/context_ext.dart';

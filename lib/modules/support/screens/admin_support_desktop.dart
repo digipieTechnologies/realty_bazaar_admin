@@ -1,10 +1,10 @@
 // File: lib/modules/support/screens/admin_support_desktop.dart
 // Purpose: Super Admin desktop view for support tickets featuring KPI metric cards, enterprise filtering, AppDataTable, and quick action dialogs.
 
-import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text_styles.dart';
@@ -190,10 +190,7 @@ class AdminSupportDesktop extends StatelessWidget {
                   value: provider.selectedPriority,
                   hintText: 'all_priorities'.tr(),
                   items: [
-                    DropdownMenuItem<SupportTicketPriority?>(
-                      value: null,
-                      child: Text('all_priorities'.tr()),
-                    ),
+                    DropdownMenuItem<SupportTicketPriority?>(value: null, child: Text('all_priorities'.tr())),
                     ...SupportTicketPriority.values.map((p) {
                       return DropdownMenuItem<SupportTicketPriority?>(
                         value: p,

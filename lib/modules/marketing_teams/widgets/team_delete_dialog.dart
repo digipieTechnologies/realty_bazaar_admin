@@ -16,16 +16,9 @@ class TeamDeleteDialog extends StatefulWidget {
   final MarketingTeamModel team;
   final List<MarketingTeamModel> otherActiveTeams;
 
-  const TeamDeleteDialog({
-    super.key,
-    required this.team,
-    required this.otherActiveTeams,
-  });
+  const TeamDeleteDialog({super.key, required this.team, required this.otherActiveTeams});
 
-  static Future<Map<String, dynamic>?> show(
-    BuildContext context, {
-    required MarketingTeamModel team,
-  }) async {
+  static Future<Map<String, dynamic>?> show(BuildContext context, {required MarketingTeamModel team}) async {
     // Fetch other active teams for reassignment dropdown
     final allActive = await MarketingTeamService().fetchActiveTeams();
     final otherTeams = allActive.where((t) => t.id != team.id).toList();
@@ -34,10 +27,7 @@ class TeamDeleteDialog extends StatefulWidget {
 
     return showDialog<Map<String, dynamic>>(
       context: context,
-      builder: (context) => TeamDeleteDialog(
-        team: team,
-        otherActiveTeams: otherTeams,
-      ),
+      builder: (context) => TeamDeleteDialog(team: team, otherActiveTeams: otherTeams),
     );
   }
 
@@ -152,20 +142,14 @@ class _TeamDeleteDialogState extends State<TeamDeleteDialog> {
         ),
       ),
       actions: [
-        AppButton.outline(
-          text: 'cancel'.tr(),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        AppButton.outline(text: 'cancel'.tr(), onPressed: () => Navigator.of(context).pop()),
         const SizedBox(width: 12),
         AppButton.solid(
           text: 'Delete Team',
           color: Colors.redAccent,
           onPressed: () {
             final reassignId = (_action == 'reassign' && hasBrokers) ? _selectedTargetTeamId : null;
-            Navigator.of(context).pop({
-              'confirmed': true,
-              'reassignTeamId': reassignId,
-            });
+            Navigator.of(context).pop({'confirmed': true, 'reassignTeamId': reassignId});
           },
         ),
       ],

@@ -14,11 +14,7 @@ class TeamEditDialog extends StatefulWidget {
   final MarketingTeamModel? team;
   final ValueChanged<MarketingTeamModel> onSave;
 
-  const TeamEditDialog({
-    super.key,
-    this.team,
-    required this.onSave,
-  });
+  const TeamEditDialog({super.key, this.team, required this.onSave});
 
   static Future<void> show(
     BuildContext context, {
@@ -62,19 +58,17 @@ class _TeamEditDialogState extends State<TeamEditDialog> {
   void _handleSave() {
     if (!_formKey.currentState!.validate()) return;
 
-    final updated = (widget.team ??
-            MarketingTeamModel(
-              id: '',
-              name: '',
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ))
-        .copyWith(
-      name: _nameController.text.trim(),
-      territory: _territoryController.text.trim().isEmpty ? null : _territoryController.text.trim(),
-      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-      isActive: _isActive,
-    );
+    final updated =
+        (widget.team ??
+                MarketingTeamModel(id: '', name: '', createdAt: DateTime.now(), updatedAt: DateTime.now()))
+            .copyWith(
+              name: _nameController.text.trim(),
+              territory: _territoryController.text.trim().isEmpty ? null : _territoryController.text.trim(),
+              description: _descriptionController.text.trim().isEmpty
+                  ? null
+                  : _descriptionController.text.trim(),
+              isActive: _isActive,
+            );
 
     widget.onSave(updated);
     Navigator.of(context).pop();
@@ -94,10 +88,7 @@ class _TeamEditDialogState extends State<TeamEditDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Team Information',
-                style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold),
-              ),
+              Text('Team Information', style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold)),
               AppTextField(
                 label: 'Team Name *',
                 hintText: 'e.g. Pune Central Champions',
@@ -138,15 +129,9 @@ class _TeamEditDialogState extends State<TeamEditDialog> {
         ),
       ),
       actions: [
-        AppButton.outline(
-          text: 'cancel'.tr(),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        AppButton.outline(text: 'cancel'.tr(), onPressed: () => Navigator.of(context).pop()),
         const SizedBox(width: 12),
-        AppButton.solid(
-          text: isEditing ? 'save'.tr() : 'Create Team',
-          onPressed: _handleSave,
-        ),
+        AppButton.solid(text: isEditing ? 'save'.tr() : 'Create Team', onPressed: _handleSave),
       ],
     );
   }

@@ -1,13 +1,12 @@
 // File: lib/modules/brokers/widgets/assign_broker_dialog.dart
 // Purpose: Dialog for Super Admins to assign a broker to a Marketing Team and designate a Primary Representative.
 
-import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:realty_bazaar_admin/widgets/inputs/app_dropdown.dart';
 
 import '../../../app/app_text_styles.dart';
 import '../../../models/models.dart';
-
 import '../../../widgets/buttons/app_button.dart';
 import '../../../widgets/dialogs/app_dialog.dart';
 import '../../../widgets/toast/app_toast.dart';
@@ -30,8 +29,7 @@ class AssignBrokerDialog extends StatefulWidget {
   State<AssignBrokerDialog> createState() => _AssignBrokerDialogState();
 }
 
-class
-_AssignBrokerDialogState extends State<AssignBrokerDialog> {
+class _AssignBrokerDialogState extends State<AssignBrokerDialog> {
   final MarketingTeamService _teamService = MarketingTeamService();
   final TextEditingController _notesController = TextEditingController();
 
@@ -112,12 +110,14 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
         notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       );
 
+      //TODO: Send notification to marketing team user
+
       if (mounted) {
         AppToast.showSuccess(
-          'success'.tr(),
+          'common.success'.tr(),
           _selectedTeamId == null
-              ? 'Broker unassigned from marketing team.'
-              : 'Broker successfully assigned.',
+              ? 'Broker and video requests unassigned from marketing team.'
+              : 'Broker and video requests successfully assigned.',
         );
         Navigator.of(context).pop(true);
       }
@@ -136,17 +136,17 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
     return AppDialog(
       title: 'Assign Marketing Team',
       content: _isLoadingTeams
-          ? const SizedBox(
-              height: 120,
-              child: Center(child: CircularProgressIndicator()),
-            )
+          ? const SizedBox(height: 120, child: Center(child: CircularProgressIndicator()))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   '${widget.broker.businessName ?? 'Broker'} (${widget.broker.id?.substring(0, widget.broker.id!.length > 8 ? 8 : widget.broker.id!.length) ?? ''})',
-                  style: AppTextStyles.caption.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.caption.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -212,10 +212,7 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
                   AppDropdown<String?>(
                     value: _selectedPrimaryUserId,
                     items: [
-                      const DropdownMenuItem<String?>(
-                        value: null,
-                        child: Text('None (Team Shared Only)'),
-                      ),
+                      const DropdownMenuItem<String?>(value: null, child: Text('None (Team Shared Only)')),
                       ..._teamMembers.map((member) {
                         return DropdownMenuItem<String?>(
                           value: member.userId,
@@ -248,6 +245,35 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
                     contentPadding: const EdgeInsets.all(12),
                   ),
                 ),
+                const SizedBox(height: 16),
+
+                // Video Request Sync Notice Callout
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.video_camera_back_outlined, size: 18, color: colorScheme.primary),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _selectedTeamId == null
+                              ? 'Unassigning will move all associated video requests to unassigned backlog.'
+                              : 'All existing and future video requests for this broker will be linked to the selected team.',
+                          style: AppTextStyles.caption.copyWith(
+                            color: colorScheme.onSurface.withValues(alpha: 0.8),
+                            height: 1.3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 24),
 
                 // Buttons
@@ -260,11 +286,7 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
                       onPressed: () => Navigator.of(context).pop(false),
                     ),
                     const SizedBox(width: 12),
-                    AppButton(
-                      text: 'Save Assignment',
-                      isLoading: _isSaving,
-                      onPressed: _handleSave,
-                    ),
+                    AppButton(text: 'Save Assignment', isLoading: _isSaving, onPressed: _handleSave),
                   ],
                 ),
               ],
@@ -272,4 +294,3 @@ _AssignBrokerDialogState extends State<AssignBrokerDialog> {
     );
   }
 }
-

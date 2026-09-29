@@ -22,12 +22,19 @@ class AdminChatProvider extends ChangeNotifier {
   String? _errorMessage;
 
   bool get isLoading => _isLoading;
+
   bool get isSending => _isSending;
+
   bool get isLoadingMore => _isLoadingMore;
+
   bool get hasMore => _hasMore;
+
   ChatRoomModel? get currentRoom => _currentRoom;
+
   List<ChatMessageModel> get messages => List.unmodifiable(_messages);
+
   ChatMessageModel? get editingMessage => _editingMessage;
+
   String? get errorMessage => _errorMessage;
 
   void setEditingMessage(ChatMessageModel? message) {

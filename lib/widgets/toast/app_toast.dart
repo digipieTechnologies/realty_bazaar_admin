@@ -18,12 +18,7 @@ class _ToastContent {
   final ToastType type;
   final VoidCallback? onTap;
 
-  _ToastContent({
-    required this.title,
-    this.description,
-    required this.type,
-    this.onTap,
-  });
+  _ToastContent({required this.title, this.description, required this.type, this.onTap});
 }
 
 class AppToast {
@@ -59,12 +54,7 @@ class AppToast {
     VoidCallback? onTap,
     bool isTop = false,
   }) {
-    final content = _ToastContent(
-      title: title,
-      description: description,
-      type: type,
-      onTap: onTap,
-    );
+    final content = _ToastContent(title: title, description: description, type: type, onTap: onTap);
 
     // If an overlay entry is currently active, update the ValueNotifier dynamically
     if (_overlayEntry != null && _toastNotifier != null) {
@@ -231,7 +221,11 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                 color: bgColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 12, offset: const Offset(0, 4)),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.12),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: ClipRRect(
@@ -245,7 +239,10 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                       child: Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.12)),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.12),
+                        ),
                       ),
                     ),
                     Positioned(
@@ -254,7 +251,10 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.08)),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.08),
+                        ),
                       ),
                     ),
 

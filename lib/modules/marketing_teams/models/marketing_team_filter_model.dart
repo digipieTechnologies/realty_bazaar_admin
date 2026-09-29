@@ -115,10 +115,8 @@ class MarketingTeamFilterModel extends BaseFilterModel {
       search: map.containsKey('search') ? map['search'] as String? : search,
       territory: map.containsKey('territory') ? map['territory'] as String? : territory,
       isActive: map.containsKey('isActive') ? map['isActive'] as bool? : isActive,
-      hasBrokersOnly:
-          map.containsKey('hasBrokersOnly') ? map['hasBrokersOnly'] as bool? : hasBrokersOnly,
-      emptyTeamsOnly:
-          map.containsKey('emptyTeamsOnly') ? map['emptyTeamsOnly'] as bool? : emptyTeamsOnly,
+      hasBrokersOnly: map.containsKey('hasBrokersOnly') ? map['hasBrokersOnly'] as bool? : hasBrokersOnly,
+      emptyTeamsOnly: map.containsKey('emptyTeamsOnly') ? map['emptyTeamsOnly'] as bool? : emptyTeamsOnly,
       page: map['page'] as int? ?? page,
       pageSize: map['pageSize'] as int? ?? pageSize,
       sortBy: map['sortBy'] as String? ?? sortBy,
@@ -128,14 +126,14 @@ class MarketingTeamFilterModel extends BaseFilterModel {
 
   @override
   List<Object?> get props => [
-        search,
-        territory,
-        isActive,
-        hasBrokersOnly,
-        emptyTeamsOnly,
-        page,
-        pageSize,
-        sortBy,
-        sortOrder,
-      ];
+    search,
+    territory,
+    isActive,
+    hasBrokersOnly,
+    emptyTeamsOnly,
+    page,
+    pageSize,
+    sortBy,
+    sortOrder,
+  ];
 }

@@ -17,6 +17,7 @@ import '../network/supabase_client.dart';
 
 class DeviceService {
   DeviceService._();
+
   static final DeviceService instance = DeviceService._();
 
   static const String _webDeviceIdKey = 'user_device_web_id';
@@ -32,7 +33,8 @@ class DeviceService {
         final prefs = await SharedPreferences.getInstance();
         String? webId = prefs.getString(_webDeviceIdKey);
         if (webId == null || webId.isEmpty) {
-          webId = 'web_${DateTime.now().millisecondsSinceEpoch}_${(1000 + (9000 * (DateTime.now().microsecond / 1000000))).toInt()}';
+          webId =
+              'web_${DateTime.now().millisecondsSinceEpoch}_${(1000 + (9000 * (DateTime.now().microsecond / 1000000))).toInt()}';
           await prefs.setString(_webDeviceIdKey, webId);
         }
         return webId;
@@ -121,9 +123,7 @@ class DeviceService {
 
   Future<void> _ensureFirebaseInitialized() async {
     if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     }
   }
 
@@ -149,12 +149,7 @@ class DeviceService {
       }
 
       // Request permission via FirebaseMessaging SDK
-      await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: true,
-      );
+      await messaging.requestPermission(alert: true, badge: true, sound: true, provisional: true);
 
       String? token;
       if (kIsWeb) {
@@ -238,7 +233,9 @@ class DeviceService {
       final (appVersion, buildNum) = await getAppInfo();
       final osVersion = await getOsVersion();
 
-      debugPrint('📱 [DeviceService] Syncing device params: ID=$deviceId, Name=$deviceName, Platform=$platformStr, FCM Token=$fcmToken');
+      debugPrint(
+        '📱 [DeviceService] Syncing device params: ID=$deviceId, Name=$deviceName, Platform=$platformStr, FCM Token=$fcmToken',
+      );
 
       await SupabaseConfig.client.rpc(
         'rpc_upsert_user_device',
@@ -303,11 +300,7 @@ class DeviceService {
       final deviceId = await getDeviceId();
       await SupabaseConfig.client
           .from('user_devices')
-          .update({
-            'is_active': false,
-            'fcm_token': null,
-            'updated_at': DateTime.now().toIso8601String(),
-          })
+          .update({'is_active': false, 'fcm_token': null, 'updated_at': DateTime.now().toIso8601String()})
           .eq('device_id', deviceId);
 
       if (Firebase.apps.isNotEmpty) {

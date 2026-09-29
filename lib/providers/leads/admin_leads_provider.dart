@@ -36,23 +36,33 @@ class AdminLeadsProvider extends ChangeNotifier {
   // ── Getters ───────────────────────────────────────────────────────────────
 
   List<SocialLeadModel> get leads => _leads;
+
   PaginationMetadata? get pagination => _pagination;
+
   bool get isLoading => _isLoading;
+
   String? get errorMessage => _errorMessage;
 
   int get currentPage => _currentPage;
+
   int get pageSize => _pageSize;
+
   int get totalPages => _pagination?.totalPages ?? 1;
+
   int get totalItems => _pagination?.total ?? _leads.length;
 
   String get searchQuery => _searchQuery;
+
   List<String> get platformsFilter => _platformsFilter;
+
   String? get selectedBrokerId => _selectedBrokerId;
 
   List<BrokerModel> get brokers => _brokers;
+
   bool get isLoadingBrokers => _isLoadingBrokers;
 
   SocialLeadModel? get selectedLead => _selectedLead;
+
   bool get isLoadingDetail => _isLoadingDetail;
 
   // ── Actions ───────────────────────────────────────────────────────────────

@@ -1,11 +1,11 @@
 // File: lib/models/user_model.dart
 // Purpose: Strongly typed UserModel with Gender enum, Date of Birth, Notes, and Cover Image fields.
 
-import 'package:realty_bazaar_admin/app/context_ext.dart';
-import 'package:realty_bazaar_admin/widgets/images/cached_image.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:realty_bazaar_admin/app/context_ext.dart';
+import 'package:realty_bazaar_admin/widgets/images/cached_image.dart';
 
 import '../core/enums/gender_enum.dart';
 import 'attachment_model.dart';
