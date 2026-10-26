@@ -1,10 +1,11 @@
 // File: lib/widgets/toast/app_toast.dart
-// Purpose: Custom Overlay toast helper for success, error, and in-app notification status messages with ValueNotifier reactive updates.
+// Purpose: Custom Overlay toast helper for success and error status messages with ValueNotifier reactive updates.
 
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/app_colors.dart';
@@ -34,7 +35,32 @@ class AppToast {
 
   /// Show an error toast notification
   static void showError(String title, [String? description]) {
-    _show(title, description, ToastType.error);
+    String finalTitle = title;
+    String? finalDesc = description;
+
+    final lowerTitle = title.toLowerCase();
+    final lowerDesc = description?.toLowerCase() ?? '';
+
+    if (lowerTitle.contains('payload too large') ||
+        lowerTitle.contains('exceeded the maximum allowed size') ||
+        lowerTitle.contains('413') ||
+        lowerDesc.contains('payload too large') ||
+        lowerDesc.contains('exceeded the maximum allowed size') ||
+        lowerDesc.contains('413')) {
+      final ctx = AppRoutes.rootNavigatorKey.currentContext;
+      finalTitle = ctx != null ? ctx.tr('file_too_large') : 'File Too Large';
+      finalDesc = ctx != null
+          ? ctx.tr('file_too_large_desc')
+          : 'The selected file size exceeds the allowed limit.';
+    }
+
+    // Automatically record user-facing error messages in diagnostic logs
+    // AppLogService.instance.logWarning(
+    //   'User Error Toast: $finalTitle${finalDesc != null && finalDesc.isNotEmpty ? " - $finalDesc" : ""}',
+    //   tag: 'UI_TOAST',
+    // );
+
+    _show(finalTitle, finalDesc, ToastType.error);
   }
 
   /// Show an in-app push notification banner that drops from the top
@@ -84,7 +110,7 @@ class AppToast {
           right: 0,
           child: _AppToastWidget(
             notifier: currentNotifier,
-            onClose: _hideWithAnimation,
+            onClose: dismiss,
             isTop: isTop,
             onControllerCreated: (controller) => _activeAnimationController = controller,
           ),
@@ -199,6 +225,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
     if (content == null) return const SizedBox.shrink();
 
     final isError = content.type == ToastType.error;
+
     final isNotification = widget.isTop;
     final bgColor = isNotification ? Colors.white : (isError ? AppColors.errorLight : AppColors.successLight);
     final iconColor = isNotification ? AppColors.primary : (isError ? AppColors.error : AppColors.success);
@@ -213,7 +240,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Align(
-            alignment: isNotification ? Alignment.topCenter : Alignment.bottomCenter,
+            alignment: Alignment.bottomCenter,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               constraints: const BoxConstraints(maxWidth: 400),
@@ -221,11 +248,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                 color: bgColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
+                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
                 ],
               ),
               child: ClipRRect(
@@ -241,7 +264,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                         height: 80,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.12),
+                          color: Colors.white.withOpacity(0.35),
                         ),
                       ),
                     ),
@@ -253,7 +276,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                         height: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: (isNotification ? AppColors.primary : Colors.white).withOpacity(0.08),
+                          color: Colors.white.withOpacity(0.25),
                         ),
                       ),
                     ),
@@ -267,10 +290,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
                           // Icon Container
                           Container(
                             padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: isNotification ? AppColors.primary.withOpacity(0.1) : Colors.white,
-                              shape: BoxShape.circle,
-                            ),
+                            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                             child: Icon(iconData, color: iconColor, size: 20),
                           ),
                           const SizedBox(width: 16),
@@ -306,14 +326,7 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
 
                           // Close Button
                           const SizedBox(width: 12),
-                          InkWell(
-                            onTap: widget.onClose,
-                            borderRadius: BorderRadius.circular(100),
-                            child: const Padding(
-                              padding: EdgeInsets.all(6.0),
-                              child: Icon(Icons.close_rounded, color: Colors.black45, size: 18),
-                            ),
-                          ),
+                          CloseButton(onPressed: widget.onClose, color: Colors.black45),
                         ],
                       ),
                     ),
@@ -336,6 +349,6 @@ class _AppToastWidgetState extends State<_AppToastWidget> with SingleTickerProvi
       );
     }
 
-    return IgnorePointer(child: contentWidget);
+    return contentWidget;
   }
 }
