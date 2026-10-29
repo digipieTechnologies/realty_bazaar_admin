@@ -66,10 +66,16 @@ class BrokersDesktop extends StatelessWidget {
                           isLoading: brokersProv.isLoading,
                           columns: [
                             AppDataColumn(label: 'business_name'.tr(), flex: 2),
+                            AppDataColumn(label: 'user'.tr(), flex: 2),
                             AppDataColumn(label: 'plan'.tr(), flex: 1.5),
                             AppDataColumn(label: 'actions'.tr(), flex: 1),
                           ],
-                          rows: brokersList.map((broker) => _buildRow(context, broker, brokersProv)).toList(),
+                          rows: brokersList
+                              .map(
+                                (broker) =>
+                                    _buildRow(context, broker, brokersProv),
+                              )
+                              .toList(),
                         ),
                       ),
                       PaginationWidget(
@@ -99,25 +105,43 @@ class BrokersDesktop extends StatelessWidget {
     );
   }
 
-  DataRowItem _buildRow(BuildContext context, BrokerModel broker, BrokersProvider brokersProv) {
+  DataRowItem _buildRow(
+    BuildContext context,
+    BrokerModel broker,
+    BrokersProvider brokersProv,
+  ) {
     String businessName = broker.businessName ?? '';
 
     if (businessName.isEmpty) {
       businessName = broker.userId?.phone ?? '-';
     }
     return DataRowItem(
-      onTap: () => context.pushNamed(brokerDetailPath, pathParameters: {'id': broker.id!}, extra: broker),
+      onTap: () => context.pushNamed(
+        brokerDetailPath,
+        pathParameters: {'id': broker.id!},
+        extra: broker,
+      ),
       cells: [
         Row(
           children: [
-            broker.avatarImage(context: context, width: 40, height: 40, name: broker.userId?.name?.forImage),
+            broker.avatarImage(
+              context: context,
+              width: 40,
+              height: 40,
+              name: broker.userId?.name?.forImage,
+            ),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(businessName, style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+                  Text(
+                    businessName,
+                    style: AppTextStyles.body1.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 3),
                   Row(
                     spacing: 8,
@@ -125,21 +149,29 @@ class BrokersDesktop extends StatelessWidget {
                       Flexible(
                         child: Text(
                           broker.userId?.name?.wordCap() ?? '-',
-                          style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold),
+                          style: AppTextStyles.label.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Flexible(
                         child: InkWell(
                           onTap: () async {
-                            final updated = await AssignBrokerDialog.show(context, broker);
+                            final updated = await AssignBrokerDialog.show(
+                              context,
+                              broker,
+                            );
                             if (updated == true) {
                               brokersProv.fetchBrokers();
                             }
                           },
                           child: broker.marketingTeam != null
                               ? Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryLight,
                                     borderRadius: BorderRadius.circular(4),
@@ -147,7 +179,11 @@ class BrokersDesktop extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(Icons.groups_outlined, size: 11, color: AppColors.primary),
+                                      const Icon(
+                                        Icons.groups_outlined,
+                                        size: 11,
+                                        color: AppColors.primary,
+                                      ),
                                       const SizedBox(width: 4),
                                       Text(
                                         broker.marketingTeam!.name,
@@ -161,7 +197,10 @@ class BrokersDesktop extends StatelessWidget {
                                   ),
                                 )
                               : Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.red.withValues(alpha: 0.08),
                                     borderRadius: BorderRadius.circular(4),
@@ -169,7 +208,11 @@ class BrokersDesktop extends StatelessWidget {
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.add_circle_outline, size: 11, color: Colors.redAccent),
+                                      Icon(
+                                        Icons.add_circle_outline,
+                                        size: 11,
+                                        color: Colors.redAccent,
+                                      ),
                                       SizedBox(width: 4),
                                       Text(
                                         'Unassigned',
@@ -191,7 +234,23 @@ class BrokersDesktop extends StatelessWidget {
             ),
           ],
         ),
-        Align(alignment: Alignment.centerLeft, child: _buildPlanBadge(broker.plan ?? 'Free')),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              broker.userId?.name ?? "-",
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              broker.userId?.phone ?? "-",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: _buildPlanBadge(broker.plan ?? 'Free'),
+        ),
         DataCellActions(
           onAssign: () async {
             final updated = await AssignBrokerDialog.show(context, broker);
@@ -199,8 +258,11 @@ class BrokersDesktop extends StatelessWidget {
               brokersProv.fetchBrokers();
             }
           },
-          onView: () =>
-              context.pushNamed(brokerDetailPath, pathParameters: {'id': broker.id!}, extra: broker),
+          onView: () => context.pushNamed(
+            brokerDetailPath,
+            pathParameters: {'id': broker.id!},
+            extra: broker,
+          ),
           onEdit: () {
             BrokerEditDialog.show(
               context,
@@ -230,10 +292,17 @@ class BrokersDesktop extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Text(
         plan.toUpperCase(),
-        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
+        style: TextStyle(
+          fontSize: 10.0,
+          fontWeight: FontWeight.bold,
+          color: fg,
+        ),
       ),
     );
   }
@@ -251,10 +320,17 @@ class BrokersDesktop extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Text(
         status.toUpperCase(),
-        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
+        style: TextStyle(
+          fontSize: 10.0,
+          fontWeight: FontWeight.bold,
+          color: fg,
+        ),
       ),
     );
   }
