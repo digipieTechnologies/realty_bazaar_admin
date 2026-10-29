@@ -128,7 +128,7 @@ class SocialPostsMobile extends StatelessWidget {
                       style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _buildStatusBadge(context, post.status),
+                  _buildPublishedBadge(context),
                 ],
               ),
               const SizedBox(height: 12),
@@ -184,25 +184,16 @@ class SocialPostsMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(BuildContext context, String? status) {
-    Color bg = context.successContainerColor;
-    Color fg = context.successColor;
-    String label = status ?? 'published';
-
-    if (label == 'scheduled') {
-      bg = context.warningContainerColor;
-      fg = context.warningColor;
-    } else if (label == 'failed') {
-      bg = context.errorContainerColor;
-      fg = context.errorColor;
-    }
-
+  Widget _buildPublishedBadge(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(
+        color: context.successContainerColor,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Text(
-        label.toUpperCase(),
-        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
+        'PUBLISHED',
+        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: context.successColor),
       ),
     );
   }

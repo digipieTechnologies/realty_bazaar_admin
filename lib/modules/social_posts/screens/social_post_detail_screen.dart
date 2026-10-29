@@ -135,7 +135,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            _buildStatusBadge(post.status),
+                            _buildPublishedBadge(),
                           ],
                         ),
                       ],
@@ -159,7 +159,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                         title: 'social_post_media_previews'.tr(),
                         icon: Icons.image_rounded,
                         children: [
-                          if (post.medias == null || post.medias!.isEmpty) ...[
+                          if (post.mediaUrls == null || post.mediaUrls!.isEmpty) ...[
                             Container(
                               height: 120,
                               decoration: BoxDecoration(
@@ -186,7 +186,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                               height: 160,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: post.medias!.length,
+                                itemCount: post.mediaUrls!.length,
                                 separatorBuilder: (context, index) => const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
                                   return ClipRRect(
@@ -194,7 +194,7 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                                     child: SizedBox(
                                       width: 160,
                                       child: CachedImage(
-                                        imageUrl: post.medias![index].url,
+                                        imageUrl: post.mediaUrls![index],
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -251,12 +251,6 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
                             'published_at'.tr(),
                             post.publishedAt != null
                                 ? DateFormat('dd MMM yyyy, hh:mm a').format(post.publishedAt!)
-                                : '-',
-                          ),
-                          _buildDetailRow(
-                            'scheduled_at'.tr(),
-                            post.scheduledAt != null
-                                ? DateFormat('dd MMM yyyy, hh:mm a').format(post.scheduledAt!)
                                 : '-',
                           ),
                           _buildDetailRow(
@@ -328,25 +322,16 @@ class _SocialPostDetailScreenState extends State<SocialPostDetailScreen> {
     );
   }
 
-  Widget _buildStatusBadge(String? status) {
-    Color bg = AppColors.successLight;
-    Color fg = AppColors.success;
-    String label = status ?? 'published';
-
-    if (label == 'scheduled') {
-      bg = AppColors.warningLight;
-      fg = AppColors.warning;
-    } else if (label == 'failed') {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
-    }
-
+  Widget _buildPublishedBadge() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: fg),
+      decoration: BoxDecoration(
+        color: AppColors.successLight,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Text(
+        'PUBLISHED',
+        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.success),
       ),
     );
   }

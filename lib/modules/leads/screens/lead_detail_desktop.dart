@@ -108,7 +108,7 @@ class LeadDetailDesktop extends StatelessWidget {
               : (lead.socialPost?.caption ?? ''));
 
     final notesText = lead.notes;
-    final mediaList = lead.socialPost?.medias ?? property?.medias;
+    final mediaList = (lead.socialPost?.mediaUrls?.map((url) => MediaModel(url: url)).toList()) ?? property?.medias;
     final hasPermalink = lead.socialPost?.permalink?.isNotEmpty == true;
 
     final child1 = Column(

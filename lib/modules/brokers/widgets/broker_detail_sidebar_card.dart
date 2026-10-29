@@ -35,7 +35,7 @@ class BrokerDetailSidebarCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
-          Text('ID: ${broker.id ?? '-'}', style: context.cardSubtitle.copyWith(fontSize: 12)),
+          Text('Code: ${broker.brokerCode ?? '-'}', style: context.cardSubtitle.copyWith(fontSize: 12)),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

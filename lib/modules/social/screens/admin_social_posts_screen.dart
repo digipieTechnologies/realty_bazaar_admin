@@ -90,7 +90,7 @@ class _AdminSocialPostsScreenState extends State<AdminSocialPostsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(color: AppColors.successLight, borderRadius: BorderRadius.circular(12)),
             child: Text(
-              (post.status ?? 'published').toUpperCase(),
+              'PUBLISHED',
               style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.success),
             ),
           ),

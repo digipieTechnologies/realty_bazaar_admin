@@ -113,6 +113,7 @@ class SocialPostsDesktop extends StatelessWidget {
     }
 
     return DataRowItem(
+      onTap: () => context.pushNamed(socialPostsDetailPath, pathParameters: {'id': post.id!}, extra: post),
       cells: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -138,9 +139,7 @@ class SocialPostsDesktop extends StatelessWidget {
                     Text(
                       post.publishedAt != null
                           ? 'Published: ${DateFormat('dd MMM yyyy').format(post.publishedAt!)}'
-                          : post.scheduledAt != null
-                          ? 'Scheduled: ${DateFormat('dd MMM yyyy, hh:mm a').format(post.scheduledAt!)}'
-                          : 'Drafted',
+                          : '-',
                       style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
                     ),
                   ],
@@ -152,7 +151,7 @@ class SocialPostsDesktop extends StatelessWidget {
         DataCellText(text: post.platform ?? '-'),
         DataCellText(text: post.broker?.businessName ?? '-'),
         DataCellText(text: post.property?.propertyTitle ?? '-'),
-        Align(alignment: Alignment.centerLeft, child: _buildStatusBadge(post.status)),
+        Align(alignment: Alignment.centerLeft, child: _buildPublishedBadge()),
         DataCellActions(
           onView: () =>
               context.pushNamed(socialPostsDetailPath, pathParameters: {'id': post.id!}, extra: post),
@@ -163,25 +162,20 @@ class SocialPostsDesktop extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(String? status) {
-    Color bg = AppColors.successLight;
-    Color fg = AppColors.success;
-    String label = status ?? 'published';
-
-    if (label == 'scheduled') {
-      bg = AppColors.warningLight;
-      fg = AppColors.warning;
-    } else if (label == 'failed') {
-      bg = AppColors.errorLight;
-      fg = AppColors.error;
-    }
-
+  Widget _buildPublishedBadge() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12.0)),
+      decoration: BoxDecoration(
+        color: AppColors.successLight,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Text(
-        label.toUpperCase(),
-        style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold, color: fg),
+        'PUBLISHED',
+        style: TextStyle(
+          fontSize: 10.0,
+          fontWeight: FontWeight.bold,
+          color: AppColors.success,
+        ),
       ),
     );
   }

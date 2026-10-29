@@ -24,7 +24,6 @@ class SocialPostService extends BaseSupabaseService {
     String? sortBy,
     String? sortOrder,
     String? platform,
-    String? status,
   }) async {
     return getPaginated<SocialPostModel>(
       table: 'social_posts',
@@ -33,13 +32,11 @@ class SocialPostService extends BaseSupabaseService {
       page: page,
       pageSize: pageSize,
       searchField: 'caption',
-      // Search by caption text
       searchQuery: search,
       sortBy: sortBy,
       ascending: sortOrder?.toLowerCase() == 'asc',
       filters: {
         if (platform != null && platform != 'All') 'platform': platform,
-        if (status != null && status != 'All') 'status': status,
       },
     );
   }
@@ -51,8 +48,6 @@ class SocialPostService extends BaseSupabaseService {
     required String platform,
     required String caption,
     List<String> mediaUrls = const [],
-    String status = 'published',
-    DateTime? scheduledAt,
   }) async {
     try {
       final response = await _client
@@ -63,9 +58,7 @@ class SocialPostService extends BaseSupabaseService {
             'platform': platform,
             'caption': caption,
             'media_urls': mediaUrls,
-            'status': status,
-            if (scheduledAt != null) 'scheduled_at': scheduledAt.toUtc().toIso8601String(),
-            'published_at': status == 'published' ? DateTime.now().toUtc().toIso8601String() : null,
+            'published_at': DateTime.now().toUtc().toIso8601String(),
             'created_at': DateTime.now().toUtc().toIso8601String(),
             'updated_at': DateTime.now().toUtc().toIso8601String(),
           })
@@ -87,8 +80,6 @@ class SocialPostService extends BaseSupabaseService {
       final payload = <String, dynamic>{
         'caption': post.caption,
         'platform': post.platform,
-        'status': post.status,
-        if (post.scheduledAt != null) 'scheduled_at': post.scheduledAt?.toUtc().toIso8601String(),
         'updated_at': DateTime.now().toUtc().toIso8601String(),
       };
       await _client.from('social_posts').update(payload).eq('id', post.id!);

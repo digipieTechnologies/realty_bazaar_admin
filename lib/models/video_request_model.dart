@@ -24,6 +24,8 @@ class VideoRequestModel extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? completedAt;
+  final bool isDeleted;
+  final DateTime? deletedAt;
 
   const VideoRequestModel({
     this.id,
@@ -41,6 +43,8 @@ class VideoRequestModel extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.completedAt,
+    this.isDeleted = false,
+    this.deletedAt,
   });
 
   MarketingTeamModel? get effectiveMarketingTeam => marketingTeam ?? broker?.marketingTeam;
@@ -94,6 +98,10 @@ class VideoRequestModel extends Equatable {
       completedAt: json['completed_at'] != null
           ? DateTime.tryParse(json['completed_at'].toString())?.toLocal()
           : null,
+      isDeleted: json['is_deleted'] as bool? ?? false,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.tryParse(json['deleted_at'].toString())?.toLocal()
+          : null,
     );
   }
 
@@ -120,6 +128,8 @@ class VideoRequestModel extends Equatable {
     if (completedAt != null) {
       data['completed_at'] = completedAt?.toUtc().toIso8601String();
     }
+    data['is_deleted'] = isDeleted;
+    if (deletedAt != null) data['deleted_at'] = deletedAt?.toUtc().toIso8601String();
     return data;
   }
 
@@ -139,6 +149,8 @@ class VideoRequestModel extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? completedAt,
+    bool? isDeleted,
+    DateTime? deletedAt,
   }) {
     return VideoRequestModel(
       id: id ?? this.id,
@@ -156,6 +168,8 @@ class VideoRequestModel extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       completedAt: completedAt ?? this.completedAt,
+      isDeleted: isDeleted ?? this.isDeleted,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -176,5 +190,7 @@ class VideoRequestModel extends Equatable {
     createdAt,
     updatedAt,
     completedAt,
+    isDeleted,
+    deletedAt,
   ];
 }

@@ -32,6 +32,11 @@ class UserModel extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? imageUrl;
+  final String? inactiveReason;
+  final String? deleteReason;
+  final DateTime? activatedAt;
+  final DateTime? inactivatedAt;
+  final bool? isEmailVerified;
 
   const UserModel({
     this.id,
@@ -51,6 +56,11 @@ class UserModel extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.imageUrl,
+    this.inactiveReason,
+    this.deleteReason,
+    this.activatedAt,
+    this.inactivatedAt,
+    this.isEmailVerified,
   });
 
   static UserModel fromJson(dynamic json) {
@@ -85,6 +95,15 @@ class UserModel extends Equatable {
       updatedAt: json['updated_at'] != null
           ? DateTime.tryParse(json['updated_at'].toString())?.toLocal()
           : null,
+      inactiveReason: json['inactive_reason']?.toString(),
+      deleteReason: json['delete_reason']?.toString(),
+      activatedAt: json['activated_at'] != null
+          ? DateTime.tryParse(json['activated_at'].toString())?.toLocal()
+          : null,
+      inactivatedAt: json['inactivated_at'] != null
+          ? DateTime.tryParse(json['inactivated_at'].toString())?.toLocal()
+          : null,
+      isEmailVerified: json['is_email_verified'] as bool?,
     );
   }
 
@@ -129,6 +148,11 @@ class UserModel extends Equatable {
     BrokerModel? brokerId,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? inactiveReason,
+    String? deleteReason,
+    DateTime? activatedAt,
+    DateTime? inactivatedAt,
+    bool? isEmailVerified,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -147,6 +171,11 @@ class UserModel extends Equatable {
       broker: brokerId ?? this.broker,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      inactiveReason: inactiveReason ?? this.inactiveReason,
+      deleteReason: deleteReason ?? this.deleteReason,
+      activatedAt: activatedAt ?? this.activatedAt,
+      inactivatedAt: inactivatedAt ?? this.inactivatedAt,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
     );
   }
 
@@ -222,5 +251,10 @@ class UserModel extends Equatable {
     broker,
     createdAt,
     updatedAt,
+    inactiveReason,
+    deleteReason,
+    activatedAt,
+    inactivatedAt,
+    isEmailVerified,
   ];
 }

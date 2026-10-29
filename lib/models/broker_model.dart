@@ -25,6 +25,10 @@ class BrokerModel extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final UserModel? userId;
+  final String? brokerCode;
+  final Map<String, dynamic>? setupDetails;
+  final bool? isDeleted;
+  final DateTime? deletedAt;
 
   const BrokerModel({
     this.id,
@@ -41,6 +45,10 @@ class BrokerModel extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.userId,
+    this.brokerCode,
+    this.setupDetails,
+    this.isDeleted,
+    this.deletedAt,
   });
 
   static BrokerModel fromJson(dynamic json) {
@@ -103,6 +111,14 @@ class BrokerModel extends Equatable {
           ? DateTime.tryParse(json['updated_at'].toString())?.toLocal()
           : null,
       userId: parsedUser,
+      brokerCode: json['broker_code']?.toString(),
+      setupDetails: json['setup_details'] is Map<String, dynamic>
+          ? Map<String, dynamic>.from(json['setup_details'] as Map)
+          : null,
+      isDeleted: json['is_deleted'] as bool? ?? false,
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.tryParse(json['deleted_at'].toString())?.toLocal()
+          : null,
     );
   }
 
@@ -127,6 +143,10 @@ class BrokerModel extends Equatable {
     if (userId != null) {
       data['user_id'] = userId?.id;
     }
+    if (brokerCode != null) data['broker_code'] = brokerCode;
+    if (setupDetails != null) data['setup_details'] = setupDetails;
+    if (isDeleted != null) data['is_deleted'] = isDeleted;
+    if (deletedAt != null) data['deleted_at'] = deletedAt?.toUtc().toIso8601String();
     return data;
   }
 
@@ -145,6 +165,10 @@ class BrokerModel extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     UserModel? user,
+    String? brokerCode,
+    Map<String, dynamic>? setupDetails,
+    bool? isDeleted,
+    DateTime? deletedAt,
   }) {
     return BrokerModel(
       id: id ?? this.id,
@@ -160,6 +184,10 @@ class BrokerModel extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       userId: user ?? this.userId,
+      brokerCode: brokerCode ?? this.brokerCode,
+      setupDetails: setupDetails ?? this.setupDetails,
+      isDeleted: isDeleted ?? this.isDeleted,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 
@@ -178,6 +206,9 @@ class BrokerModel extends Equatable {
     createdAt,
     updatedAt,
     userId,
+    brokerCode,
+    isDeleted,
+    deletedAt,
   ];
 
   Widget avatarImage({
@@ -185,6 +216,7 @@ class BrokerModel extends Equatable {
     double width = 48,
     double height = 48,
     String? imageUrl,
+    String? name,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
     return CachedImage(
@@ -203,7 +235,7 @@ class BrokerModel extends Equatable {
         ),
         child: Center(
           child: Text(
-            businessName?.forImage ?? '',
+            name ?? businessName?.forImage ?? '',
             style: context.labelSmallBold?.copyWith(
               fontSize: (width + height) * 0.18,
               color: colorScheme.primary,

@@ -41,6 +41,9 @@ class PropertyModel extends Equatable {
   final DateTime? updatedAt;
   final String propertyTitle;
   final String? propertyDescription;
+  final String? propertyCode;
+  final String? reraNumber;
+  final String? webUrl;
 
   const PropertyModel({
     this.id,
@@ -48,6 +51,9 @@ class PropertyModel extends Equatable {
     this.addressId,
     required this.propertyTitle,
     this.propertyDescription,
+    this.propertyCode,
+    this.reraNumber,
+    this.webUrl,
     this.propertyType = PropertyType.apartment,
     this.listingType = ListingType.sale,
     required this.price,
@@ -113,6 +119,9 @@ class PropertyModel extends Equatable {
           : json['address_id']?.toString(),
       propertyTitle: json['property_title']?.toString() ?? '',
       propertyDescription: json['property_description']?.toString(),
+      propertyCode: json['property_code']?.toString(),
+      reraNumber: json['rera_number']?.toString(),
+      webUrl: json['web_url']?.toString(),
       propertyType: (json['property_type']?.toString()).asPropertyType,
       listingType: (json['listing_type']?.toString()).asListingType,
       price: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
@@ -176,6 +185,9 @@ class PropertyModel extends Equatable {
     data['is_active'] = isActive;
     data['is_deleted'] = isDeleted;
     if (deletedAt != null) data['deleted_at'] = deletedAt?.toUtc().toIso8601String();
+    if (propertyCode != null) data['property_code'] = propertyCode;
+    if (reraNumber != null) data['rera_number'] = reraNumber;
+    if (webUrl != null) data['web_url'] = webUrl;
     if (createdAt != null) data['created_at'] = createdAt?.toUtc().toIso8601String();
     if (updatedAt != null) data['updated_at'] = updatedAt?.toUtc().toIso8601String();
     return data;
@@ -210,6 +222,9 @@ class PropertyModel extends Equatable {
     DateTime? deletedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? propertyCode,
+    String? reraNumber,
+    String? webUrl,
   }) {
     return PropertyModel(
       id: id ?? this.id,
@@ -240,6 +255,9 @@ class PropertyModel extends Equatable {
       deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      propertyCode: propertyCode ?? this.propertyCode,
+      reraNumber: reraNumber ?? this.reraNumber,
+      webUrl: webUrl ?? this.webUrl,
     );
   }
 
@@ -273,6 +291,9 @@ class PropertyModel extends Equatable {
     deletedAt,
     createdAt,
     updatedAt,
+    propertyCode,
+    reraNumber,
+    webUrl,
   ];
 
   Widget propertyImage({

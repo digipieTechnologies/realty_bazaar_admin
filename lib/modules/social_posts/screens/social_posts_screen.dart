@@ -89,15 +89,13 @@ class SocialPostsScreenState extends State<SocialPostsScreen> {
     await SocialPostEditDialog.show(
       context,
       post: post,
-      onSave: (brokerId, propertyId, platform, caption, status, scheduledAt) async {
+      onSave: (brokerId, propertyId, platform, caption) async {
         if (post == null) {
           final id = await context.read<SocialPostsProvider>().createSocialPost(
             brokerId: brokerId,
             propertyId: propertyId,
             platform: platform,
             caption: caption,
-            status: status,
-            scheduledAt: scheduledAt,
           );
           if (id != null && mounted) {
             AppToast.showSuccess('Post Created', 'New social post has been created successfully.');
@@ -106,8 +104,6 @@ class SocialPostsScreenState extends State<SocialPostsScreen> {
           final updated = post.copyWith(
             caption: caption,
             platform: platform,
-            status: status,
-            scheduledAt: scheduledAt,
           );
           final success = await context.read<SocialPostsProvider>().updateSocialPost(updated);
           if (success && mounted) {

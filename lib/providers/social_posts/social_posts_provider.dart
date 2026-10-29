@@ -48,7 +48,6 @@ class SocialPostsProvider extends ChangeNotifier {
         sortBy: _filter.sortBy,
         sortOrder: _filter.sortOrder,
         platform: _filter.platform,
-        status: _filter.status,
       );
 
       _posts = response.items;
@@ -84,15 +83,6 @@ class SocialPostsProvider extends ChangeNotifier {
     fetchSocialPosts();
   }
 
-  void setStatusFilter(String? status) {
-    _filter = _filter.copyWith(
-      status: status == 'All' ? null : status,
-      clearStatus: status == 'All',
-      page: 1,
-    );
-    fetchSocialPosts();
-  }
-
   void setPage(int page) {
     _filter = _filter.copyWith(page: page);
     fetchSocialPosts();
@@ -104,8 +94,6 @@ class SocialPostsProvider extends ChangeNotifier {
     required String platform,
     required String caption,
     List<String> mediaUrls = const [],
-    String status = 'published',
-    DateTime? scheduledAt,
   }) async {
     _isLoading = true;
     _error = null;
@@ -118,8 +106,6 @@ class SocialPostsProvider extends ChangeNotifier {
         platform: platform,
         caption: caption,
         mediaUrls: mediaUrls,
-        status: status,
-        scheduledAt: scheduledAt,
       );
       _isLoading = false;
       await fetchSocialPosts();

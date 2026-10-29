@@ -4,7 +4,6 @@ import '../../../core/filters/filter_field.dart';
 class SocialPostFilterModel extends BaseFilterModel {
   final String? search;
   final String? platform;
-  final String? status;
 
   final int page;
   final int pageSize;
@@ -14,7 +13,6 @@ class SocialPostFilterModel extends BaseFilterModel {
   const SocialPostFilterModel({
     this.search,
     this.platform,
-    this.status,
     this.page = 1,
     this.pageSize = 15,
     this.sortBy = 'created_at',
@@ -40,16 +38,6 @@ class SocialPostFilterModel extends BaseFilterModel {
           FilterOption(value: 'TikTok', labelKey: 'TikTok', isPlainLabel: true),
         ],
       ),
-      const FilterField(
-        key: 'status',
-        type: FilterType.singleSelect,
-        labelKey: 'Post Status',
-        staticOptions: [
-          FilterOption(value: 'published', labelKey: 'Published', isPlainLabel: true),
-          FilterOption(value: 'scheduled', labelKey: 'Scheduled', isPlainLabel: true),
-          FilterOption(value: 'failed', labelKey: 'Failed', isPlainLabel: true),
-        ],
-      ),
     ],
     defaultSortBy: 'created_at',
   );
@@ -57,19 +45,16 @@ class SocialPostFilterModel extends BaseFilterModel {
   SocialPostFilterModel copyWith({
     String? search,
     String? platform,
-    String? status,
     int? page,
     int? pageSize,
     String? sortBy,
     String? sortOrder,
     bool clearSearch = false,
     bool clearPlatform = false,
-    bool clearStatus = false,
   }) {
     return SocialPostFilterModel(
       search: clearSearch ? null : (search ?? this.search),
       platform: clearPlatform ? null : (platform ?? this.platform),
-      status: clearStatus ? null : (status ?? this.status),
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
       sortBy: sortBy ?? this.sortBy,
@@ -83,14 +68,13 @@ class SocialPostFilterModel extends BaseFilterModel {
   }
 
   @override
-  bool get hasActiveFilters => search != null || platform != null || status != null;
+  bool get hasActiveFilters => search != null || platform != null;
 
   @override
   Map<String, dynamic> toJson() {
     return {
       'search': search,
       'platform': platform,
-      'status': status,
       'page': page,
       'pageSize': pageSize,
       'sortBy': sortBy,
@@ -103,7 +87,6 @@ class SocialPostFilterModel extends BaseFilterModel {
     return SocialPostFilterModel(
       search: map.containsKey('search') ? map['search'] as String? : search,
       platform: map.containsKey('platform') ? map['platform'] as String? : platform,
-      status: map.containsKey('status') ? map['status'] as String? : status,
       page: map['page'] as int? ?? page,
       pageSize: map['pageSize'] as int? ?? pageSize,
       sortBy: map['sortBy'] as String? ?? sortBy,
@@ -112,5 +95,5 @@ class SocialPostFilterModel extends BaseFilterModel {
   }
 
   @override
-  List<Object?> get props => [search, platform, status, page, pageSize, sortBy, sortOrder];
+  List<Object?> get props => [search, platform, page, pageSize, sortBy, sortOrder];
 }

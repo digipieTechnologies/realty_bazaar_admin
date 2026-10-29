@@ -170,7 +170,7 @@ class _PropertyPostsTabState extends State<PropertyPostsTab> with AutomaticKeepA
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: Text(
-                                          (post.status ?? 'published').toUpperCase(),
+                                          'PUBLISHED',
                                           style: const TextStyle(
                                             color: Colors.green,
                                             fontWeight: FontWeight.bold,
@@ -196,13 +196,16 @@ class _PropertyPostsTabState extends State<PropertyPostsTab> with AutomaticKeepA
                                           DateFormat.yMMMd().add_jm().format(post.createdAt!),
                                           style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
                                         ),
-                                      if (post.medias != null && post.medias!.isNotEmpty)
+                                      if (post.mediaUrls != null && post.mediaUrls!.isNotEmpty)
                                         InkWell(
                                           onTap: () {
+                                            final mediaModels = post.mediaUrls!
+                                                .map((url) => MediaModel(url: url))
+                                                .toList();
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) => FullScreenMediaViewer(
-                                                  medias: post.medias ?? <MediaModel>[],
+                                                  medias: mediaModels,
                                                   initialIndex: 0,
                                                 ),
                                               ),
@@ -221,7 +224,7 @@ class _PropertyPostsTabState extends State<PropertyPostsTab> with AutomaticKeepA
                                                 ),
                                                 const SizedBox(width: 4),
                                                 Text(
-                                                  '${post.medias!.length} Media',
+                                                  '${post.mediaUrls!.length} Media',
                                                   style: TextStyle(
                                                     color: AppColors.primary,
                                                     fontWeight: FontWeight.w600,
