@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:realty_bazaar_admin/core/logging/app_log_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:the_realty_bazaar/core/logging/app_log_service.dart';
 
 class SupabaseLoggerClient extends BaseClient {
   SupabaseLoggerClient({

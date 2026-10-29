@@ -1,7 +1,10 @@
+import 'package:realty_bazaar_admin/core/network/supabase_logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseConfig {
-  static const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  static const String supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+  );
   static const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const String apiAuthToken = String.fromEnvironment('API_AUTH_TOKEN');
 
@@ -9,8 +12,8 @@ class SupabaseConfig {
     if (supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty) {
       await Supabase.initialize(
         url: supabaseUrl,
-        anonKey: supabaseAnonKey,
-        // httpClient: SupabaseLoggerClient(),
+        publishableKey: supabaseAnonKey,
+        httpClient: SupabaseLoggerClient(),
       );
     }
   }

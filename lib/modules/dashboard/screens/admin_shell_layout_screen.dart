@@ -86,6 +86,24 @@ class _AdminShellLayoutScreenState extends State<AdminShellLayoutScreen> {
       icon: Icons.contact_phone_rounded,
     ),
     _NavigationItem(
+      title: 'Property Visits',
+      titleKey: 'property_visits',
+      path: AppRoutes.propertyVisits,
+      icon: Icons.calendar_today_rounded,
+    ),
+    _NavigationItem(
+      title: 'Deletion Requests',
+      titleKey: 'account_deletion_requests',
+      path: AppRoutes.accountDeletionRequests,
+      icon: Icons.delete_forever_rounded,
+    ),
+    _NavigationItem(
+      title: 'Subscriptions',
+      titleKey: 'subscriptions',
+      path: AppRoutes.subscriptions,
+      icon: Icons.card_membership_rounded,
+    ),
+    _NavigationItem(
       title: 'Support',
       titleKey: 'support_title',
       path: AppRoutes.support,

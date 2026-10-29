@@ -66,8 +66,6 @@ class UsersDesktop extends StatelessWidget {
                           columns: [
                             AppDataColumn(label: 'users'.tr(), flex: 2),
                             AppDataColumn(label: 'email'.tr(), flex: 2),
-                            AppDataColumn(label: 'role'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'status_active'.tr(), flex: 1.2),
                             AppDataColumn(label: 'actions'.tr(), flex: 1),
                           ],
                           rows: usersList.map((user) => _buildRow(context, user, usersProv)).toList(),
@@ -102,6 +100,7 @@ class UsersDesktop extends StatelessWidget {
 
   DataRowItem _buildRow(BuildContext context, UserModel user, UsersProvider usersProv) {
     return DataRowItem(
+      onTap: () => context.pushNamed(userDetailPath, pathParameters: {'id': user.id!}, extra: user),
       cells: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -133,17 +132,6 @@ class UsersDesktop extends StatelessWidget {
           ),
         ),
         DataCellText(text: user.email ?? '-'),
-        Align(alignment: Alignment.centerLeft, child: _buildRoleBadge(user.role)),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Switch(
-            value: user.isActive ?? true,
-            onChanged: (val) {
-              usersProv.toggleUserStatus(user.id!);
-              AppToast.showSuccess('Status Updated', 'User status toggled.');
-            },
-          ),
-        ),
         DataCellActions(
           onView: () => context.pushNamed(userDetailPath, pathParameters: {'id': user.id!}, extra: user),
           onEdit: () {

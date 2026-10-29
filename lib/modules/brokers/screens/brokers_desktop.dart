@@ -67,8 +67,6 @@ class BrokersDesktop extends StatelessWidget {
                           columns: [
                             AppDataColumn(label: 'business_name'.tr(), flex: 2),
                             AppDataColumn(label: 'plan'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'onboarding_status'.tr(), flex: 1.5),
-                            AppDataColumn(label: 'active_status'.tr(), flex: 1.2),
                             AppDataColumn(label: 'actions'.tr(), flex: 1),
                           ],
                           rows: brokersList.map((broker) => _buildRow(context, broker, brokersProv)).toList(),
@@ -105,13 +103,14 @@ class BrokersDesktop extends StatelessWidget {
     String businessName = broker.businessName ?? '';
 
     if (businessName.isEmpty) {
-      businessName = "-";
+      businessName = broker.userId?.phone ?? '-';
     }
     return DataRowItem(
+      onTap: () => context.pushNamed(brokerDetailPath, pathParameters: {'id': broker.id!}, extra: broker),
       cells: [
         Row(
           children: [
-            broker.avatarImage(context: context, width: 40, height: 40),
+            broker.avatarImage(context: context, width: 40, height: 40, name: broker.userId?.name?.forImage),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -193,20 +192,6 @@ class BrokersDesktop extends StatelessWidget {
           ],
         ),
         Align(alignment: Alignment.centerLeft, child: _buildPlanBadge(broker.plan ?? 'Free')),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: _buildStatusBadge(broker.onboardingStatus ?? 'pending'),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Switch(
-            value: broker.isActive ?? true,
-            onChanged: (val) {
-              brokersProv.toggleBrokerStatus(broker.id!);
-              AppToast.showSuccess('Broker Updated', 'Active status toggled.');
-            },
-          ),
-        ),
         DataCellActions(
           onAssign: () async {
             final updated = await AssignBrokerDialog.show(context, broker);

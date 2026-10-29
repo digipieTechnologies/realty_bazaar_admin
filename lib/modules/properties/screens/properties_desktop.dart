@@ -108,6 +108,7 @@ class PropertiesDesktop extends StatelessWidget {
 
   DataRowItem _buildRow(BuildContext context, PropertyModel prop, AdminPropertyProvider prov) {
     return DataRowItem(
+      onTap: () => context.pushNamed(propertyDetailPath, pathParameters: {'id': prop.id!}, extra: prop),
       cells: [
         Row(
           children: [

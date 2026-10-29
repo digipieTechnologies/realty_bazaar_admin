@@ -107,10 +107,10 @@ class PropertyService extends BaseSupabaseService {
       if (hardDelete) {
         await _client.from('properties').delete().eq('id', id);
       } else {
-        await _client
-            .from('properties')
-            .update({'is_deleted': true, 'deleted_at': DateTime.now().toUtc().toIso8601String()})
-            .eq('id', id);
+        await _client.rpc(
+          'soft_delete_property',
+          params: {'p_property_id': id},
+        );
       }
     } on PostgrestException catch (e) {
       throw Exception(e.message);

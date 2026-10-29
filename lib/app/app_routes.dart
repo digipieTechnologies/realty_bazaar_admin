@@ -25,6 +25,9 @@ import '../modules/social_posts/screens/social_posts_screen.dart';
 import '../modules/support/screens/admin_support_screen.dart';
 import '../modules/users/screens/user_detail_screen.dart';
 import '../modules/users/screens/users_screen.dart';
+import '../modules/account_deletion_requests/screens/account_deletion_requests_screen.dart';
+import '../modules/property_visits/screens/property_visits_screen.dart';
+import '../modules/subscriptions/screens/subscriptions_screen.dart';
 import '../modules/video_requests/screens/video_request_detail_screen.dart';
 import '../modules/video_requests/screens/video_requests_screen.dart';
 
@@ -51,6 +54,9 @@ const String profilePath = 'profile';
 const String videoRequestsPath = 'video_requests';
 const String videoRequestDetailPath = 'video_request_detail';
 const String supportPath = 'support';
+const String propertyVisitsPath = 'property_visits';
+const String accountDeletionRequestsPath = 'account_deletion_requests';
+const String subscriptionsPath = 'subscriptions';
 
 class AppRoutes {
   AppRoutes._();
@@ -82,6 +88,9 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String videoRequests = '/video-requests';
   static const String videoRequestDetail = '/video-requests/detail/:id';
+  static const String propertyVisits = '/property-visits';
+  static const String accountDeletionRequests = '/account-deletion-requests';
+  static const String subscriptions = '/subscriptions';
 
   /// Storage key for preserving deep link URL across auth flows
   static const String pendingRedirectKey = AppConstants.pendingRedirectKey;
@@ -344,6 +353,24 @@ class AppRoutes {
             path: support,
             pageBuilder: (context, state) =>
                 NoTransitionPage(key: state.pageKey, child: const AdminSupportScreen()),
+          ),
+          GoRoute(
+            name: propertyVisitsPath,
+            path: propertyVisits,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const PropertyVisitsScreen()),
+          ),
+          GoRoute(
+            name: accountDeletionRequestsPath,
+            path: accountDeletionRequests,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const AccountDeletionRequestsScreen()),
+          ),
+          GoRoute(
+            name: subscriptionsPath,
+            path: subscriptions,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const SubscriptionsScreen()),
           ),
         ],
       ),

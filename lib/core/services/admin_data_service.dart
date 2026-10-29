@@ -138,7 +138,10 @@ class AdminDataService {
 
   Future<bool> deleteProperty(String id) async {
     try {
-      await SupabaseConfig.client.from('properties').update({'is_deleted': true}).eq('id', id);
+      await SupabaseConfig.client.rpc(
+        'soft_delete_property',
+        params: {'p_property_id': id},
+      );
       return true;
     } catch (e) {
       debugPrint('Supabase deleteProperty API call failed: $e');

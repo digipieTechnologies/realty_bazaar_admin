@@ -120,6 +120,7 @@ class MarketingTeamsDesktop extends StatelessWidget {
 
   DataRowItem _buildRow(BuildContext context, MarketingTeamModel team, MarketingTeamsProvider teamsProv) {
     return DataRowItem(
+      onTap: () => context.push(AppRoutes.marketingTeamDetailPath(team.id), extra: team),
       cells: [
         // Column 1: Team Name & Territory
         Row(

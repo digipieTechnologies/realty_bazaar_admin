@@ -10,10 +10,10 @@ PODS:
   - Firebase/Messaging (10.29.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.29.0)
-  - firebase_core (4.13.0):
+  - firebase_core (4.15.2):
     - Firebase/CoreOnly (~> 10.29.0)
     - FlutterMacOS
-  - firebase_messaging (16.5.0):
+  - firebase_messaging (16.7.1):
     - Firebase/CoreOnly (~> 10.29.0)
     - Firebase/Messaging (~> 10.29.0)
     - firebase_core
@@ -78,6 +78,8 @@ PODS:
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - PromisesObjC (2.4.1)
+  - share_plus (0.0.1):
+    - FlutterMacOS
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -99,6 +101,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
+  - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
@@ -133,6 +136,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
+  share_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/share_plus/macos
   shared_preferences_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
   sqflite_darwin:
@@ -147,8 +152,8 @@ SPEC CHECKSUMS:
   device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
-  firebase_core: b6f559d1e42de31a779f56c9cd3575e97efe167f
-  firebase_messaging: 678ab1e4367a5e011f9fac34ba32e4f200dcdd2f
+  firebase_core: fc320de4c977e51f9b379b6569ff0523362ab787
+  firebase_messaging: 69a45e678c85edcb23057e6442ebd9399ac91562
   FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
@@ -160,6 +165,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
+  share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   url_launcher_macos: f87a979182d112f911de6820aefddaf56ee9fbfd
