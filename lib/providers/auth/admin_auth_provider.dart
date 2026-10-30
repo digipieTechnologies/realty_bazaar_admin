@@ -1,11 +1,14 @@
 // File: lib/providers/auth/admin_auth_provider.dart
 // Purpose: Super Admin Authentication provider with real Supabase Auth and database role verification.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:realty_bazaar_admin/models/models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/app_constants.dart';
+import '../../app/app_routes.dart';
 import '../../core/network/supabase_client.dart';
 import '../../core/services/device_service.dart';
 import '../../main.dart';
@@ -14,6 +17,25 @@ class AdminAuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   UserModel? _adminUser;
+  StreamSubscription<AuthState>? _authSubscription;
+  bool _isExplicitSignOut = false;
+
+  AdminAuthProvider() {
+    _authSubscription = SupabaseConfig.client.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.signedOut && !_isExplicitSignOut) {
+        _onForcedSignOut();
+      }
+    });
+  }
+
+  void _onForcedSignOut() {
+    Future.microtask(() async {
+      await sharedPrefs.remove(AppConstants.sessionKey);
+      _adminUser = null;
+      notifyListeners();
+      AppRoutes.router.go(AppRoutes.login);
+    });
+  }
 
   bool get isLoading => _isLoading;
 
@@ -126,6 +148,7 @@ class AdminAuthProvider extends ChangeNotifier {
 
   /// Sign out admin session
   Future<void> signOut() async {
+    _isExplicitSignOut = true;
     _setLoading(true);
     try {
       // Deactivate device and revoke FCM token on logout
@@ -137,6 +160,7 @@ class AdminAuthProvider extends ChangeNotifier {
     } finally {
       await sharedPrefs.remove(AppConstants.sessionKey);
       _adminUser = null;
+      _isExplicitSignOut = false;
       _setLoading(false);
     }
   }
@@ -156,5 +180,11 @@ class AdminAuthProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error removing device token on logout: $e');
     }
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }
